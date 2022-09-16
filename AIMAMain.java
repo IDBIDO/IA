@@ -19,8 +19,8 @@ public class AIMAMain {
          *  For a problem to be solvable:
          *    count(0,prob) % 2 == count(0,sol) %2
          */
-        int [] prob = new int []{1 ,0, 1, 1, 0};
-        int [] sol = new int[]{1, 1, 0, 1, 0};
+        int [] prob = new int []{1 ,1,1,1,1,1, 1, 1, 0,0,0,1,1,0,0,1,1};
+        int [] sol = new int[]{0 ,1,0,1,0,1, 1, 0, 0,1,1,0,0,1,1,0,0};
 
         ProbIA5Board board = new ProbIA5Board(prob, sol );
 
@@ -38,7 +38,6 @@ public class AIMAMain {
         SearchAgent agent = new SearchAgent(p, alg);
 
 	// We print the results of the search
-        System.out.println();
         printActions(agent.getActions());
         printInstrumentation(agent.getInstrumentation());
 

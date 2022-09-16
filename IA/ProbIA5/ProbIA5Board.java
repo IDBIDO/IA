@@ -30,25 +30,44 @@ public class ProbIA5Board {
 
     /* vvvvv TO COMPLETE vvvvv */
     public void flip_it(int i){
-        // flip the coins i and i + 1
+        board[i]=1-board[i];
+        board[i+1]=1-board[i+1];
     }
 
     /* Heuristic function */
     public double heuristic(){
-        // compute the number of coins out of place respect to solution
-        return 0;
+        int out=0;
+        for(int i=0;i<board.length;++i){
+            if(board[i]!=solution[i])++out;
+        }
+        return out;
     }
 
      /* Goal test */
      public boolean is_goal(){
-         // compute if board = solution
-         return false;
+         for(int i=0;i<board.length;++i){
+             if(board[i]!=solution[i])return false;
+         }
+         return true;
      }
 
      /* auxiliary functions */
 
-     // Some functions will be needed for creating a copy of the state
+    ProbIA5Board copy(){
+         int[] ret=new int[board.length];
+         for(int i = 0;i<board.length;++i)
+             ret[i]=board[i];
+
+         return new ProbIA5Board(ret,solution);
+     }
+     int[] obtainBoard(){
+         return board;
+     }
+    int[] obtainGoal(){
+        return solution;
+    }
+
+}
 
     /* ^^^^^ TO COMPLETE ^^^^^ */
 
-}

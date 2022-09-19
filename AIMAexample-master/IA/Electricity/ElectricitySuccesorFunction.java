@@ -1,4 +1,4 @@
-package IA.ProbIA5;
+package IA.Electricity;
 
 import aima.search.framework.SuccessorFunction;
 import aima.search.framework.Successor;
@@ -8,11 +8,11 @@ import java.util.List;
 /**
  * Created by bejar on 17/01/17
  */
-public class ProbIA5SuccesorFunction implements SuccessorFunction{
+public class ElectricitySuccesorFunction implements SuccessorFunction{
 
     public List getSuccessors(Object state){
         ArrayList retval = new ArrayList();
-        ProbIA5Board status = (ProbIA5Board) state;
+        TemporalSoItWorks status = (TemporalSoItWorks) state;
 
 
         // Some code here
@@ -21,7 +21,7 @@ public class ProbIA5SuccesorFunction implements SuccessorFunction{
         // new_state has to be a copy of state
 
         for(int i=0;i<status.obtainBoard().length-1;++i){
-            ProbIA5Board probIA5Board = new ProbIA5Board(status.obtainBoard(),status.obtainGoal());
+            TemporalSoItWorks probIA5Board = new TemporalSoItWorks(status.obtainBoard(),status.obtainGoal());
             probIA5Board.flip_it(i);
             Successor successor = new Successor("flip "+Integer.toString(i)+" "+Integer.toString(i+1),probIA5Board);
             retval.add(successor);

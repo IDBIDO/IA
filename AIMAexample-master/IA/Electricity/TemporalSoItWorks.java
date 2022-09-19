@@ -1,9 +1,9 @@
-package IA.ProbIA5;
+package IA.Electricity;
 
 /**
  * Created by bejar on 17/01/17.
  */
-public class ProbIA5Board {
+public class TemporalSoItWorks {
     /* Class independent from AIMA classes
        - It has to implement the state of the problem and its operators
      *
@@ -16,7 +16,7 @@ public class ProbIA5Board {
     private static int [] solution;
 
     /* Constructor */
-    public ProbIA5Board(int []init, int[] goal) {
+    public TemporalSoItWorks(int []init, int[] goal) {
 
         board = new int[init.length];
         solution = new int[init.length];
@@ -53,12 +53,12 @@ public class ProbIA5Board {
 
     /* auxiliary functions */
 
-    ProbIA5Board copy(){
+    TemporalSoItWorks copy(){
         int[] ret=new int[board.length];
         for(int i = 0;i<board.length;++i)
             ret[i]=board[i];
 
-        return new ProbIA5Board(ret,solution);
+        return new TemporalSoItWorks(ret,solution);
     }
     int[] obtainBoard(){
         return board;

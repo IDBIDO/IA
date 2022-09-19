@@ -1,18 +1,21 @@
-import IA.ProbIA5.ProbIA5Board;
-import IA.ProbIA5.ProbIA5GoalTest;
-import IA.ProbIA5.ProbIA5HeuristicFunction;
-import IA.ProbIA5.ProbIA5SuccesorFunction;
+import IA.Electricity.TemporalSoItWorks;
+import IA.Electricity.ElectricityGoalTest;
+import IA.Electricity.ElectricityHeuristicFunction;
+import IA.Electricity.ElectricitySuccesorFunction;
 import aima.search.framework.GraphSearch;
 import aima.search.framework.Problem;
 import aima.search.framework.Search;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.AStarSearch;
-import aima.search.informed.IterativeDeepeningAStarSearch;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+
 public class AIMAMain {
+
+
 
     public static void main(String[] args) throws Exception{
         /**
@@ -22,13 +25,13 @@ public class AIMAMain {
         int [] prob = new int []{1 ,1,1,1,1,1, 1, 1, 0,0,0,1,1,0,0,1,1};
         int [] sol = new int[]{0 ,1,0,1,0,1, 1, 0, 0,1,1,0,0,1,1,0,0};
 
-        ProbIA5Board board = new ProbIA5Board(prob, sol );
+        TemporalSoItWorks board = new TemporalSoItWorks(prob, sol );
 
         // Create the Problem object
         Problem p = new  Problem(board,
-                new ProbIA5SuccesorFunction(),
-                new ProbIA5GoalTest(),
-                new ProbIA5HeuristicFunction());
+                new ElectricitySuccesorFunction(),
+                new ElectricityGoalTest(),
+                new ElectricityHeuristicFunction());
 
         // Instantiate the search algorithm
         // AStarSearch(new GraphSearch()) or IterativeDeepeningAStarSearch()

@@ -10,6 +10,8 @@ public abstract class PowerPlant {
     int stopCost;
     boolean working=false;
 
+    Consumer supplying[];
+
 
 
     public static double computeNeededSupply(int supply,Position from, Position to){

@@ -7,7 +7,8 @@ public abstract class Consumer {
 
     int guaranteed,nonGuaranteed;
     int compensation=50;
-    int min,max;
+    double demand;
+    boolean isGuaranteed;
     Position position;
 
     PowerPlant supplier=null;
@@ -26,12 +27,18 @@ public abstract class Consumer {
     }
 
 
-    protected void assign(Position position) {
+    protected void assign(Position position, boolean guaranteed,double demand) {
         this.position = position;
+        this.isGuaranteed = guaranteed;
+        this.demand = demand;
     }
 
     public void setSupplier(PowerPlant powerPlant){
         supplier = powerPlant;
+    }
+
+    public boolean isGuaranteed() {
+        return isGuaranteed;
     }
 }
 

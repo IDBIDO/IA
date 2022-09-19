@@ -1,11 +1,9 @@
 package IA.Electricity;
 
 public class ExtraLargeConsumer extends Consumer{
-    public ExtraLargeConsumer(Position position){
-        super.assign(position);
+    public ExtraLargeConsumer(Position position, Boolean garantizado, double demand){
+        super.assign(position,garantizado,demand);
         guaranteed = 400;
         nonGuaranteed = 300;
-        min = 5;
-        max = 20;
     }
 }

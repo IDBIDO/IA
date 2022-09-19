@@ -1,4 +1,4 @@
-import IA.Electricity.Central;
+import IA.Electricity.TemporalSoItWorks;
 import IA.Electricity.ElectricityGoalTest;
 import IA.Electricity.ElectricityHeuristicFunction;
 import IA.Electricity.ElectricitySuccesorFunction;
@@ -12,7 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+
 public class AIMAMain {
+
+
 
     public static void main(String[] args) throws Exception{
         /**
@@ -22,7 +25,7 @@ public class AIMAMain {
         int [] prob = new int []{1 ,1,1,1,1,1, 1, 1, 0,0,0,1,1,0,0,1,1};
         int [] sol = new int[]{0 ,1,0,1,0,1, 1, 0, 0,1,1,0,0,1,1,0,0};
 
-        Central board = new Central(prob, sol );
+        TemporalSoItWorks board = new TemporalSoItWorks(prob, sol );
 
         // Create the Problem object
         Problem p = new  Problem(board,

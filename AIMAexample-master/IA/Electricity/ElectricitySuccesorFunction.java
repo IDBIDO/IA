@@ -12,7 +12,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
 
     public List getSuccessors(Object state){
         ArrayList retval = new ArrayList();
-        Central status = (Central) state;
+        TemporalSoItWorks status = (TemporalSoItWorks) state;
 
 
         // Some code here
@@ -21,7 +21,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         // new_state has to be a copy of state
 
         for(int i=0;i<status.obtainBoard().length-1;++i){
-            Central probIA5Board = new Central(status.obtainBoard(),status.obtainGoal());
+            TemporalSoItWorks probIA5Board = new TemporalSoItWorks(status.obtainBoard(),status.obtainGoal());
             probIA5Board.flip_it(i);
             Successor successor = new Successor("flip "+Integer.toString(i)+" "+Integer.toString(i+1),probIA5Board);
             retval.add(successor);

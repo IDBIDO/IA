@@ -3,7 +3,7 @@ package IA.Electricity;
 /**
  * Created by bejar on 17/01/17.
  */
-public class Central {
+public class TemporalSoItWorks {
     /* Class independent from AIMA classes
        - It has to implement the state of the problem and its operators
      *
@@ -16,7 +16,7 @@ public class Central {
     private static int [] solution;
 
     /* Constructor */
-    public Central(int []init, int[] goal) {
+    public TemporalSoItWorks(int []init, int[] goal) {
 
         board = new int[init.length];
         solution = new int[init.length];
@@ -53,12 +53,12 @@ public class Central {
 
     /* auxiliary functions */
 
-    Central copy(){
+    TemporalSoItWorks copy(){
         int[] ret=new int[board.length];
         for(int i = 0;i<board.length;++i)
             ret[i]=board[i];
 
-        return new Central(ret,solution);
+        return new TemporalSoItWorks(ret,solution);
     }
     int[] obtainBoard(){
         return board;

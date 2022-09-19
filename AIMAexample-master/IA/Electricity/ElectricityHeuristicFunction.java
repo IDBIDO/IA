@@ -10,6 +10,6 @@ public class ElectricityHeuristicFunction implements HeuristicFunction {
 
     public double getHeuristicValue(Object n){
 
-        return ((Central) n).heuristic();
+        return ((TemporalSoItWorks) n).heuristic();
     }
 }

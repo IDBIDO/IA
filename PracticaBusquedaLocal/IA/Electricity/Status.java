@@ -1,49 +1,30 @@
 package IA.Electricity;
 
 public class Status {
+    Centrales centrales;
+    Clientes clientes;
+    public Status() throws Exception {
+        int seed = 10;
 
-    Consumer consumers[];
+        centrales= new Centrales(new int[]{5, 5, 5},seed);
+        clientes = new Clientes(30,new double[]{0.4,0.4,0.2},0.4,seed);
 
-    PowerPlant powerPlants[];
-
-    public Status(int consumers[],int powerPlants[]){
-        this.consumers = new Consumer[consumers[0]+consumers[1]+consumers[2]];
-        int aux =0;
-        for(int i=0;i<consumers.length();++i){
-            for(int j=0;j<consumers[i];++j){
-                Consumer consumer;
-
-                boolean guaranteed = Math.random()>=0.5;
-                Position position = new Position((int)(Math.random()*100),(int)(Math.random()*100));
-
-                if(i==0)consumer=new LargeConsumer(position,guaranteed,randomRange(1,2));
-                else if(i==1)consumer = new VeryLargeConsumer(position,guaranteed,randomRange(2,5));
-                else consumer = new ExtraLargeConsumer(position,guaranteed,randomRange(5,20));
-
-                this.consumers[aux]=consumer;
-
-                aux+=1;
-            }
-        }
-        this.powerPlants= new PowerPlant[powerPlants[0]+powerPlants[1]+powerPlants[2]];
-        aux = 0;
-        for(int i=0;i<powerPlants.length();++i){
-            for(int j=0;j<consumers[i];++j){
-                PowerPlant powerPlant;
-
-                if(i==0)powerPlant=new APowerPlant();
-                else if(i==1)powerPlant = new BPowerPlant();
-                else powerPlant = new CPowerPlant();
-
-                this.powerPlants[aux]=powerPlant;
-
-                aux+=1;
-            }
-        }
+        centrales.print();
+        clientes.print();
     }
 
-    public static double randomRange(double min,double max){
-        return (Math.random()*(max-min))+min;
-    }
+    //Funcion que calcule el beneficio
+    double beneficio(){return 0;}
+
+    //Asigna Centrales a clientes y clientes a centrales en una configuración valida.
+    void initialSolution1(){}
+
+    //Asigna Centrales a clientes y clientes a centrales en una configuración valida.
+    void initialSolution2(){}
+
+    //OPERADORES
+    //void swap(Central central1, Central central2){}
+    //void mueveCliente(Cliente cliente, Central centralDestino){}
+    //void mueveBulk(Clientes clientes, Central centralDestino){}
 
 }

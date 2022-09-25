@@ -39,6 +39,7 @@ public class Central {
     }
 
     public void deleteClient(Cliente client){
+        if(client.estaServido())client.unsetCentral();
         if(client.isGuaranteed())
             servingGuaranteed.remove(client);
         else
@@ -46,18 +47,22 @@ public class Central {
     }
 
     public void addClient(Cliente client){
-        if(client.isGuaranteed())
-            servingGuaranteed.add(client);
-        else
-            servingNotGuaranteed.add(client);
+        if(!servingGuaranteed.contains(client)&& !servingNotGuaranteed.contains(client)) {
+            if (client.isGuaranteed())
+                servingGuaranteed.add(client);
+            else
+                servingNotGuaranteed.add(client);
+
+            if(client.getServer()!=this)client.setCentral(this);
+        }
     }
 
-    public int totalServedWithLoss(){
-        int served=0;
-        for(int i=0;i<servingGuaranteed.size() & served<Produccion;++i){
+    public double totalServedWithLoss(){
+        double served=0;
+        for(int i=0;i<servingGuaranteed.size() && served<Produccion;++i){
             served+=(servingGuaranteed.get(i).getConsumo()*(1+VEnergia.getPerdida(getCoordX(),getCoordY(),servingGuaranteed.get(i).getCoordX(),servingGuaranteed.get(i).getCoordY())));
         }
-        for(int i=0;i<servingNotGuaranteed.size() & served<Produccion;++i) {
+        for(int i=0;i<servingNotGuaranteed.size() && served<Produccion;++i) {
             served += (servingNotGuaranteed.get(i).getConsumo()*(1+VEnergia.getPerdida(getCoordX(),getCoordY(),servingNotGuaranteed.get(i).getCoordX(),servingNotGuaranteed.get(i).getCoordY())));
         }
         return served;

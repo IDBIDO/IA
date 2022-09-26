@@ -10,5 +10,6 @@ public class TestEnergia {
 
     public static void main(String[] var0) throws Exception {
         Status status= new Status();
+        status.initialSolution1(true);
     }
 }

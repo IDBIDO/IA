@@ -35,8 +35,63 @@ public class Status {
         }
     }
 
+    double gananciaCliente(Cliente cliente) throws Exception {
+        int tipo = cliente.getTipo();
+        double consumo = cliente.getConsumo();
+        boolean garantizado = cliente.isGuaranteed();
+
+        double precio;
+        if (garantizado)
+            precio = VEnergia.getTarifaClienteGarantizada(tipo);
+        else
+            precio = VEnergia.getTarifaClienteNoGarantizada(tipo);
+        return precio*consumo;
+    }
+
     //Funcion que calcule el beneficio
-    double beneficio(){return 0;}
+    double beneficioPorCentral() throws Exception{
+        double beneficioTotal = 0;
+        ArrayList<Double>costeCentrales = new ArrayList<Double>(centrales.size());
+        for (int i = 0; i < centrales.size(); ++i) {
+            double costeCentral = 0;
+            if (centrales.get(i).totalServedWithLoss() > 0) {
+                int tipo = centrales.get(i).getTipo();
+                double costeProduccionMW = VEnergia.getCosteProduccionMW(tipo);
+                double costeMarcha = VEnergia.getCosteMarcha(tipo);
+                double costeParada = VEnergia.getCosteParada(tipo);
+                costeCentral = costeProduccionMW*costeMarcha + costeParada;
+                costeCentrales.add(i, costeCentral);
+            }
+            else {
+                costeCentrales.add(i, 0.0);
+            }
+        }
+        System.out.println("Coste actual de las centrales que estan en marcha: ");
+        System.out.println(costeCentrales);
+        System.out.println("Coste total: " + costeCentrales.stream().reduce(0.0, (a, b) -> a + b));
+
+        ArrayList<Double>beneficioCentrales = new ArrayList<>(centrales.size());
+        for(int i = 0; i < centrales.size(); ++i) {
+            double ganancias = 0;
+            Central centralActual = centrales.get(i);
+            ArrayList<Cliente> clientes = centralActual.getServing();
+
+            double consumoTotal = 0;
+            for (int c = 0; c < clientes.size(); ++c) {
+                ganancias += this.gananciaCliente(clientes.get(c));
+            }
+
+            beneficioCentrales.add(i, ganancias - costeCentrales.get(i));
+        }
+        System.out.println("Beneficios de las centrales: ");
+        System.out.println(beneficioCentrales);
+        System.out.println("Beneficio total: " + beneficioCentrales.stream().reduce(0.0, (a, b) -> a + b));
+
+
+        return 0;
+
+
+    }
 
     //Asigna Centrales a clientes y clientes a centrales en una configuración valida.
     void initialSolution1(boolean includeNoGuaranteed){

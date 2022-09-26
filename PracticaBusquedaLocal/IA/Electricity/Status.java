@@ -1,6 +1,7 @@
 package IA.Electricity;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Status {
     Centrales centrales;
@@ -38,7 +39,39 @@ public class Status {
     double beneficio(){return 0;}
 
     //Asigna Centrales a clientes y clientes a centrales en una configuración valida.
-    void initialSolution1(){}
+    void initialSolution1(boolean includeNoGuaranteed){
+        Random r = new Random();
+        int actualCentralIndex = r.nextInt(centrales.size()-1);
+
+        //solo clientes garantizados
+        int i = 0;
+
+        while (i < clientes.size()) {
+            boolean includeClient = clientes.get(i).isGuaranteed();
+            if (includeNoGuaranteed) includeClient = true;
+            if (includeClient) {
+                Central actualCentral = centrales.get(actualCentralIndex);
+                double capacidadRestante = actualCentral.getProduccion() - actualCentral.totalServedWithLoss();
+                double perdidaConsumoCliente = clientes.get(i).getConsumo()*(1+VEnergia.getPerdida(actualCentral.getCoordX(),actualCentral.getCoordY(),clientes.get(i).getCoordX(),clientes.get(i).getCoordY()));
+                if (capacidadRestante >= perdidaConsumoCliente) {
+                    actualCentral.addClient(clientes.get(i));
+                    clientes.get(i).setCentral(actualCentral);
+                } else {
+                    --i;
+                }
+
+                actualCentralIndex = r.nextInt(centrales.size()-1);
+            }
+            ++i;
+        }
+        System.out.println("------------------------------------------ ");
+
+        System.out.println("Initial solutions: ");
+        centrales.print();
+        clientes.print();
+        //System.out.println(centrales.size());
+        //System.out.println(actualCentralIndex);
+    }
 
     //Asigna Centrales a clientes y clientes a centrales en una configuración valida.
     void initialSolution2(){}

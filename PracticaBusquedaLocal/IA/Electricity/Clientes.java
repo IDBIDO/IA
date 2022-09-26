@@ -53,7 +53,7 @@ public class Clientes extends ArrayList<Cliente> {
             System.out.print("Es garantizado: "+this.get(i).isGuaranteed()+ " Esta servido: "+this.get(i).estaServido()+" ");
             System.out.print("Consumo: "+this.get(i).getConsumo());
             if(get(i).estaServido()){
-                System.out.print("Le sirve la central en las coordenadas: ("+this.get(i).getServer().getCoordX()+ ", "+this.get(i).getServer().getCoordY()+")");
+                System.out.print(" --- Le sirve la central en las coordenadas: ("+this.get(i).getServer().getCoordX()+ ", "+this.get(i).getServer().getCoordY()+")");
             }
             System.out.print("\n");
         }

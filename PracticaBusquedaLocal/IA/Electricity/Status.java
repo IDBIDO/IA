@@ -1,6 +1,8 @@
 package IA.Electricity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 public class Status {
@@ -9,8 +11,8 @@ public class Status {
     public Status() throws Exception {
         int seed = 10;
 
-        centrales= new Centrales(new int[]{5, 5, 5},seed);
-        clientes = new Clientes(30,new double[]{0.4,0.4,0.2},0.4,seed);
+        centrales= new Centrales(new int[]{1, 0, 0},seed);
+        clientes = new Clientes(80,new double[]{0.4,0.4,0.2},0.4,seed);
 
 
         /*
@@ -35,9 +37,10 @@ public class Status {
         }
     }
 
-    double gananciaCliente(Cliente cliente) throws Exception {
+    double gananciaCliente(Cliente cliente, double consumo) throws Exception {
+        double fine = (cliente.getConsumo()-consumo)*cliente.getCompensation();
+
         int tipo = cliente.getTipo();
-        double consumo = cliente.getConsumo();
         boolean garantizado = cliente.isGuaranteed();
 
         double precio;
@@ -45,7 +48,7 @@ public class Status {
             precio = VEnergia.getTarifaClienteGarantizada(tipo);
         else
             precio = VEnergia.getTarifaClienteNoGarantizada(tipo);
-        return precio*consumo;
+        return precio*consumo-fine;
     }
 
     //Funcion que calcule el beneficio
@@ -54,16 +57,16 @@ public class Status {
         ArrayList<Double>costeCentrales = new ArrayList<Double>(centrales.size());
         for (int i = 0; i < centrales.size(); ++i) {
             double costeCentral = 0;
+            int tipo = centrales.get(i).getTipo();
             if (centrales.get(i).totalServedWithLoss() > 0) {
-                int tipo = centrales.get(i).getTipo();
                 double costeProduccionMW = VEnergia.getCosteProduccionMW(tipo);
                 double costeMarcha = VEnergia.getCosteMarcha(tipo);
-                double costeParada = VEnergia.getCosteParada(tipo);
-                costeCentral = costeProduccionMW*costeMarcha + costeParada;
+                costeCentral = costeProduccionMW*centrales.get(i).getProduccion()+costeMarcha;
                 costeCentrales.add(i, costeCentral);
             }
             else {
-                costeCentrales.add(i, 0.0);
+                double costeParada = VEnergia.getCosteParada(tipo);
+                costeCentrales.add(i, costeParada);
             }
         }
         System.out.println("Coste actual de las centrales que estan en marcha: ");
@@ -75,11 +78,42 @@ public class Status {
             double ganancias = 0;
             Central centralActual = centrales.get(i);
             ArrayList<Cliente> clientes = centralActual.getServing();
+            Collections.sort(clientes, new Comparator<Cliente>() {
+                @Override
+                public int compare(Cliente cliente1, Cliente cliente2) {
+                    //We want to serve the smaller clients first since they pay the MW at a higher price than the bigger ones
 
-            double consumoTotal = 0;
-            for (int c = 0; c < clientes.size(); ++c) {
-                ganancias += this.gananciaCliente(clientes.get(c));
+                    //TODO:
+                    //Perhaps the energy distribution should be decided by the search algorithm and not by this function
+                    //Since otherwise, we are bounding the problem.
+
+                    if(cliente1.isGuaranteed() && !cliente2.isGuaranteed())return -1;
+                    else if(cliente1.isGuaranteed()&&cliente2.isGuaranteed()){
+                        if(cliente1.getTipo()>cliente2.getTipo())
+                            return -1;
+                        else return 1;
+                    }
+                    else{
+                        if(cliente1.getTipo()>cliente2.getTipo())
+                            return -1;
+                        else return 1;
+                    }
+                }
+            });
+
+            double capacidadCentral = centralActual.getProduccion();
+
+            for(int j=0; j<clientes.size();++j){
+                if(clientes.get(j).getConsumo()>capacidadCentral){
+                    ganancias+=gananciaCliente(clientes.get(j),capacidadCentral);
+                    capacidadCentral=0;
+                }
+                else{
+                    ganancias+=gananciaCliente(clientes.get(j),clientes.get(j).getConsumo());
+                    capacidadCentral-=clientes.get(j).getConsumo();
+                }
             }
+
 
             beneficioCentrales.add(i, ganancias - costeCentrales.get(i));
         }
@@ -89,11 +123,9 @@ public class Status {
 
 
         return 0;
-
-
     }
 
-    //Asigna Centrales a clientes y clientes a centrales en una configuración valida.
+    //Asigna Centrales a clientes y clientes a centrales.
     void initialSolution1(boolean includeNoGuaranteed){
         Random r = new Random();
         int actualCentralIndex = r.nextInt(centrales.size()-1);

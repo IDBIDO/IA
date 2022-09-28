@@ -68,6 +68,10 @@ public class Central {
         return served;
     }
 
+    public boolean powerPlantOverLoaded(){
+        return totalServedWithLoss()>this.getProduccion();
+    }
+
     public int getCoordY() {
         return this.CoordY;
     }

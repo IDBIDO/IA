@@ -93,4 +93,9 @@ public class Cliente {
     public boolean isGuaranteed() {
         return Contrato==GARANTIZADO;
     }
+
+    public double getCompensation() throws Exception {
+        if(!isGuaranteed())return 0;
+        else return VEnergia.getTarifaClientePenalizacion(getTipo());
+    }
 }

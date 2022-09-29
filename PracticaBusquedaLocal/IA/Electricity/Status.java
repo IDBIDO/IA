@@ -246,6 +246,13 @@ public class Status {
     }
 
 
+    //operadores
+
+    /**
+     *intercambia los clientes de las centrales central1 y central2
+     * @param central1
+     * @param central2
+     */
     void swap(Central central1, Central central2){
         ArrayList<Cliente> tmp = central1.getServing();
         //Clientes de la central2 se copian en la central1

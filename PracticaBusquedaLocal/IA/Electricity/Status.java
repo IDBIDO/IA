@@ -245,9 +245,69 @@ public class Status {
         //System.out.println(actualCentralIndex);
     }
 
-    //OPERADORES
-    //void swap(Central central1, Central central2){}
-    //void mueveCliente(Cliente cliente, Central centralDestino){}
-    //void mueveBulk(Clientes clientes, Central centralDestino){}
+
+    void swap(Central central1, Central central2){
+        ArrayList<Cliente> tmp = central1.getServing();
+        //Clientes de la central2 se copian en la central1
+        eliminaClientes(central1);
+        addClientes(central1,central2.getServing());
+        //Clientes de la central1 se copian en la central2
+        eliminaClientes(central2);
+        addClientes(central2,tmp);
+    }
+
+    /**
+     * cambia la central del cliente a la centralDestino
+     * @param cliente
+     * @param centralDestino
+     */
+    void mueveCliente(Cliente cliente, Central centralDestino){
+        cliente.setCentral(centralDestino);
+    }
+
+    /**
+     * mueve un conjunto de clientes a una centralDesinto
+     * @param clientes
+     * @param centralDestino
+     */
+    void mueveBulk(Clientes clientes, Central centralDestino){
+        for (Cliente c : clientes)
+            c.setCentral(centralDestino);
+    }
+
+    /**
+     * desasigna el cliente de su central
+     * @param cliente
+     */
+    void quitarCliente(Cliente cliente){
+        cliente.unsetCentral();
+    }
+
+    /**
+     * asigna el cliente a una central
+     * @param cliente
+     * @param central
+     */
+    void asignarCliente(Cliente cliente, Central central){ cliente.setCentral(central);}
+
+    //Auxiliares
+    /**
+     * elimina todos los clientes de la central
+     * @param central
+     */
+    void eliminaClientes(Central central){
+        while (!central.getServing().isEmpty())
+            central.deleteClient(central.getServing().get(0));
+    }
+
+    /**
+     * copia todos los clientes de la ArrayList clientes a la central destino
+     * @param destino
+     * @param clientes
+     */
+    void addClientes(Central destino, ArrayList<Cliente> clientes){
+        for ( Cliente c : clientes)
+            destino.addClient(c);
+    }
 
 }

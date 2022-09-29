@@ -133,35 +133,39 @@ public class Status {
     }
 
     //Asigna Centrales a clientes de manera que no sobrepasa la capacidad de una central
-    void initialSolution1(){
+    void initialSolution1(boolean includeNoGuaranteed){
         Random r = new Random();
+
         int actualCentralIndex = r.nextInt(centrales.size());
 
         //solo clientes garantizados
         int i = 0;
 
         while (i < clientes.size()) {
-            Central actualCentral = centrales.get(actualCentralIndex);
-            double capacidadRestante = actualCentral.getProduccion() - actualCentral.totalServedWithLoss();
-            double perdidaConsumoCliente = clientes.get(i).getConsumo()*(1+VEnergia.getPerdida(actualCentral.getCoordX(),actualCentral.getCoordY(),clientes.get(i).getCoordX(),clientes.get(i).getCoordY()));
-            if (capacidadRestante >= perdidaConsumoCliente) {
-                actualCentral.addClient(clientes.get(i));
-                clientes.get(i).setCentral(actualCentral);
-            } else {
-                --i;
+            boolean includeClient = clientes.get(i).isGuaranteed();
+            if (includeNoGuaranteed) includeClient = true;
+            if (includeClient) {
+                Central actualCentral = centrales.get(actualCentralIndex);
+                double capacidadRestante = actualCentral.getProduccion() - actualCentral.totalServedWithLoss();
+                double perdidaConsumoCliente = clientes.get(i).getConsumo()*(1+VEnergia.getPerdida(actualCentral.getCoordX(),actualCentral.getCoordY(),clientes.get(i).getCoordX(),clientes.get(i).getCoordY()));
+                if (capacidadRestante >= perdidaConsumoCliente) {
+                    actualCentral.addClient(clientes.get(i));
+                    clientes.get(i).setCentral(actualCentral);
+                } else {
+                    --i;
+                }
+
+                actualCentralIndex = r.nextInt(centrales.size());
             }
-            actualCentralIndex = r.nextInt(centrales.size());
             ++i;
         }
-
         System.out.println("------------------------------------------ ");
+
         System.out.println("Initial solutions: ");
         centrales.print();
         clientes.print();
-        //System.out.println(centrales.size());
-        //System.out.println(actualCentralIndex);
-    }
 
+    }
     //Asigna Centrales a clientes y clientes a centrales de forma aleatoria
     void initialSolution2(){
         Random r = new Random();

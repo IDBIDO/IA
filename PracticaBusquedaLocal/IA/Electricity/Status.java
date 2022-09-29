@@ -249,9 +249,9 @@ public class Status {
     //operadores
 
     /**
-     *intercambia los clientes de las centrales central1 y central2
-     * @param central1
-     * @param central2
+     *intercambia los clientes de las centrales
+     * @param central1 central a la que se asignaran los clientes de central2
+     * @param central2 central a la que asignaran los clientes de central1
      */
     void swap(Central central1, Central central2){
         ArrayList<Cliente> tmp = central1.getServing();
@@ -265,8 +265,8 @@ public class Status {
 
     /**
      * cambia la central del cliente a la centralDestino
-     * @param cliente
-     * @param centralDestino
+     * @param cliente cliente a cambiar
+     * @param centralDestino central a la que asignar el cliente
      */
     void mueveCliente(Cliente cliente, Central centralDestino){
         cliente.setCentral(centralDestino);
@@ -274,8 +274,8 @@ public class Status {
 
     /**
      * mueve un conjunto de clientes a una centralDesinto
-     * @param clientes
-     * @param centralDestino
+     * @param clientes lista de clientes a asignar
+     * @param centralDestino central a la que se asignaran los clientes
      */
     void mueveBulk(Clientes clientes, Central centralDestino){
         for (Cliente c : clientes)
@@ -284,7 +284,7 @@ public class Status {
 
     /**
      * desasigna el cliente de su central
-     * @param cliente
+     * @param cliente cliente a desasignar.
      */
     void quitarCliente(Cliente cliente){
         cliente.unsetCentral();
@@ -292,15 +292,15 @@ public class Status {
 
     /**
      * asigna el cliente a una central
-     * @param cliente
-     * @param central
+     * @param cliente cliente a asignar
+     * @param central central a la que se asignará cliente
      */
     void asignarCliente(Cliente cliente, Central central){ cliente.setCentral(central);}
 
     //Auxiliares
     /**
      * elimina todos los clientes de la central
-     * @param central
+     * @param central central de la que se deben eliminar los clientes
      */
     void eliminaClientes(Central central){
         while (!central.getServing().isEmpty())
@@ -309,8 +309,8 @@ public class Status {
 
     /**
      * copia todos los clientes de la ArrayList clientes a la central destino
-     * @param destino
-     * @param clientes
+     * @param destino central a la que se asignaran los clientes
+     * @param clientes vector de clientes a asignar
      */
     void addClientes(Central destino, ArrayList<Cliente> clientes){
         for ( Cliente c : clientes)

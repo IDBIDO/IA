@@ -120,37 +120,78 @@ public class Status {
         return 0;
     }
 
+    boolean canServe(Central central, Cliente cliente) {
+        double capacidadRestante = central.getProduccion() - central.totalServedWithLoss();
+        double perdidaConsumoCliente = cliente.getConsumo()*(1+VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY()));
+        if (capacidadRestante >= perdidaConsumoCliente) {
+            return true;
+        }
+        return false;
+    }
+
+    int anyCentralCanServe(Cliente cliente) {
+        for (int i = 0; i < centrales.size(); ++i) {
+            if (canServe(centrales.get(i),cliente)) return i;
+        }
+        return -1;
+    }
+
     //Asigna Centrales a clientes de manera que no sobrepasa la capacidad de una central
-    //Y trata de minimizar el número de centrales activas
-    void initialSolution1(){
+
+    void initialSolution1(boolean includeNoGuaranteed){
+
         Random r = new Random();
+
         int actualCentralIndex = r.nextInt(centrales.size());
 
         int i = 0;
 
         while (i < clientes.size()) {
-            Central actualCentral = centrales.get(actualCentralIndex);
-            double capacidadRestante = actualCentral.getProduccion() - actualCentral.totalServedWithLoss();
-            double perdidaConsumoCliente = clientes.get(i).getConsumo()*(1+VEnergia.getPerdida(actualCentral.getCoordX(),actualCentral.getCoordY(),clientes.get(i).getCoordX(),clientes.get(i).getCoordY()));
-            if (capacidadRestante >= perdidaConsumoCliente) {
-                actualCentral.addClient(clientes.get(i));
-                clientes.get(i).setCentral(actualCentral);
-            } else {
-                --i;
+
+            if (clientes.get(i).isGuaranteed()) {
+                Central actualCentral = centrales.get(actualCentralIndex);
+                if (canServe(actualCentral, clientes.get(i))) {
+                    actualCentral.addClient(clientes.get(i));
+                    clientes.get(i).setCentral(actualCentral);
+                }
+                else {
+                    --i;
+                }
+                actualCentralIndex = r.nextInt(centrales.size());
+
+            }
+            ++i;
+        }
+        i = 0;
+        //asign noguaranteed client
+        if (includeNoGuaranteed)
+        while (i < clientes.size()) {
+
+            if (!clientes.get(i).isGuaranteed()) {
+                Central actualCentral = centrales.get(actualCentralIndex);
+                if (canServe(actualCentral, clientes.get(i))) {
+                    actualCentral.addClient(clientes.get(i));
+                    clientes.get(i).setCentral(actualCentral);
+                } else {
+                    int rcode = anyCentralCanServe(clientes.get(i));
+                    if (rcode > 0) {
+                        --i;
+                    }
+                    else break;
+                }
                 actualCentralIndex = r.nextInt(centrales.size());
             }
             ++i;
         }
-
         System.out.println("------------------------------------------ ");
+
         System.out.println("Initial solutions: ");
         centrales.print();
         clientes.print();
-        //System.out.println(centrales.size());
-        //System.out.println(actualCentralIndex);
-    }
+
 
     //Asigna Centrales a clientes y clientes a centrales de forma aleatoria sin sobrepasar la capacidad de ninguna central
+
     void initialSolution2(){
         Random r = new Random();
 
@@ -245,9 +286,76 @@ public class Status {
         //System.out.println(actualCentralIndex);
     }
 
-    //OPERADORES
-    //void swap(Central central1, Central central2){}
-    //void mueveCliente(Cliente cliente, Central centralDestino){}
-    //void mueveBulk(Clientes clientes, Central centralDestino){}
+
+    //operadores
+
+    /**
+     *intercambia los clientes de las centrales
+     * @param central1 central a la que se asignaran los clientes de central2
+     * @param central2 central a la que asignaran los clientes de central1
+     */
+    void swap(Central central1, Central central2){
+        ArrayList<Cliente> tmp = central1.getServing();
+        //Clientes de la central2 se copian en la central1
+        eliminaClientes(central1);
+        addClientes(central1,central2.getServing());
+        //Clientes de la central1 se copian en la central2
+        eliminaClientes(central2);
+        addClientes(central2,tmp);
+    }
+
+    /**
+     * cambia la central del cliente a la centralDestino
+     * @param cliente cliente a cambiar
+     * @param centralDestino central a la que asignar el cliente
+     */
+    void mueveCliente(Cliente cliente, Central centralDestino){
+        cliente.setCentral(centralDestino);
+    }
+
+    /**
+     * mueve un conjunto de clientes a una centralDesinto
+     * @param clientes lista de clientes a asignar
+     * @param centralDestino central a la que se asignaran los clientes
+     */
+    void mueveBulk(Clientes clientes, Central centralDestino){
+        for (Cliente c : clientes)
+            c.setCentral(centralDestino);
+    }
+
+    /**
+     * desasigna el cliente de su central
+     * @param cliente cliente a desasignar.
+     */
+    void quitarCliente(Cliente cliente){
+        cliente.unsetCentral();
+    }
+
+    /**
+     * asigna el cliente a una central
+     * @param cliente cliente a asignar
+     * @param central central a la que se asignará cliente
+     */
+    void asignarCliente(Cliente cliente, Central central){ cliente.setCentral(central);}
+
+    //Auxiliares
+    /**
+     * elimina todos los clientes de la central
+     * @param central central de la que se deben eliminar los clientes
+     */
+    void eliminaClientes(Central central){
+        while (!central.getServing().isEmpty())
+            central.deleteClient(central.getServing().get(0));
+    }
+
+    /**
+     * copia todos los clientes de la ArrayList clientes a la central destino
+     * @param destino central a la que se asignaran los clientes
+     * @param clientes vector de clientes a asignar
+     */
+    void addClientes(Central destino, ArrayList<Cliente> clientes){
+        for ( Cliente c : clientes)
+            destino.addClient(c);
+    }
 
 }

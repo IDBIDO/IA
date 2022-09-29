@@ -120,37 +120,78 @@ public class Status {
         return 0;
     }
 
+    boolean canServe(Central central, Cliente cliente) {
+        double capacidadRestante = central.getProduccion() - central.totalServedWithLoss();
+        double perdidaConsumoCliente = cliente.getConsumo()*(1+VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY()));
+        if (capacidadRestante >= perdidaConsumoCliente) {
+            return true;
+        }
+        return false;
+    }
+
+    int anyCentralCanServe(Cliente cliente) {
+        for (int i = 0; i < centrales.size(); ++i) {
+            if (canServe(centrales.get(i),cliente)) return i;
+        }
+        return -1;
+    }
+
     //Asigna Centrales a clientes de manera que no sobrepasa la capacidad de una central
-    //Y trata de minimizar el número de centrales activas
-    void initialSolution1(){
+
+    void initialSolution1(boolean includeNoGuaranteed){
+
         Random r = new Random();
+
         int actualCentralIndex = r.nextInt(centrales.size());
 
         int i = 0;
 
         while (i < clientes.size()) {
-            Central actualCentral = centrales.get(actualCentralIndex);
-            double capacidadRestante = actualCentral.getProduccion() - actualCentral.totalServedWithLoss();
-            double perdidaConsumoCliente = clientes.get(i).getConsumo()*(1+VEnergia.getPerdida(actualCentral.getCoordX(),actualCentral.getCoordY(),clientes.get(i).getCoordX(),clientes.get(i).getCoordY()));
-            if (capacidadRestante >= perdidaConsumoCliente) {
-                actualCentral.addClient(clientes.get(i));
-                clientes.get(i).setCentral(actualCentral);
-            } else {
-                --i;
+
+            if (clientes.get(i).isGuaranteed()) {
+                Central actualCentral = centrales.get(actualCentralIndex);
+                if (canServe(actualCentral, clientes.get(i))) {
+                    actualCentral.addClient(clientes.get(i));
+                    clientes.get(i).setCentral(actualCentral);
+                }
+                else {
+                    --i;
+                }
+                actualCentralIndex = r.nextInt(centrales.size());
+
+            }
+            ++i;
+        }
+        i = 0;
+        //asign noguaranteed client
+        if (includeNoGuaranteed)
+        while (i < clientes.size()) {
+
+            if (!clientes.get(i).isGuaranteed()) {
+                Central actualCentral = centrales.get(actualCentralIndex);
+                if (canServe(actualCentral, clientes.get(i))) {
+                    actualCentral.addClient(clientes.get(i));
+                    clientes.get(i).setCentral(actualCentral);
+                } else {
+                    int rcode = anyCentralCanServe(clientes.get(i));
+                    if (rcode > 0) {
+                        --i;
+                    }
+                    else break;
+                }
                 actualCentralIndex = r.nextInt(centrales.size());
             }
             ++i;
         }
-
         System.out.println("------------------------------------------ ");
+
         System.out.println("Initial solutions: ");
         centrales.print();
         clientes.print();
-        //System.out.println(centrales.size());
-        //System.out.println(actualCentralIndex);
-    }
+
 
     //Asigna Centrales a clientes y clientes a centrales de forma aleatoria sin sobrepasar la capacidad de ninguna central
+
     void initialSolution2(){
         Random r = new Random();
 

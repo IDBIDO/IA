@@ -132,6 +132,22 @@ public class Status {
         return 0;
     }
 
+    boolean canServe(Central central, Cliente cliente) {
+        double capacidadRestante = central.getProduccion() - central.totalServedWithLoss();
+        double perdidaConsumoCliente = cliente.getConsumo()*(1+VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY()));
+        if (capacidadRestante >= perdidaConsumoCliente) {
+            return true;
+        }
+        return false;
+    }
+
+    int anyCentralCanServe(Cliente cliente) {
+        for (int i = 0; i < centrales.size(); ++i) {
+            if (canServe(centrales.get(i),cliente)) return i;
+        }
+        return -1;
+    }
+
     //Asigna Centrales a clientes de manera que no sobrepasa la capacidad de una central
     void initialSolution1(boolean includeNoGuaranteed){
         Random r = new Random();
@@ -142,19 +158,37 @@ public class Status {
         int i = 0;
 
         while (i < clientes.size()) {
-            boolean includeClient = clientes.get(i).isGuaranteed();
-            if (includeNoGuaranteed) includeClient = true;
-            if (includeClient) {
+            if (clientes.get(i).isGuaranteed()) {
                 Central actualCentral = centrales.get(actualCentralIndex);
-                double capacidadRestante = actualCentral.getProduccion() - actualCentral.totalServedWithLoss();
-                double perdidaConsumoCliente = clientes.get(i).getConsumo()*(1+VEnergia.getPerdida(actualCentral.getCoordX(),actualCentral.getCoordY(),clientes.get(i).getCoordX(),clientes.get(i).getCoordY()));
-                if (capacidadRestante >= perdidaConsumoCliente) {
+                if (canServe(actualCentral, clientes.get(i))) {
+                    actualCentral.addClient(clientes.get(i));
+                    clientes.get(i).setCentral(actualCentral);
+                }
+                else {
+                    --i;
+                }
+                actualCentralIndex = r.nextInt(centrales.size());
+
+            }
+            ++i;
+        }
+        i = 0;
+        //asign noguaranteed client
+        if (includeNoGuaranteed)
+        while (i < clientes.size()) {
+
+            if (!clientes.get(i).isGuaranteed()) {
+                Central actualCentral = centrales.get(actualCentralIndex);
+                if (canServe(actualCentral, clientes.get(i))) {
                     actualCentral.addClient(clientes.get(i));
                     clientes.get(i).setCentral(actualCentral);
                 } else {
-                    --i;
+                    int rcode = anyCentralCanServe(clientes.get(i));
+                    if (rcode > 0) {
+                        --i;
+                    }
+                    else break;
                 }
-
                 actualCentralIndex = r.nextInt(centrales.size());
             }
             ++i;

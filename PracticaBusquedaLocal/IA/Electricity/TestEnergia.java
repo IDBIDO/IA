@@ -10,7 +10,11 @@ public class TestEnergia {
 
     public static void main(String[] var0) throws Exception {
         Status status= new Status(14);
-        status.initialSolution4(); //RANDOM
+
+        status.initialSolution1(true); //RANDOM
+        status.initialSolution2(); //RANDOM
+
+
         status.beneficioPorCentral();
     }
 }

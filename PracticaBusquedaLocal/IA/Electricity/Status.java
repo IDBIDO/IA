@@ -138,7 +138,7 @@ public class Status {
 
     //Asigna Centrales a clientes de manera que no sobrepasa la capacidad de una central
 
-    void initialSolution1(boolean includeNoGuaranteed){
+    void initialSolution1(boolean includeNoGuaranteed) {
 
         Random r = new Random();
 
@@ -153,8 +153,7 @@ public class Status {
                 if (canServe(actualCentral, clientes.get(i))) {
                     actualCentral.addClient(clientes.get(i));
                     clientes.get(i).setCentral(actualCentral);
-                }
-                else {
+                } else {
                     --i;
                 }
                 actualCentralIndex = r.nextInt(centrales.size());
@@ -165,30 +164,29 @@ public class Status {
         i = 0;
         //asign noguaranteed client
         if (includeNoGuaranteed)
-        while (i < clientes.size()) {
+            while (i < clientes.size()) {
 
-            if (!clientes.get(i).isGuaranteed()) {
-                Central actualCentral = centrales.get(actualCentralIndex);
-                if (canServe(actualCentral, clientes.get(i))) {
-                    actualCentral.addClient(clientes.get(i));
-                    clientes.get(i).setCentral(actualCentral);
-                } else {
-                    int rcode = anyCentralCanServe(clientes.get(i));
-                    if (rcode > 0) {
-                        --i;
+                if (!clientes.get(i).isGuaranteed()) {
+                    Central actualCentral = centrales.get(actualCentralIndex);
+                    if (canServe(actualCentral, clientes.get(i))) {
+                        actualCentral.addClient(clientes.get(i));
+                        clientes.get(i).setCentral(actualCentral);
+                    } else {
+                        int rcode = anyCentralCanServe(clientes.get(i));
+                        if (rcode > 0) {
+                            --i;
+                        } else break;
                     }
-                    else break;
+                    actualCentralIndex = r.nextInt(centrales.size());
                 }
-                actualCentralIndex = r.nextInt(centrales.size());
+                ++i;
             }
-            ++i;
-        }
         System.out.println("------------------------------------------ ");
 
         System.out.println("Initial solutions: ");
         centrales.print();
         clientes.print();
-
+    }
 
     //Asigna Centrales a clientes y clientes a centrales de forma aleatoria sin sobrepasar la capacidad de ninguna central
 
@@ -290,11 +288,36 @@ public class Status {
     void swap(Central central1, Central central2){
         ArrayList<Cliente> tmp = central1.getServing();
         //Clientes de la central2 se copian en la central1
+
         eliminaClientes(central1);
         addClientes(central1,central2.getServing());
         //Clientes de la central1 se copian en la central2
         eliminaClientes(central2);
         addClientes(central2,tmp);
+    }
+
+    boolean canSwap(Cliente cliente1, Cliente cliente2) {
+        if (cliente1.estaServido() && cliente2.estaServido()) {
+            Central central1 = cliente1.getServer();
+            Central central2 = cliente2.getServer();
+
+        }
+        return false;
+    }
+
+    /**
+     * intercambio de centrales de cliente 1 y cliente 2
+     * @param cliente1
+     * @param cliente2
+     */
+    void swapCliente(Cliente cliente1, Cliente cliente2) {
+        Central central1 = cliente1.getServer();
+        Central aux1 = new Central(central1.getTipo(), central1.getProduccion(), central1.getCoordX(), central1.getCoordY());
+        Central central2 = cliente2.getServer();
+        //Central aux2 = new Central(central1.getTipo(), central1.getProduccion(), central1.getCoordX(), central1.getCoordY());
+
+        cliente1.setCentral(central2);
+        cliente2.setCentral(aux1);
     }
 
     /**

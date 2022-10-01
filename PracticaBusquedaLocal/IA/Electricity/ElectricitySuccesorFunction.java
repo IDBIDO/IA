@@ -10,26 +10,36 @@ import java.util.List;
  */
 public class ElectricitySuccesorFunction implements SuccessorFunction{
 
+    public List getSuccessors1(Object state) {
+        ArrayList retval = new ArrayList();
+        Status status = (Status) state;
+
+        //swap
+        for (int i = 0; i < status.centrales.size(); ++i) {
+            Central central = status.centrales.get(i);
+
+        }
+
+
+        return retval;
+    }
+
     public List getSuccessors(Object state){
         ArrayList retval = new ArrayList();
         TemporalSoItWorks status = (TemporalSoItWorks) state;
-
-
         // Some code here
         // (flip all the consecutive pairs of coins and generate new states
         // Add the states to retval as Succesor("flip i j", new_state)
         // new_state has to be a copy of state
 
         for(int i=0;i<status.obtainBoard().length-1;++i){
+            System.out.println(i);
             TemporalSoItWorks probIA5Board = new TemporalSoItWorks(status.obtainBoard(),status.obtainGoal());
             probIA5Board.flip_it(i);
             Successor successor = new Successor("flip "+Integer.toString(i)+" "+Integer.toString(i+1),probIA5Board);
             retval.add(successor);
         }
-
-
         return retval;
-
     }
 
 }

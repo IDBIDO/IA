@@ -51,12 +51,28 @@ public class Status {
         clientes.print();
     }
 
+    public Status(Status state) {
+        this.centrales = (Centrales)state.centrales.clone();
+        this.clientes = (Clientes)state.clientes.clone();
+
+    }
+
+    public void printState() {
+        centrales.print();
+        clientes.print();
+    }
+
     public void unAssignAll(){
         for(int i=0;i<centrales.size();++i){
             ArrayList<Cliente> clientes = centrales.get(i).getServing();
             for(int j=0;j<clientes.size();++j)
                 centrales.get(i).deleteClient(clientes.get(j));
         }
+    }
+
+    boolean equalCentral(Central central1, Central central2) {
+        if (central1.getCoordX() == central2.getCoordX() && central1.getCoordY() == central2.getCoordY()) return true;
+        return false;
     }
 
     double gananciaCliente(Cliente cliente) throws Exception {
@@ -129,6 +145,15 @@ public class Status {
         return false;
     }
 
+    boolean canServeSwaping(Central central, Cliente originalClient, Cliente swapCliente) {
+        double capacidadRestante = central.getProduccion() - central.totalServedWithLoss();
+        double perdidaConsumoCliente = swapCliente.getConsumo()*(1+VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),swapCliente.getCoordX(),swapCliente.getCoordY()));
+        double swapClientEnergy = originalClient.getConsumo();
+        if (capacidadRestante + swapClientEnergy >= perdidaConsumoCliente) {
+            return true;
+        }
+        return false;
+    }
     int anyCentralCanServe(Cliente cliente) {
         for (int i = 0; i < centrales.size(); ++i) {
             if (canServe(centrales.get(i),cliente)) return i;
@@ -296,11 +321,16 @@ public class Status {
         addClientes(central2,tmp);
     }
 
+
+
     boolean canSwap(Cliente cliente1, Cliente cliente2) {
+
         if (cliente1.estaServido() && cliente2.estaServido()) {
             Central central1 = cliente1.getServer();
             Central central2 = cliente2.getServer();
-
+            if (canServeSwaping(central1, cliente1, cliente2) && canServeSwaping(central2, cliente2, cliente1)) {
+                return true;
+            }
         }
         return false;
     }
@@ -315,9 +345,10 @@ public class Status {
         Central aux1 = new Central(central1.getTipo(), central1.getProduccion(), central1.getCoordX(), central1.getCoordY());
         Central central2 = cliente2.getServer();
         //Central aux2 = new Central(central1.getTipo(), central1.getProduccion(), central1.getCoordX(), central1.getCoordY());
-
-        cliente1.setCentral(central2);
-        cliente2.setCentral(aux1);
+        if (canSwap(cliente1, cliente2)) {
+            cliente1.setCentral(central2);
+            cliente2.setCentral(aux1);
+        }
     }
 
     /**

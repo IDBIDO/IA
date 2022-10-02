@@ -46,6 +46,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                         statusAux.asignarCliente(cliente1,central);
                         retval.add(new Successor("Asignar cliente no servido"+ String.valueOf(i) + "->" + "central " + String.valueOf(j) + "\n",
                                 statusAux));
+
                     }
                 }
             }

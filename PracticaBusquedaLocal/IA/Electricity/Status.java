@@ -51,12 +51,28 @@ public class Status {
         clientes.print();
     }
 
+    public Status(Status state) {
+        this.centrales = (Centrales)state.centrales.clone();
+        this.clientes = (Clientes)state.clientes.clone();
+
+    }
+
+    public void printState() {
+        centrales.print();
+        clientes.print();
+    }
+
     public void unAssignAll(){
         for(int i=0;i<centrales.size();++i){
             ArrayList<Cliente> clientes = centrales.get(i).getServing();
             for(int j=0;j<clientes.size();++j)
                 centrales.get(i).deleteClient(clientes.get(j));
         }
+    }
+
+    boolean equalCentral(Central central1, Central central2) {
+        if (central1.getCoordX() == central2.getCoordX() && central1.getCoordY() == central2.getCoordY()) return true;
+        return false;
     }
 
     double gananciaCliente(Cliente cliente) throws Exception {
@@ -129,6 +145,15 @@ public class Status {
         return false;
     }
 
+    boolean canServeSwaping(Central central, Cliente originalClient, Cliente swapCliente) {
+        double capacidadRestante = central.getProduccion() - central.totalServedWithLoss();
+        double perdidaConsumoCliente = swapCliente.getConsumo()*(1+VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),swapCliente.getCoordX(),swapCliente.getCoordY()));
+        double swapClientEnergy = originalClient.getConsumo();
+        if (capacidadRestante + swapClientEnergy >= perdidaConsumoCliente) {
+            return true;
+        }
+        return false;
+    }
     int anyCentralCanServe(Cliente cliente) {
         for (int i = 0; i < centrales.size(); ++i) {
             if (canServe(centrales.get(i),cliente)) return i;
@@ -187,6 +212,8 @@ public class Status {
         centrales.print();
         clientes.print();
     }
+
+
 
 
     //Asigna Centrales a clientes y clientes a centrales de forma aleatoria sin sobrepasar la capacidad de ninguna central
@@ -296,11 +323,42 @@ public class Status {
     void swap(Central central1, Central central2){
         ArrayList<Cliente> tmp = central1.getServing();
         //Clientes de la central2 se copian en la central1
+
         eliminaClientes(central1);
         addClientes(central1,central2.getServing());
         //Clientes de la central1 se copian en la central2
         eliminaClientes(central2);
         addClientes(central2,tmp);
+    }
+
+
+
+    boolean canSwap(Cliente cliente1, Cliente cliente2) {
+
+        if (cliente1.estaServido() && cliente2.estaServido()) {
+            Central central1 = cliente1.getServer();
+            Central central2 = cliente2.getServer();
+            if (canServeSwaping(central1, cliente1, cliente2) && canServeSwaping(central2, cliente2, cliente1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * intercambio de centrales de cliente 1 y cliente 2
+     * @param cliente1
+     * @param cliente2
+     */
+    void swapCliente(Cliente cliente1, Cliente cliente2) {
+        Central central1 = cliente1.getServer();
+        Central aux1 = new Central(central1.getTipo(), central1.getProduccion(), central1.getCoordX(), central1.getCoordY());
+        Central central2 = cliente2.getServer();
+        //Central aux2 = new Central(central1.getTipo(), central1.getProduccion(), central1.getCoordX(), central1.getCoordY());
+        if (canSwap(cliente1, cliente2)) {
+            cliente1.setCentral(central2);
+            cliente2.setCentral(aux1);
+        }
     }
 
     /**

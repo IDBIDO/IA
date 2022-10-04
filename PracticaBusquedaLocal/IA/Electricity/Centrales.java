@@ -12,9 +12,11 @@ public class Centrales{
     private static final int[] TIPO = new int[]{0, 1, 2};
 
     Map<Integer,Central> centrales;
+    ArrayList<Integer>idsClientes;
 
     public Centrales(int[] powerPlantsPerType, int seed) throws Exception {
         centrales = new LinkedHashMap<Integer,Central>();
+        idsClientes = new ArrayList<Integer>();
         if (powerPlantsPerType.length != 3) {
             throw new Exception("Vector Centrales de tamaño incorrecto");
         } else {
@@ -26,6 +28,7 @@ public class Centrales{
                     double var4 = this.myRandom.nextDouble() * prod[i][0] + prod[i][1];
                     Central central = new Central(TIPO[i], truncate(var4), this.myRandom.nextInt(100), this.myRandom.nextInt(100),count);
                     this.centrales.put(count,central);
+                    this.idsClientes.add(count);
                     ++count;
                 }
             }
@@ -38,7 +41,7 @@ public class Centrales{
     }
 
     public int size(){
-        return this.size();
+        return centrales.size();
     }
 
     public Centrales(Centrales centrales){
@@ -47,16 +50,17 @@ public class Centrales{
         }
     }
 
-
-    public void print(){
-        System.out.println("CENTRALES:");
-        for(int i=0;i<this.centrales.size();++i){
-            System.out.print("Coordenadas: ("+ this.centrales.get(i).getCoordX()+" "+this.centrales.get(i).getCoordY()+") ");
-            System.out.print("Capacidad max: "+this.centrales.get(i).getProduccion()+" Capacidad usada: "+this.centrales.get(i).totalServedWithLoss()+"\n");
-        }
+    public ArrayList<Integer>getIds(){
+        return this.idsClientes;
     }
+
+
 
     private static double truncate(double var0) {
         return Math.floor(var0 * 100.0) / 100.0;
+    }
+
+    public Iterable<? extends Map.Entry<Integer, Central>> entrySet() {
+        return centrales.entrySet();
     }
 }

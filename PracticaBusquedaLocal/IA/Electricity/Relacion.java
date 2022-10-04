@@ -5,7 +5,7 @@ import java.util.Set;
 public class Relacion {
     double MWVendidos;
     double MWUsados;
-
+    int idCentral;
     double ganancia;
     Set<Integer> clientes;
 
@@ -13,6 +13,7 @@ public class Relacion {
         this.MWVendidos = 0;
         this.MWUsados = 0;
         this.ganancia = 0;
+        this.idCentral = idCentral;
         this.clientes = clientes;
     }
 
@@ -34,6 +35,10 @@ public class Relacion {
 
     public double getMWVendidos() {
         return MWVendidos;
+    }
+
+    public int getIdCentral(){
+        return idCentral;
     }
 
     public double getMWUsados(){

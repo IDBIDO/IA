@@ -85,4 +85,8 @@ public class Clientes{
     private static double truncate(double var0) {
         return Math.floor(var0 * 100.0) / 100.0;
     }
+
+    public Iterable<? extends Map.Entry<Integer, Cliente>> entrySet() {
+        return clientes.entrySet();
+    }
 }

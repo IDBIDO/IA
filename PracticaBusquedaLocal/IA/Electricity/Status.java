@@ -10,26 +10,45 @@ public class Status {
     public Status(int seed) throws Exception {
         centrales= new Centrales(new int[]{3, 0, 0},seed);
         clientes = new Clientes(30,new double[]{0.4,0.4,0.2},0.6,seed);
-        relaciones = new Relaciones();
+        relaciones = new Relaciones(centrales);
         initialSolution1(false);
     }
 
-    private void initialSolution1(boolean includeNonGuaranteed) {
+    void initialSolution1(boolean includeNoGuaranteed) throws Exception {
 
-    }
+        Random r = new Random();
+        ArrayList<Integer>centralIds = centrales.getIds();
+        int actualCentralIndex = r.nextInt(centrales.size());
 
-    public Status(Status state) {
-        this.centrales = new Centrales(state.centrales);
-        this.clientes = new Clientes(state.clientes);
-        for(int i=0;i<state.centrales.size();++i){
-            for(int j=0;j<state.centrales.get(i).getServing().size();++j){
+        int i = 0;
+
+        for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
+            {
+                if (entry.getValue().isGuaranteed()) {
+                    Central actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                    if (canServe(entry.getValue(),actualCentral)) {
+                        relaciones.asignaCliente(entry.getValue(),actualCentral);
+                    } else {
+                        --i;
+                    }
+                    actualCentralIndex = r.nextInt(centrales.size());
+                }
+                ++i;
             }
         }
+        System.out.println("------------------------------------------ ");
+
+        System.out.println("Initial solutions: ");
+        relaciones.print(clientes,centrales);
+        System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
     }
 
-    public void printState() {
-        centrales.print();
-        clientes.print();
+    public void printState(){
+        relaciones.print(clientes,centrales);
+    }
+
+    private boolean canServe(Cliente cliente,Central central) {
+        return relaciones.puedeAsignarse(cliente,central);
     }
 
     //Funcion que calcule el beneficio

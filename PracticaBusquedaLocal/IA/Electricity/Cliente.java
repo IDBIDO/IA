@@ -110,4 +110,11 @@ public class Cliente {
             return 0;
         }
     }
+
+    public void print() {
+        System.out.println("    Cliente: "+this.id);
+        System.out.println("    Coordenadas: ("+ getCoordX()+" "+getCoordY()+")");
+        System.out.println("    Es garantizado: "+isGuaranteed()+ " Esta servido: "+estaServido()+" ");
+        System.out.println("    Consumo: "+getConsumo()+"\n");
+    }
 }

@@ -2,39 +2,73 @@ package IA.Electricity;
 
 import aima.search.framework.SuccessorFunction;
 import aima.search.framework.Successor;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 /**
  * Created by bejar on 17/01/17
  */
 public class ElectricitySuccesorFunction implements SuccessorFunction{
 
-/*
-    public List getSuccessorsFirstExperiment(Object state){
+    public List getSuccessorsFirstExperiment(Object state) throws Exception {
         ArrayList retval = new ArrayList();
         Status status = (Status) state;
-        System.out.println(("A"));
-        for (int i = 0; i < status.clientes.size(); ++i) {
-            Cliente cliente = status.clientes.get(i);
-            if (cliente.estaServido() && !cliente.isGuaranteed()) {
-                Status statusAux = new Status(status);
-                statusAux.quitarCliente(statusAux.clientes.get(i));
-                retval.add(new Successor("QuitarCliente("+String.valueOf(i)+")",statusAux));
-            }
-            for (int j = 0; j < status.centrales.size(); ++j) {
-                Status statusAux = new Status(status);
-                statusAux.asignarCliente(statusAux.clientes.get(i),statusAux.centrales.get(j));
-                retval.add(new Successor("AsignarCliente("+String.valueOf(i)+" "+String.valueOf(j)+")",statusAux));
+        Relaciones relaciones= status.getRelaciones();
+        Clientes clientes= status.getClientes();
+        Centrales centrales = status.getCentrales();
+
+        Set<Integer> served = new HashSet<Integer>();
+        for (Map.Entry<Integer,Relacion> entry : relaciones.entrySet()){
+            Relacion relacion = entry.getValue();
+            Central centralRelacion = centrales.get(entry.getKey());
+
+            //Por cada cliente de la central que hay en cada relación
+            for(Integer clienteId: relacion.getClientes()){
+                Cliente cliente = clientes.get(clienteId);
+                //Quitamos el cliente si es que es no garantizado
+                if (!cliente.isGuaranteed()) {
+                    Status statusAux = new Status(status);
+                    statusAux.quitarCliente(cliente,centralRelacion);
+                    retval.add(new Successor("QuitarCliente("+String.valueOf(clienteId)+","+String.valueOf(entry.getKey())+")",statusAux));
+                }
+                //Añadimos al cliente a todas las otras centrales
+                for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()){
+                    if(centralIter.getKey()!=entry.getKey() && status.canServe(cliente,centralIter.getValue())) {
+                        Status statusAux = new Status(status);
+                        statusAux.asignarCliente(cliente, centralIter.getValue());
+                        statusAux.quitarCliente(cliente,centralRelacion);
+                        retval.add(new Successor("AsignarCliente(" + String.valueOf(clienteId) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
+                    }
+                }
+                served.add(clienteId);
             }
         }
-
+        for(Map.Entry<Integer,Cliente> clienteIter: clientes.entrySet()){
+            if(!served.contains(clienteIter.getKey())){
+                //Antes no hemos tratado a este cliente porque no estaba en ninguna central
+                //Le asignamos a cualquier posible central
+                Cliente cliente = clienteIter.getValue();
+                for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()){
+                    if(status.canServe(cliente,centralIter.getValue())) {
+                        Status statusAux = new Status(status);
+                        statusAux.asignarCliente(cliente, centralIter.getValue());
+                        retval.add(new Successor("AsignarCliente(" + String.valueOf(clienteIter.getKey()) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
+                    }
+                }
+            }
+        }
         return retval;
     }
- */
 
-    public List getSuccessors(Object state)  {
-        return null;
+
+    public List getSuccessors(Object state){
+        try {
+            return getSuccessorsFirstExperiment(state);
+        }
+        catch (Exception e){
+            System.out.println("Excepcion: "+e.toString());
+            return null;
+        }
         /*
         //todos los swaps de clientes posibles
         for (int i = 0; i < status.clientes.size(); ++i) {

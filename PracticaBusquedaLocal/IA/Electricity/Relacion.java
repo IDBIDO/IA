@@ -1,5 +1,6 @@
 package IA.Electricity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Relacion {
@@ -15,6 +16,15 @@ public class Relacion {
         this.ganancia = 0;
         this.idCentral = idCentral;
         this.clientes = clientes;
+    }
+
+    public Relacion(Relacion relacion) {
+        this.MWVendidos = relacion.getMWVendidos();
+        this.MWUsados = relacion.getMWUsados();
+        this.ganancia = relacion.getGanancia();
+        this.idCentral = relacion.getIdCentral();
+        this.clientes = new HashSet<Integer>();
+        this.clientes.addAll(relacion.getClientes());
     }
 
     public void addCliente(int cliente, double precioCliente, double perdida, double venta) {

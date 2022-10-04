@@ -15,6 +15,15 @@ public class Relaciones{
             relaciones.put(entry.getValue().getId(),nueva);
         }
     }
+
+    public Relaciones(Relaciones relaciones){
+        this.relaciones = new LinkedHashMap<Integer, Relacion>();
+        for(Map.Entry<Integer,Relacion> entry:relaciones.entrySet()){
+            Relacion nueva = new Relacion(entry.getValue());
+            this.relaciones.put(entry.getKey(),nueva);
+        }
+    }
+
     public void asignaCliente(Cliente cliente, Central central){
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
         this.relaciones.get(central.getId()).addCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());

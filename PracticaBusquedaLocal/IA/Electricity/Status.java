@@ -14,6 +14,12 @@ public class Status {
         initialSolution1(false);
     }
 
+    public Status(Status status){
+        this.centrales=status.getCentrales();
+        this.clientes=status.getClientes();
+        this.relaciones=new Relaciones(status.getRelaciones());
+    }
+
     void initialSolution1(boolean includeNoGuaranteed) throws Exception {
 
         Random r = new Random();
@@ -47,7 +53,7 @@ public class Status {
         relaciones.print(clientes,centrales);
     }
 
-    private boolean canServe(Cliente cliente,Central central) {
+    public boolean canServe(Cliente cliente,Central central) {
         return relaciones.puedeAsignarse(cliente,central);
     }
 
@@ -75,7 +81,17 @@ public class Status {
 
     //operadores
 
-    public double heuristic() throws Exception {
+    public Clientes getClientes(){
+        return clientes;
+    }
+    public Centrales getCentrales(){
+        return centrales;
+    }
+    public Relaciones getRelaciones(){
+        return relaciones;
+    }
+
+    public double heuristic1() throws Exception {
         return beneficioPorCentral();
     }
 
@@ -88,7 +104,7 @@ public class Status {
     }
 
     void asignarCliente(Cliente cliente, Central central){
-        relaciones.quitarCliente(cliente,central);
+        relaciones.asignaCliente(cliente,central);
     }
 
 }

@@ -7,13 +7,17 @@ import java.util.Set;
 
 
 public class Relaciones{
+    double brutoTotal;
+    double costeTotal;
     Map<Integer,Relacion> relaciones;//El integer hace referencia a la central.
-    public Relaciones(Centrales centrales) {
+    public Relaciones(Centrales centrales) throws Exception {
         this.relaciones = new LinkedHashMap<Integer, Relacion>();
         for (Map.Entry<Integer, Central> entry : centrales.entrySet()) {
             Relacion nueva = new Relacion(entry.getValue().getId(),new HashSet<Integer>());
             relaciones.put(entry.getValue().getId(),nueva);
+            this.costeTotal+=VEnergia.getCosteParada(entry.getValue().getTipo());
         }
+        this.brutoTotal = 0;
     }
 
     public Relaciones(Relaciones relaciones){
@@ -22,15 +26,34 @@ public class Relaciones{
             Relacion nueva = new Relacion(entry.getValue());
             this.relaciones.put(entry.getKey(),nueva);
         }
+        this.brutoTotal = relaciones.getBrutoTotal();
+        this.costeTotal = relaciones.getCosteTotal();
     }
 
-    public void asignaCliente(Cliente cliente, Central central){
-        double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
-        this.relaciones.get(central.getId()).addCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
+    public double getBrutoTotal() {
+        return brutoTotal;
     }
-    public void quitarCliente(Cliente cliente, Central central) {
+
+    public double getCosteTotal(){
+        return costeTotal;
+    }
+
+
+    public void asignaCliente(Cliente cliente, Central central) throws Exception {
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
-        this.relaciones.get(central.getId()).deleteCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
+        brutoTotal+=this.relaciones.get(central.getId()).addCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
+        if(this.relaciones.get(central.getId()).clientesServidos()==1){
+            costeTotal=costeTotal+(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
+            costeTotal=costeTotal+(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
+        }
+    }
+    public void quitarCliente(Cliente cliente, Central central) throws Exception {
+        double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
+        brutoTotal+=this.relaciones.get(central.getId()).deleteCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
+        if(this.relaciones.get(central.getId()).clientesServidos()==0){
+            costeTotal=costeTotal-(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
+            costeTotal=costeTotal-(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
+        }
     }
 
     public boolean puedeAsignarse(Cliente cliente, Central central){
@@ -62,7 +85,7 @@ public class Relaciones{
                 clientesServidos.add(clientId);
             }
         }
-        System.out.println("Clientes no asignados a central: ");
+        System.out.println("\nClientes no asignados a central: ");
         for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
             if(!clientesServidos.contains(entry.getKey())){
                 entry.getValue().print();

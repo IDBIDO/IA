@@ -8,10 +8,10 @@ public class Status {
     Relaciones relaciones;
 
     public Status(int seed) throws Exception {
-        centrales= new Centrales(new int[]{3, 0, 0},seed);
+        centrales= new Centrales(new int[]{1, 0, 0},seed);
         clientes = new Clientes(30,new double[]{0.4,0.4,0.2},0.6,seed);
         relaciones = new Relaciones(centrales);
-        initialSolution1(false);
+        initialSolution1(false,seed);
     }
 
     public Status(Status status){
@@ -20,9 +20,9 @@ public class Status {
         this.relaciones=new Relaciones(status.getRelaciones());
     }
 
-    void initialSolution1(boolean includeNoGuaranteed) throws Exception {
+    void initialSolution1(boolean includeNoGuaranteed, int seed) throws Exception {
 
-        Random r = new Random();
+        Random r = new Random(seed);
         ArrayList<Integer>centralIds = centrales.getIds();
         int actualCentralIndex = r.nextInt(centrales.size());
 
@@ -59,24 +59,7 @@ public class Status {
 
     //Funcion que calcule el beneficio
     public double beneficioPorCentral() throws Exception{
-        double beneficioTotal = 0;
-        for (Map.Entry<Integer,Relacion> entry : relaciones.entrySet()){
-            double coste = 0;
-            double ganancia = 0;
-            Central central = centrales.get(entry.getKey());
-            Relacion relacion = entry.getValue();
-            if(relacion.clientesServidos()!=0){
-                double costeProduccionMW = VEnergia.getCosteProduccionMW(central.getTipo());
-                double costeMarcha = VEnergia.getCosteMarcha(central.getTipo());
-                coste = costeProduccionMW*central.getProduccion()+costeMarcha;
-                ganancia = relacion.getGanancia();
-            }
-            else{
-                coste = VEnergia.getCosteParada(central.getTipo());
-            }
-            beneficioTotal +=(ganancia-coste);
-        }
-        return beneficioTotal;
+        return relaciones.getBrutoTotal()-relaciones.getCosteTotal();
     }
 
     //operadores
@@ -99,11 +82,11 @@ public class Status {
         return false;
     }
 
-    void quitarCliente(Cliente cliente, Central central){
+    void quitarCliente(Cliente cliente, Central central) throws Exception {
         relaciones.quitarCliente(cliente,central);
     }
 
-    void asignarCliente(Cliente cliente, Central central){
+    void asignarCliente(Cliente cliente, Central central) throws Exception {
         relaciones.asignaCliente(cliente,central);
     }
 

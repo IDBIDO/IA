@@ -27,17 +27,19 @@ public class Relacion {
         this.clientes.addAll(relacion.getClientes());
     }
 
-    public void addCliente(int cliente, double precioCliente, double perdida, double venta) {
+    public double addCliente(int cliente, double precioCliente, double perdida, double venta) {
         clientes.add(cliente);
         MWVendidos+=venta;
         MWUsados+=(perdida+venta);
         ganancia+=venta*precioCliente;
+        return (venta*precioCliente);
     }
-    public void deleteCliente(int cliente,double precioCliente, double perdida, double venta){
+    public double deleteCliente(int cliente,double precioCliente, double perdida, double venta){
         clientes.remove(cliente);
         MWVendidos-=venta;
         MWUsados-=(perdida+venta);
         ganancia-=(venta*precioCliente);
+        return (-venta*precioCliente);
     }
     public boolean isthereCliente(int cliente){
         return clientes.contains(cliente);

@@ -12,9 +12,6 @@ import java.util.Properties;
 
 
 public class AIMAMain {
-
-
-
     public static void main(String[] args) throws Exception{
         /**
          *  For a problem to be solvable:
@@ -45,7 +42,8 @@ public class AIMAMain {
 
         Status finalStatus = (Status)alg.getGoalState();
         finalStatus.printState();
-        System.out.println(String.valueOf(finalStatus.beneficioPorCentral()));
+        System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
+        System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));
     }
 
     private static void printInstrumentation(Properties properties) {

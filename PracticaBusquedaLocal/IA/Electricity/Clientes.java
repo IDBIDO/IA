@@ -1,9 +1,6 @@
 package IA.Electricity;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Clientes{
     private Random myRandom;
@@ -14,7 +11,7 @@ public class Clientes{
     Map<Integer,Cliente> clientes;
 
     public Clientes(int numberOfCustomers, double[] proportionsOfTypes, double guaranteed, int seed) throws Exception {
-        clientes = new LinkedHashMap<Integer, Cliente>();
+        clientes = new HashMap<Integer, Cliente>();
         if (proportionsOfTypes.length != 3) {
             throw new Exception("Vector proporciones tipos clientes de tamaño incorrecto");
         } else if (proportionsOfTypes[0] + proportionsOfTypes[1] + proportionsOfTypes[2] != 1.0) {

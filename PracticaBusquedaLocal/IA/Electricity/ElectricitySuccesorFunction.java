@@ -28,7 +28,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                     statusAux.quitarCliente(cliente,centralRelacion);
                     retval.add(new Successor("QuitarCliente("+String.valueOf(clienteId)+","+String.valueOf(entry.getKey())+")",statusAux));
                 }
-                //Añadimos al cliente a todas las otras centrales
+                //Añadimos el cliente a todas las otras centrales
                 for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()){
                     if(!centralIter.getKey().equals(entry.getKey()) && status.canServe(cliente,centralIter.getValue())) {
                         Status statusAux = new Status(status);
@@ -40,13 +40,14 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                 served.add(clienteId);
             }
         }
-        for(Map.Entry<Integer,Cliente> clienteIter: clientes.entrySet()){
-            if(!served.contains(clienteIter.getKey())){
+
+        for(Map.Entry<Integer,Cliente> clienteIter: clientes.entrySet()) {
+            if (!served.contains(clienteIter.getKey())) {
                 //Antes no hemos tratado a este cliente porque no estaba en ninguna central
                 //Le asignamos a cualquier posible central
                 Cliente cliente = clienteIter.getValue();
-                for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()){
-                    if(status.canServe(cliente,centralIter.getValue())) {
+                for (Map.Entry<Integer, Central> centralIter : centrales.entrySet()) {
+                    if (status.canServe(cliente, centralIter.getValue())) {
                         Status statusAux = new Status(status);
                         statusAux.asignarCliente(cliente, centralIter.getValue());
                         retval.add(new Successor("AsignarCliente(" + String.valueOf(clienteIter.getKey()) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));

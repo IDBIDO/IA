@@ -66,6 +66,7 @@ public class Central {
     }
 
     public void print() {
+        System.out.println("Central: "+String.valueOf(getId()));
         System.out.println("Coordenadas: ("+ getCoordX()+" "+getCoordY()+") ");
         System.out.println("Capacidad max: "+getProduccion());
     }

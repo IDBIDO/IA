@@ -8,8 +8,8 @@ public class Status {
     Relaciones relaciones;
 
     public Status(int seed) throws Exception {
-        centrales= new Centrales(new int[]{1, 0, 0},seed);
-        clientes = new Clientes(30,new double[]{0.4,0.4,0.2},0.6,seed);
+        centrales= new Centrales(new int[]{20, 40, 100},seed);
+        clientes = new Clientes(4000,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales);
         initialSolution1(false,seed);
     }
@@ -26,20 +26,32 @@ public class Status {
         ArrayList<Integer>centralIds = centrales.getIds();
         int actualCentralIndex = r.nextInt(centrales.size());
 
-        int i = 0;
-
         for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
             {
                 if (entry.getValue().isGuaranteed()) {
                     Central actualCentral = centrales.get(centralIds.get(actualCentralIndex));
-                    if (canServe(entry.getValue(),actualCentral)) {
+                    while (!canServe(entry.getValue(),actualCentral)) {
+                        actualCentralIndex = r.nextInt(centrales.size());
+                        actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                    }
+                    relaciones.asignaCliente(entry.getValue(),actualCentral);
+                }
+                actualCentralIndex = r.nextInt(centrales.size());
+            }
+        }
+        if(includeNoGuaranteed) {
+            for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
+                {
+                    if (!entry.getValue().isGuaranteed()) {
+                        Central actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                        while (!canServe(entry.getValue(),actualCentral)) {
+                            actualCentralIndex = r.nextInt(centrales.size());
+                            actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                        }
                         relaciones.asignaCliente(entry.getValue(),actualCentral);
-                    } else {
-                        --i;
                     }
                     actualCentralIndex = r.nextInt(centrales.size());
                 }
-                ++i;
             }
         }
         System.out.println("------------------------------------------ ");
@@ -49,8 +61,9 @@ public class Status {
         System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
     }
 
-    public void printState(){
+    public void printState() throws Exception {
         relaciones.print(clientes,centrales);
+        System.out.println("Beneficio: "+beneficioPorCentral());
     }
 
     public boolean canServe(Cliente cliente,Central central) {

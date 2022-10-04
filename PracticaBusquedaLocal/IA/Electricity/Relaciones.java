@@ -1,9 +1,6 @@
 package IA.Electricity;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class Relaciones{
@@ -11,17 +8,18 @@ public class Relaciones{
     double costeTotal;
     Map<Integer,Relacion> relaciones;//El integer hace referencia a la central.
     public Relaciones(Centrales centrales) throws Exception {
-        this.relaciones = new LinkedHashMap<Integer, Relacion>();
+        this.relaciones = new HashMap<Integer, Relacion>();
         for (Map.Entry<Integer, Central> entry : centrales.entrySet()) {
             Relacion nueva = new Relacion(entry.getValue().getId(),new HashSet<Integer>());
             relaciones.put(entry.getValue().getId(),nueva);
             this.costeTotal+=VEnergia.getCosteParada(entry.getValue().getTipo());
         }
         this.brutoTotal = 0;
+        this.costeTotal = 0;
     }
 
     public Relaciones(Relaciones relaciones){
-        this.relaciones = new LinkedHashMap<Integer, Relacion>();
+        this.relaciones = new HashMap<Integer, Relacion>();
         for(Map.Entry<Integer,Relacion> entry:relaciones.entrySet()){
             Relacion nueva = new Relacion(entry.getValue());
             this.relaciones.put(entry.getKey(),nueva);

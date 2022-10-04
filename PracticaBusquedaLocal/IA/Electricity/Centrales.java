@@ -1,9 +1,6 @@
 package IA.Electricity;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Centrales{
     private static final long serialVersionUID = 1L;
@@ -15,7 +12,7 @@ public class Centrales{
     ArrayList<Integer>idsClientes;
 
     public Centrales(int[] powerPlantsPerType, int seed) throws Exception {
-        centrales = new LinkedHashMap<Integer,Central>();
+        centrales = new HashMap<Integer,Central>();
         idsClientes = new ArrayList<Integer>();
         if (powerPlantsPerType.length != 3) {
             throw new Exception("Vector Centrales de tamaño incorrecto");

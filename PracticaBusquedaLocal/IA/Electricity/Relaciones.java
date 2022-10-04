@@ -30,7 +30,7 @@ public class Relaciones{
     }
     public void quitarCliente(Cliente cliente, Central central) {
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
-        this.relaciones.get(central).deleteCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
+        this.relaciones.get(central.getId()).deleteCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
     }
 
     public boolean puedeAsignarse(Cliente cliente, Central central){

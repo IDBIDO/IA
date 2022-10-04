@@ -22,6 +22,7 @@ public class AIMAMain {
          */
 
         Status status = new Status(10);
+        double beneficioInicial = status.beneficioPorCentral();
 
         // Create the Problem object
         Problem p = new  Problem(status,
@@ -42,7 +43,9 @@ public class AIMAMain {
         // You can access also to the goal state using the
         // method getGoalState of class Search
 
-        status.printState();
+        Status finalStatus = (Status)alg.getGoalState();
+        finalStatus.printState();
+        System.out.println(String.valueOf(finalStatus.beneficioPorCentral()));
     }
 
     private static void printInstrumentation(Properties properties) {

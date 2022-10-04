@@ -31,13 +31,13 @@ public class Relacion {
         clientes.add(cliente);
         MWVendidos+=venta;
         MWUsados+=(perdida+venta);
-        ganancia +=venta*precioCliente;
+        ganancia+=venta*precioCliente;
     }
     public void deleteCliente(int cliente,double precioCliente, double perdida, double venta){
         clientes.remove(cliente);
         MWVendidos-=venta;
-        MWUsados+=(perdida+venta);
-        ganancia-=(venta*perdida);
+        MWUsados-=(perdida+venta);
+        ganancia-=(venta*precioCliente);
     }
     public boolean isthereCliente(int cliente){
         return clientes.contains(cliente);

@@ -70,11 +70,8 @@ public class Clientes{
         System.out.println("CLIENTES:");
         for(int i=0;i<this.clientes.size();++i){
             System.out.print("Coordenadas: ("+ this.clientes.get(i).getCoordX()+" "+this.clientes.get(i).getCoordY()+")");
-            System.out.print("Es garantizado: "+this.clientes.get(i).isGuaranteed()+ " Esta servido: "+this.clientes.get(i).estaServido()+" ");
+            System.out.print("Es garantizado: "+this.clientes.get(i).isGuaranteed());
             System.out.print("Consumo: "+this.clientes.get(i).getConsumo());
-            if(this.clientes.get(i).estaServido()){
-                System.out.print("Está servido");
-            }
             System.out.print("\n");
         }
     }

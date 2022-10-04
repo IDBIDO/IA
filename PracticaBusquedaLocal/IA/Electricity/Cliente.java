@@ -16,15 +16,12 @@ public class Cliente {
 
     private int id;
 
-    private boolean served;
-
     public Cliente(int tipo, double consumo, int contrato, int coordX, int coordY, int id) {
         this.Tipo =tipo;
         this.Consumo = consumo;
         this.Contrato = contrato;
         this.CoordX = coordX;
         this.CoordY = coordY;
-        this.served = false;
         this.id = id;
     }
 
@@ -35,7 +32,6 @@ public class Cliente {
         this.CoordX = cliente.getCoordX();
         this.CoordY = cliente.getCoordY();
         this.id = cliente.getId();
-        this.served= cliente.estaServido();
     }
 
     public int getId() {
@@ -82,17 +78,6 @@ public class Cliente {
         this.Contrato = var1;
     }
 
-    public void asignarCentral(){
-        this.served = false;
-    }
-    public void quitarCentral(){
-        this.served=false;
-    }
-
-    public boolean estaServido(){
-        return served;
-    }
-
     public boolean isGuaranteed() {
         return Contrato==GARANTIZADO;
     }
@@ -114,7 +99,7 @@ public class Cliente {
     public void print() {
         System.out.println("    Cliente: "+this.id);
         System.out.println("    Coordenadas: ("+ getCoordX()+" "+getCoordY()+")");
-        System.out.println("    Es garantizado: "+isGuaranteed()+ " Esta servido: "+estaServido()+" ");
+        System.out.println("    Es garantizado: "+isGuaranteed());
         System.out.println("    Consumo: "+getConsumo()+"\n");
     }
 }

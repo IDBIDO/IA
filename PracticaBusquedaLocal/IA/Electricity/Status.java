@@ -58,7 +58,7 @@ public class Status {
     }
 
     //Funcion que calcule el beneficio
-    double beneficioPorCentral() throws Exception{
+    public double beneficioPorCentral() throws Exception{
         double beneficioTotal = 0;
         for (Map.Entry<Integer,Relacion> entry : relaciones.entrySet()){
             double coste = 0;

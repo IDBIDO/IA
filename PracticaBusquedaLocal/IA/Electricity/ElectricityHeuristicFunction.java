@@ -7,9 +7,13 @@ package IA.Electricity;
 import aima.search.framework.HeuristicFunction;
 
 public class ElectricityHeuristicFunction implements HeuristicFunction {
-
     public double getHeuristicValue(Object n){
-
-        return ((TemporalSoItWorks) n).heuristic();
+        try {
+            return ((Status) n).heuristic();
+        }
+        catch (Exception e){
+            System.out.println("Exception heuristic Value: "+e.toString());
+            return 0;
+        }
     }
 }

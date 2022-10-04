@@ -9,6 +9,6 @@ public class ElectricityGoalTest implements GoalTest {
 
     public boolean isGoalState(Object state){
 
-        return((TemporalSoItWorks) state).is_goal();
+        return((Status) state).is_goal();
     }
 }

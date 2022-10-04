@@ -6,6 +6,7 @@ public class Central {
     public static final int CENTRALA = 0;
     public static final int CENTRALB = 1;
     public static final int CENTRALC = 2;
+    private int id;
     private int Tipo;
     private double Produccion;
     private int CoordX;
@@ -14,13 +15,22 @@ public class Central {
     private ArrayList<Cliente> servingNotGuaranteed;
     private ArrayList<Cliente> servingGuaranteed;
 
-    public Central(int type, double production, int coordX, int coordY) {
+    public Central(int type, double production, int coordX, int coordY, int id) {
         this.Tipo = type;
         this.Produccion = production;
         this.CoordX = coordX;
         this.CoordY = coordY;
         this.servingNotGuaranteed = new ArrayList<Cliente>();
         this.servingGuaranteed = new ArrayList<Cliente>();
+        this.id = id;
+    }
+
+    public Central(Central central){
+        this.Tipo = central.getTipo();
+        this.Produccion = central.getProduccion();
+        this.CoordX = central.getCoordX();
+        this.CoordY = central.getCoordY();
+        //Servings are assigned latter
     }
 
     public ArrayList<Cliente> getServing(){
@@ -38,25 +48,6 @@ public class Central {
         this.CoordX = var1;
     }
 
-    public void deleteClient(Cliente client){
-        if(client.estaServido())client.unsetCentral();
-        if(client.isGuaranteed())
-            servingGuaranteed.remove(client);
-        else
-            servingNotGuaranteed.remove(client);
-    }
-
-    public void addClient(Cliente client){
-        if(!servingGuaranteed.contains(client)&& !servingNotGuaranteed.contains(client)) {
-            if (client.isGuaranteed())
-                servingGuaranteed.add(client);
-            else
-                servingNotGuaranteed.add(client);
-
-            if(client.getServer()!=this)client.setCentral(this);
-        }
-    }
-
     public double totalServedWithLoss(){
         double served=0;
         for(int i=0;i<servingGuaranteed.size() && served<Produccion;++i){
@@ -66,10 +57,6 @@ public class Central {
             served += (servingNotGuaranteed.get(i).getConsumo()*(1+VEnergia.getPerdida(getCoordX(),getCoordY(),servingNotGuaranteed.get(i).getCoordX(),servingNotGuaranteed.get(i).getCoordY())));
         }
         return served;
-    }
-
-    public boolean powerPlantOverLoaded(){
-        return totalServedWithLoss()>this.getProduccion();
     }
 
     public int getCoordY() {
@@ -94,5 +81,9 @@ public class Central {
 
     public void setProduccion(double var1) {
         this.Produccion = var1;
+    }
+
+    public int getId() {
+        return id;
     }
 }

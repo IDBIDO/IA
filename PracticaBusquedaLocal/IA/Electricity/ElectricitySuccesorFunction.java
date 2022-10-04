@@ -10,10 +10,32 @@ import java.util.List;
  */
 public class ElectricitySuccesorFunction implements SuccessorFunction{
 
-    public List getSuccessors(Object state)  {
+/*
+    public List getSuccessorsFirstExperiment(Object state){
         ArrayList retval = new ArrayList();
         Status status = (Status) state;
+        System.out.println(("A"));
+        for (int i = 0; i < status.clientes.size(); ++i) {
+            Cliente cliente = status.clientes.get(i);
+            if (cliente.estaServido() && !cliente.isGuaranteed()) {
+                Status statusAux = new Status(status);
+                statusAux.quitarCliente(statusAux.clientes.get(i));
+                retval.add(new Successor("QuitarCliente("+String.valueOf(i)+")",statusAux));
+            }
+            for (int j = 0; j < status.centrales.size(); ++j) {
+                Status statusAux = new Status(status);
+                statusAux.asignarCliente(statusAux.clientes.get(i),statusAux.centrales.get(j));
+                retval.add(new Successor("AsignarCliente("+String.valueOf(i)+" "+String.valueOf(j)+")",statusAux));
+            }
+        }
 
+        return retval;
+    }
+ */
+
+    public List getSuccessors(Object state)  {
+        return null;
+        /*
         //todos los swaps de clientes posibles
         for (int i = 0; i < status.clientes.size(); ++i) {
             Cliente cliente1 = status.clientes.get(i);
@@ -33,8 +55,9 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             }
         }
 
+         */
 
-
+        /*
         //assignar clientes no servidos
         for (int i = 0; i < status.clientes.size(); ++i) {
             Cliente cliente1 = status.clientes.get(i);
@@ -83,26 +106,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             }
         }
 
-
-        return retval;
+        */
+        //return retval;
     }
-
-    public List getSuccessors_(Object state){
-        ArrayList retval = new ArrayList();
-        TemporalSoItWorks status = (TemporalSoItWorks) state;
-        // Some code here
-        // (flip all the consecutive pairs of coins and generate new states
-        // Add the states to retval as Succesor("flip i j", new_state)
-        // new_state has to be a copy of state
-
-        for(int i=0;i<status.obtainBoard().length-1;++i){
-            System.out.println(i);
-            TemporalSoItWorks probIA5Board = new TemporalSoItWorks(status.obtainBoard(),status.obtainGoal());
-            probIA5Board.flip_it(i);
-            Successor successor = new Successor("flip "+Integer.toString(i)+" "+Integer.toString(i+1),probIA5Board);
-            retval.add(successor);
-        }
-        return retval;
-    }
-
 }

@@ -6,7 +6,7 @@ import java.util.*;
 public class Relaciones{
     double brutoTotal;
     double costeTotal;
-    ArrayList<Relacion> relaciones;//El integer hace referencia a la central.
+    ArrayList<Relacion> relaciones;
     public Relaciones(Centrales centrales) throws Exception {
         this.relaciones = new ArrayList<Relacion>();
         for (Map.Entry<Integer, Central> entry : centrales.entrySet()) {
@@ -65,9 +65,21 @@ public class Relaciones{
         return ((consumido+gasto)<=central.getProduccion());
     }
 
+    public boolean puedeCambiarse(Cliente cliente1, Cliente cliente2, Relacion relacion, Central central) {
+        double perdida1 = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente1.getCoordX(),cliente1.getCoordY());
+        double gasto1 = cliente1.getConsumo()*(1+perdida1);
+
+        double perdida2 = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente1.getCoordX(),cliente1.getCoordY());
+        double gasto2 = cliente2.getConsumo()*(1+perdida2);
+
+        double capacidad = central.getProduccion();
+        double restante = capacidad-(relacion.getMWUsados());
+        return (capacidad-restante-(gasto1-gasto2))>0;
+    }
     public int size() {
         return relaciones.size();
     }
+
     public Relacion get(int id){
         return relaciones.get(id);
     }

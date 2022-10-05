@@ -71,6 +71,10 @@ public class Status {
         return relaciones.puedeAsignarse(cliente,central);
     }
 
+    public boolean canChange(Cliente cliente1, Cliente cliente2,Relacion relacion){
+        return relaciones.puedeCambiarse(cliente1, cliente2,relacion, centrales.get(relacion.getIdCentral()));
+    }
+
     //Funcion que calcule el beneficio
     public double beneficioPorCentral() throws Exception{
         return relaciones.getBrutoTotal()-relaciones.getCosteTotal();
@@ -102,6 +106,14 @@ public class Status {
 
     void asignarCliente(Cliente cliente, Central central) throws Exception {
         relaciones.asignaCliente(cliente,central);
+    }
+
+    void swapCliente(Cliente cliente1, Central central1, Cliente cliente2, Central central2) throws Exception {
+        relaciones.quitarCliente(cliente1,central1);
+        relaciones.quitarCliente(cliente2,central2);
+
+        relaciones.asignaCliente(cliente1,central2);
+        relaciones.asignaCliente(cliente2,central1);
     }
 
 }

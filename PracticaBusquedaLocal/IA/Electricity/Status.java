@@ -15,7 +15,7 @@ public class Status {
         initialSolution1(false,seed);
     }
 
-    public Status(Status status){
+    public Status(Status status) {
         this.centrales=status.getCentrales();
         this.clientes=status.getClientes();
         this.relaciones=new Relaciones(status.getRelaciones());

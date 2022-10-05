@@ -26,6 +26,7 @@ public class Relacion {
         return (venta*precioCliente);
     }
     public double deleteCliente(int cliente,double precioCliente, double perdida, double venta){
+
         clientes.remove(clientes.indexOf(cliente));//Could be sped up
         MWUsados-=(perdida+venta);
         return (-venta*precioCliente);

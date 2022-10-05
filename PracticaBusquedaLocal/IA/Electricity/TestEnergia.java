@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 public class TestEnergia {
 
     public static void main(String[] var0) throws Exception {
-        Status status= new Status(1);
+        Status status= new Status(5);
         Clientes clientes = status.getClientes();
         Centrales centrales = status.getCentrales();
 
@@ -17,10 +17,11 @@ public class TestEnergia {
         Status statusaux2 = new Status(status);
         Status statusaux3 = new Status(status);
 
-        statusaux2.asignarCliente(clientes.get(4),centrales.get(1));
+        System.out.println(status.getCentrales());
+        statusaux2.asignarCliente(clientes.get(4),centrales.get(2));
         statusaux2.quitarCliente(clientes.get(4),centrales.get(2));
 
-        statusaux2.printState();
+        //statusaux2.printState();
 
     }
 }

@@ -10,12 +10,26 @@ public class ElectricityHeuristicFunction implements HeuristicFunction {
 
     public double getHeuristicValue(Object n){
 
-        //opcion 1 (buscar el máximo beneficio)
+        Status status = (Status) n;
 
-        //opcion 2 (buscando minimizar el coste)
+        int option = 1;
+        // puesto para ir probando las heurísticas quitar junto con el switch cuando ya tengamos la buena
 
-        //opcion 3 (minimizar la energia "inutil" maximizando benefeicios)
+        switch (option) {
+            //opcion 1 (buscar el máximo beneficio)
+            case 1:
+                double beneficio;
+                try {
+                    beneficio = ((Status) n).beneficioPorCentral();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            //opcion 2 (buscando minimizar el coste)
 
+            //opcion 3 (minimizar la energia "inutil" maximizando beneficios)
+            case 3:
+        }
         return ((TemporalSoItWorks) n).heuristic();
     }
 }

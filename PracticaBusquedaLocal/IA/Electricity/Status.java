@@ -385,7 +385,8 @@ public class Status {
      * @param cliente cliente a desasignar.
      */
     void quitarCliente(Cliente cliente){
-        cliente.unsetCentral();
+        if (cliente.estaServido())
+            cliente.unsetCentral();
     }
 
     /**

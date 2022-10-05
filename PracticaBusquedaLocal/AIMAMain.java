@@ -1,12 +1,10 @@
-import IA.Electricity.TemporalSoItWorks;
-import IA.Electricity.ElectricityGoalTest;
-import IA.Electricity.ElectricityHeuristicFunction;
-import IA.Electricity.ElectricitySuccesorFunction;
+import IA.Electricity.*;
 import aima.search.framework.GraphSearch;
 import aima.search.framework.Problem;
 import aima.search.framework.Search;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.AStarSearch;
+import aima.search.informed.HillClimbingSearch;
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,29 +12,24 @@ import java.util.Properties;
 
 
 public class AIMAMain {
-
-
-
     public static void main(String[] args) throws Exception{
         /**
          *  For a problem to be solvable:
          *    count(0,prob) % 2 == count(0,sol) %2
          */
-        int [] prob = new int []{1 ,1,1,1,1,1, 1, 1, 0,0,0,1,1,0,0,1,1};
-        int [] sol = new int[]{0 ,1,0,1,0,1, 1, 0, 0,1,1,0,0,1,1,0,0};
 
-        TemporalSoItWorks board = new TemporalSoItWorks(prob, sol );
+        Status status = new Status(20);
+        double beneficioInicial = status.beneficioPorCentral();
 
         // Create the Problem object
-        Problem p = new  Problem(board,
+        Problem p = new  Problem(status,
                 new ElectricitySuccesorFunction(),
                 new ElectricityGoalTest(),
                 new ElectricityHeuristicFunction());
 
         // Instantiate the search algorithm
         // AStarSearch(new GraphSearch()) or IterativeDeepeningAStarSearch()
-        Search alg = new AStarSearch(new GraphSearch());
-
+        Search alg = new HillClimbingSearch();
         // Instantiate the SearchAgent object
         SearchAgent agent = new SearchAgent(p, alg);
 
@@ -47,6 +40,10 @@ public class AIMAMain {
         // You can access also to the goal state using the
         // method getGoalState of class Search
 
+        Status finalStatus = (Status)alg.getGoalState();
+        //finalStatus.printState();
+        System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
+        System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));
     }
 
     private static void printInstrumentation(Properties properties) {

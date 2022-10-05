@@ -2,18 +2,71 @@ package IA.Electricity;
 
 import aima.search.framework.SuccessorFunction;
 import aima.search.framework.Successor;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 /**
  * Created by bejar on 17/01/17
  */
 public class ElectricitySuccesorFunction implements SuccessorFunction{
 
-    public List getSuccessors(Object state)  {
+    public List getSuccessorsFirstExperiment(Object state) throws Exception {
         ArrayList retval = new ArrayList();
         Status status = (Status) state;
+        Relaciones relaciones= status.getRelaciones();
+        Clientes clientes= status.getClientes();
+        Centrales centrales = status.getCentrales();
+        Set<Integer> served = new HashSet<Integer>();
+        for (Relacion relacion: relaciones.getRelaciones()){
+            Central centralRelacion = centrales.get(relacion.getIdCentral());
+            //Por cada cliente de la central que hay en cada relación
+            for(Integer clienteId: relacion.getClientes()){
+                Cliente cliente = clientes.get(clienteId);
+                if(!cliente.isGuaranteed()) {
+                    Status statusAux = new Status(status);
+                    statusAux.quitarCliente(cliente,centralRelacion);
+                    retval.add(new Successor("QuitarCliente("+String.valueOf(clienteId)+","+String.valueOf(relacion.getIdCentral())+")",statusAux));
+                }
+                //Añadimos el cliente a todas las otras centrales
+                for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()){
+                    if(!centralIter.getKey().equals(relacion.getIdCentral()) && status.canServe(cliente,centralIter.getValue())) {
+                        Status statusAux = new Status(status);
+                        statusAux.asignarCliente(cliente, centralIter.getValue());
+                        statusAux.quitarCliente(cliente,centralRelacion);
+                        retval.add(new Successor("AsignarCliente(" + String.valueOf(clienteId) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
+                    }
+                }
+                served.add(clienteId);
+            }
+        }
 
+        for(Map.Entry<Integer,Cliente> clienteIter: clientes.entrySet()) {
+            if (!served.contains(clienteIter.getKey())) {
+                //Antes no hemos tratado a este cliente porque no estaba en ninguna central
+                //Le asignamos a cualquier posible central
+                Cliente cliente = clienteIter.getValue();
+                for (Map.Entry<Integer, Central> centralIter : centrales.entrySet()) {
+                    if (status.canServe(cliente, centralIter.getValue())) {
+                        Status statusAux = new Status(status);
+                        statusAux.asignarCliente(cliente, centralIter.getValue());
+                        retval.add(new Successor("AsignarCliente(" + String.valueOf(clienteIter.getKey()) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
+                    }
+                }
+            }
+        }
+        return retval;
+    }
+
+
+    public List getSuccessors(Object state){
+        try {
+            return getSuccessorsFirstExperiment(state);
+        }
+        catch (Exception e){
+            System.out.println("Excepcion: "+e.toString());
+            return null;
+        }
+        /*
         //todos los swaps de clientes posibles
         for (int i = 0; i < status.clientes.size(); ++i) {
             Cliente cliente1 = status.clientes.get(i);
@@ -33,8 +86,9 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             }
         }
 
+         */
 
-
+        /*
         //assignar clientes no servidos
         for (int i = 0; i < status.clientes.size(); ++i) {
             Cliente cliente1 = status.clientes.get(i);
@@ -83,26 +137,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             }
         }
 
-
-        return retval;
+        */
+        //return retval;
     }
-
-    public List getSuccessors_(Object state){
-        ArrayList retval = new ArrayList();
-        TemporalSoItWorks status = (TemporalSoItWorks) state;
-        // Some code here
-        // (flip all the consecutive pairs of coins and generate new states
-        // Add the states to retval as Succesor("flip i j", new_state)
-        // new_state has to be a copy of state
-
-        for(int i=0;i<status.obtainBoard().length-1;++i){
-            System.out.println(i);
-            TemporalSoItWorks probIA5Board = new TemporalSoItWorks(status.obtainBoard(),status.obtainGoal());
-            probIA5Board.flip_it(i);
-            Successor successor = new Successor("flip "+Integer.toString(i)+" "+Integer.toString(i+1),probIA5Board);
-            retval.add(successor);
-        }
-        return retval;
-    }
-
 }

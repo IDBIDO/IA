@@ -10,17 +10,17 @@ public class TestEnergia {
 
     public static void main(String[] var0) throws Exception {
         Status status= new Status(1);
+        Clientes clientes = status.getClientes();
+        Centrales centrales = status.getCentrales();
 
-        status.initialSolution1(false); //RANDOM
-        status.beneficioPorCentral();
+        Status statusaux1 = new Status(status);
+        Status statusaux2 = new Status(status);
+        Status statusaux3 = new Status(status);
 
-        System.out.println("Constructor testing");
-        Status aux = new Status(status);
-        aux.printState();
-        aux.swapCliente(aux.clientes.get(1), aux.clientes.get(2));
+        statusaux2.asignarCliente(clientes.get(4),centrales.get(1));
+        statusaux2.quitarCliente(clientes.get(4),centrales.get(2));
 
-        aux.printState();
-
+        statusaux2.printState();
 
     }
 }

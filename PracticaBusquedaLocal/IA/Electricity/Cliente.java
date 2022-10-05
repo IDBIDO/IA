@@ -1,5 +1,7 @@
 package IA.Electricity;
 
+import java.security.spec.ECField;
+
 public class Cliente {
     public static final int CLIENTEXG = 0;
     public static final int CLIENTEMG = 1;
@@ -12,15 +14,28 @@ public class Cliente {
     private double Consumo;
     private int Contrato;
 
-    private Central server;
+    private int id;
 
-    public Cliente(int var1, double var2, int var4, int var5, int var6) {
-        this.Tipo = var1;
-        this.Consumo = var2;
-        this.Contrato = var4;
-        this.CoordX = var5;
-        this.CoordY = var6;
-        this.server = null;
+    public Cliente(int tipo, double consumo, int contrato, int coordX, int coordY, int id) {
+        this.Tipo =tipo;
+        this.Consumo = consumo;
+        this.Contrato = contrato;
+        this.CoordX = coordX;
+        this.CoordY = coordY;
+        this.id = id;
+    }
+
+    public Cliente(Cliente cliente){
+        this.Tipo = cliente.getTipo();
+        this.Consumo = cliente.getConsumo();
+        this.Contrato = cliente.getContrato();
+        this.CoordX = cliente.getCoordX();
+        this.CoordY = cliente.getCoordY();
+        this.id = cliente.getId();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getTipo() {
@@ -63,39 +78,28 @@ public class Cliente {
         this.Contrato = var1;
     }
 
-    public void setCentral(Central central){
-        if(estaServido()){
-            if(central==null){
-                Central aux = this.server;
-                this.server = null;
-                aux.deleteClient(this);
-            }
-            else {
-                this.server.deleteClient(this);
-            }
-        }
-        this.server= central;
-        if(central!=null)central.addClient(this);
-    }
-
-    public void unsetCentral(){
-        setCentral(null);
-    }
-
-    public boolean estaServido(){
-        return server!=null;
-    }
-
-    public Central getServer(){
-        return server;
-    }
-
     public boolean isGuaranteed() {
         return Contrato==GARANTIZADO;
     }
 
-    public double getCompensation() throws Exception {
-        if(!isGuaranteed())return 0;
-        else return VEnergia.getTarifaClientePenalizacion(getTipo());
+    public double getPrecio(){
+        try {
+            if (isGuaranteed()) {
+                return VEnergia.getTarifaClienteGarantizada(this.Tipo);
+            } else {
+                return VEnergia.getTarifaClienteNoGarantizada(this.Tipo);
+            }
+        }
+        catch(Exception e){
+            System.out.println("Excepcion: "+e.toString());
+            return 0;
+        }
+    }
+
+    public void print() {
+        System.out.println("    Cliente: "+this.id);
+        System.out.println("    Coordenadas: ("+ getCoordX()+" "+getCoordY()+")");
+        System.out.println("    Es garantizado: "+isGuaranteed());
+        System.out.println("    Consumo: "+getConsumo()+"\n");
     }
 }

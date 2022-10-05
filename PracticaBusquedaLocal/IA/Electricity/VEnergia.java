@@ -67,7 +67,7 @@ public class VEnergia {
     }
 
     public static double euclidea(double var0, double var2, double var4, double var6) {
-        return Math.sqrt((var0 - var4) * (var0 - var4)) + (var2 - var6) * (var2 - var6);
+        return Math.sqrt((var0 - var4) * (var0 - var4) + (var2 - var6) * (var2 - var6));
     }
 
     public static double getPerdida(double coordX1, double coordY1,double coordX2, double coordY2){

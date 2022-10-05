@@ -56,6 +56,21 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         }
         return retval;
     }
+    /*
+    private List getSuccessorsSecondExperiment(Object state) throws Exception {
+        List retval = getSuccessorsFirstExperiment(state);
+        Status status = (Status)state;
+        Relaciones relaciones= status.getRelaciones();
+        Clientes clientes= status.getClientes();
+        Centrales centrales = status.getCentrales();
+
+        for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()) {
+            Set<Cliente> clientesCentral = new HashSet<Cliente>();
+
+        }
+        return retval;
+    }
+     */
 
 
     public List getSuccessors(Object state){
@@ -140,4 +155,6 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         */
         //return retval;
     }
+
+
 }

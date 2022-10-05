@@ -8,6 +8,7 @@ public class TemporalSoItWorks {
        - It has to implement the state of the problem and its operators
      *
 
+     */
     /* State data structure
         vector with the parity of the coins (we can assume 0 = heads, 1 = tails
      */

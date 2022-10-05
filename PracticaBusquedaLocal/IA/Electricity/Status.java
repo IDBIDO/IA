@@ -92,6 +92,16 @@ public class Status {
         return beneficioPorCentral();
     }
 
+    public double heuristic2() throws Exception{
+        double MWbrutos = 0;
+        ArrayList<Relacion>  r = relaciones.getRelaciones();
+
+        for (Relacion r1 : r)
+            MWbrutos += r1.MWUsados;
+
+        return beneficioPorCentral() * 0.6 + MWbrutos * 0.4;
+    }
+
     public boolean is_goal(){
         return false;
     }

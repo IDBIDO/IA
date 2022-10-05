@@ -2,6 +2,7 @@
   <library name="AIMA">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/PracticaBusquedaLocal/AIMA.jar!/" />
+      <root url="file://$PROJECT_DIR$/../AIMA" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

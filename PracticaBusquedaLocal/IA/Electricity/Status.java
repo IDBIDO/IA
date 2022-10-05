@@ -8,8 +8,9 @@ public class Status {
     Relaciones relaciones;
 
     public Status(int seed) throws Exception {
-        centrales= new Centrales(new int[]{20, 40, 100},seed);
-        clientes = new Clientes(4000,new double[]{0.25,0.3,0.45},0.75,seed);
+        int test = 1;
+        centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
+        clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales);
         initialSolution1(false,seed);
     }
@@ -57,7 +58,7 @@ public class Status {
         System.out.println("------------------------------------------ ");
 
         System.out.println("Initial solutions: ");
-        relaciones.print(clientes,centrales);
+        //relaciones.print(clientes,centrales);
         System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
     }
 

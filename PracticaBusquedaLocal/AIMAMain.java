@@ -18,7 +18,7 @@ public class AIMAMain {
          *    count(0,prob) % 2 == count(0,sol) %2
          */
 
-        Status status = new Status(1);
+        Status status = new Status(20);
         double beneficioInicial = status.beneficioPorCentral();
 
         // Create the Problem object
@@ -41,7 +41,7 @@ public class AIMAMain {
         // method getGoalState of class Search
 
         Status finalStatus = (Status)alg.getGoalState();
-        finalStatus.printState();
+        //finalStatus.printState();
         System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
         System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));
     }

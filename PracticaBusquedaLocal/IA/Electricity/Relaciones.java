@@ -6,12 +6,12 @@ import java.util.*;
 public class Relaciones{
     double brutoTotal;
     double costeTotal;
-    Map<Integer,Relacion> relaciones;//El integer hace referencia a la central.
+    ArrayList<Relacion> relaciones;//El integer hace referencia a la central.
     public Relaciones(Centrales centrales) throws Exception {
-        this.relaciones = new HashMap<Integer, Relacion>();
+        this.relaciones = new ArrayList<Relacion>();
         for (Map.Entry<Integer, Central> entry : centrales.entrySet()) {
-            Relacion nueva = new Relacion(entry.getValue().getId(),new HashSet<Integer>());
-            relaciones.put(entry.getValue().getId(),nueva);
+            Relacion nueva = new Relacion(entry.getValue().getId(),new ArrayList<Integer>());
+            relaciones.add(nueva);
             this.costeTotal+=VEnergia.getCosteParada(entry.getValue().getTipo());
         }
         this.brutoTotal = 0;
@@ -19,13 +19,17 @@ public class Relaciones{
     }
 
     public Relaciones(Relaciones relaciones){
-        this.relaciones = new HashMap<Integer, Relacion>();
-        for(Map.Entry<Integer,Relacion> entry:relaciones.entrySet()){
-            Relacion nueva = new Relacion(entry.getValue());
-            this.relaciones.put(entry.getKey(),nueva);
+        this.relaciones = new ArrayList<Relacion>();
+        for(Relacion relacion: relaciones.getRelaciones()){
+            Relacion nueva = new Relacion(relacion);
+            this.relaciones.add(nueva);
         }
         this.brutoTotal = relaciones.getBrutoTotal();
         this.costeTotal = relaciones.getCosteTotal();
+    }
+
+    public ArrayList<Relacion> getRelaciones() {
+        return relaciones;
     }
 
     public double getBrutoTotal() {
@@ -68,16 +72,12 @@ public class Relaciones{
         return relaciones.get(id);
     }
 
-    public Iterable<? extends Map.Entry<Integer, Relacion>> entrySet() {
-        return relaciones.entrySet();
-    }
-
     public void print(Clientes clientes, Centrales centrales) {
         Set<Integer> clientesServidos = new HashSet<Integer>();
-        for (Map.Entry<Integer, Relacion> entry : relaciones.entrySet()) {
-            centrales.get(entry.getKey()).print();
-            System.out.println("Capacidad usada: "+String.valueOf(entry.getValue().getMWUsados()));
-            for(Integer clientId: entry.getValue().getClientes()){
+        for (Relacion relacion: relaciones) {
+            centrales.get(relacion.getIdCentral()).print();
+            System.out.println("Capacidad usada: "+String.valueOf(relacion.getMWUsados()));
+            for(Integer clientId: relacion.getClientes()){
                 Cliente cliente = clientes.get(clientId);
                 cliente.print();
                 clientesServidos.add(clientId);

@@ -16,7 +16,6 @@ public class ElectricityHeuristicFunction implements HeuristicFunction {
 
         //opcion 3 (minimizar la energia "inutil" maximizando benefeicios)
 
-
         return ((TemporalSoItWorks) n).heuristic();
     }
 }

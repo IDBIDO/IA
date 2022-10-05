@@ -17,20 +17,19 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         Clientes clientes= status.getClientes();
         Centrales centrales = status.getCentrales();
         Set<Integer> served = new HashSet<Integer>();
-        for (Map.Entry<Integer,Relacion> entry : relaciones.entrySet()){
-            Relacion relacion = entry.getValue();
-            Central centralRelacion = centrales.get(entry.getKey());
+        for (Relacion relacion: relaciones.getRelaciones()){
+            Central centralRelacion = centrales.get(relacion.getIdCentral());
             //Por cada cliente de la central que hay en cada relación
             for(Integer clienteId: relacion.getClientes()){
                 Cliente cliente = clientes.get(clienteId);
                 if(!cliente.isGuaranteed()) {
                     Status statusAux = new Status(status);
                     statusAux.quitarCliente(cliente,centralRelacion);
-                    retval.add(new Successor("QuitarCliente("+String.valueOf(clienteId)+","+String.valueOf(entry.getKey())+")",statusAux));
+                    retval.add(new Successor("QuitarCliente("+String.valueOf(clienteId)+","+String.valueOf(relacion.getIdCentral())+")",statusAux));
                 }
                 //Añadimos el cliente a todas las otras centrales
                 for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()){
-                    if(!centralIter.getKey().equals(entry.getKey()) && status.canServe(cliente,centralIter.getValue())) {
+                    if(!centralIter.getKey().equals(relacion.getIdCentral()) && status.canServe(cliente,centralIter.getValue())) {
                         Status statusAux = new Status(status);
                         statusAux.asignarCliente(cliente, centralIter.getValue());
                         statusAux.quitarCliente(cliente,centralRelacion);

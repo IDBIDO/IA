@@ -41,11 +41,6 @@ public class Centrales{
         return centrales.size();
     }
 
-    public Centrales(Centrales centrales){
-        for(int i=0;i<centrales.size();++i){
-            this.centrales.put(centrales.get(i).getId(),new Central(centrales.get(i)));
-        }
-    }
 
     public ArrayList<Integer>getIds(){
         return this.idsClientes;

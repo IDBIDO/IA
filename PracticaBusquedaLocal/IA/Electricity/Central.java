@@ -25,7 +25,7 @@ public class Central {
         this.Produccion = central.getProduccion();
         this.CoordX = central.getCoordX();
         this.CoordY = central.getCoordY();
-        //Servings are assigned latter
+        this.id = central.getId();
     }
 
     public int getCoordX() {

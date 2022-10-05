@@ -18,7 +18,7 @@ public class AIMAMain {
          *    count(0,prob) % 2 == count(0,sol) %2
          */
 
-        Status status = new Status(20);
+        Status status = new Status(1);
         status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 

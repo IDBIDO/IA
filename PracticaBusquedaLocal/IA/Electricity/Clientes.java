@@ -6,7 +6,7 @@ public class Clientes{
     private Random myRandom;
     private static final int[] TIPOCL = new int[]{0, 1, 2};
     private static final int[] TIPOCNT = new int[]{0, 1};
-    private static final double[][] consumos = new double[][]{{15.0, 5.0}, {3.0, 2.0}, {2.0, 1.0}};
+    private static final double[][] consumos = new double[][]{{15.0, 5.0}, {3.0, 2.0}, {1.0, 1.0}};
 
     Map<Integer,Cliente> clientes;
 

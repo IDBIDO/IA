@@ -49,12 +49,23 @@ public class Relaciones{
 
     public void asignaCliente(Cliente cliente, Central central) throws Exception {
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
+        /*
+        System.out.println(brutoTotal - costeTotal);
+        System.out.println(cliente.getConsumo());
+        System.out.println(cliente.getPrecio());
+        System.out.println(cliente.getId());
+        */
+
         brutoTotal+=this.relaciones.get(central.getId()).addCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
         desperdiciadoTotal +=perdida*cliente.getConsumo();
         if(this.relaciones.get(central.getId()).clientesServidos()==1){
             costeTotal=costeTotal+(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal+(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
         }
+        /*
+        System.out.println(brutoTotal - costeTotal);
+        System.out.println("\n\n\n");
+         */
     }
     public void quitarCliente(Cliente cliente, Central central) throws Exception {
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());

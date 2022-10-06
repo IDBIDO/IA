@@ -10,14 +10,13 @@ public class Relaciones{
     ArrayList<Relacion> relaciones;
     public Relaciones(Centrales centrales) throws Exception {
         this.relaciones = new ArrayList<Relacion>();
+        this.brutoTotal = 0;
+        this.desperdiciadoTotal=0;
         for (Map.Entry<Integer, Central> entry : centrales.entrySet()) {
             Relacion nueva = new Relacion(entry.getValue().getId(),new ArrayList<Integer>());
             relaciones.add(nueva);
             this.costeTotal+=VEnergia.getCosteParada(entry.getValue().getTipo());
         }
-        this.brutoTotal = 0;
-        this.costeTotal = 0;
-        this.desperdiciadoTotal=0;
     }
 
     public Relaciones(Relaciones relaciones){

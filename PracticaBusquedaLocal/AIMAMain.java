@@ -16,6 +16,7 @@ public class AIMAMain {
     public static void main(String[] args) throws Exception{
 
         Status status = new Status(20);
+        status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 
         // Create the Problem object

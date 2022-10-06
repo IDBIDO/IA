@@ -85,7 +85,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
 
     public List getSuccessors(Object state){
         try {
-            return getSuccessorsSecondExperiment(state);
+            return getSuccessorsFirstExperiment(state);
         }
         catch (Exception e){
             System.out.println("Excepcion: "+e.toString());

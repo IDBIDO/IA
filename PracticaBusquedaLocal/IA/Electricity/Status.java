@@ -95,7 +95,7 @@ public class Status {
     public double heuristic1() throws Exception {
         return beneficioPorCentral();
     }
-/*
+
     public double heuristic2() throws Exception{
         return beneficioPorCentral()-totalDesperdiciado();
     }
@@ -104,7 +104,7 @@ public class Status {
     private double totalDesperdiciado() {
         return relaciones.getDesperdiciadoTotal();
     }
-*/
+
     public boolean is_goal(){
         return false;
     }

@@ -7,7 +7,7 @@ public class Relaciones{
     double brutoTotal;
     double costeTotal;
 
-    //double desperdiciadoTotal;
+    double desperdiciadoTotal;
     ArrayList<Relacion> relaciones;
     public Relaciones(Centrales centrales) throws Exception {
         this.relaciones = new ArrayList<Relacion>();
@@ -18,7 +18,7 @@ public class Relaciones{
         }
         this.brutoTotal = 0;
         this.costeTotal = 0;
-        //this.desperdiciadoTotal=0;
+        this.desperdiciadoTotal=0;
     }
 
     public Relaciones(Relaciones relaciones){
@@ -29,12 +29,12 @@ public class Relaciones{
         }
         this.brutoTotal = relaciones.getBrutoTotal();
         this.costeTotal = relaciones.getCosteTotal();
-        //this.desperdiciadoTotal = relaciones.getDesperdiciadoTotal();
+        this.desperdiciadoTotal = relaciones.getDesperdiciadoTotal();
     }
 
-    //public double getDesperdiciadoTotal() {
-    //    return desperdiciadoTotal;
-    //}
+    public double getDesperdiciadoTotal() {
+        return desperdiciadoTotal;
+    }
 
     public ArrayList<Relacion> getRelaciones() {
         return relaciones;
@@ -52,7 +52,7 @@ public class Relaciones{
     public void asignaCliente(Cliente cliente, Central central) throws Exception {
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
         brutoTotal+=this.relaciones.get(central.getId()).addCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
-        //desperdiciadoTotal +=perdida*cliente.getConsumo();
+        desperdiciadoTotal +=perdida*cliente.getConsumo();
         if(this.relaciones.get(central.getId()).clientesServidos()==1){
             costeTotal=costeTotal+(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal+(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
@@ -61,7 +61,7 @@ public class Relaciones{
     public void quitarCliente(Cliente cliente, Central central) throws Exception {
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
         brutoTotal+=this.relaciones.get(central.getId()).deleteCliente(cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
-        //desperdiciadoTotal -=perdida*cliente.getConsumo();
+        desperdiciadoTotal -=perdida*cliente.getConsumo();
         if(this.relaciones.get(central.getId()).clientesServidos()==0){
             costeTotal=costeTotal-(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal-(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
@@ -89,7 +89,6 @@ public class Relaciones{
     public int size() {
         return relaciones.size();
     }
-
     public Relacion get(int id){
         return relaciones.get(id);
     }

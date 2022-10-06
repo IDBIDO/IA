@@ -22,11 +22,6 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             //Por cada cliente de la central que hay en cada relación
             for(Integer clienteId: relacion.getClientes()){
                 Cliente cliente = clientes.get(clienteId);
-                if(!cliente.isGuaranteed()) {
-                    Status statusAux = new Status(status);
-                    statusAux.quitarCliente(cliente,centralRelacion);
-                    retval.add(new Successor("QuitarCliente("+String.valueOf(clienteId)+","+String.valueOf(relacion.getIdCentral())+")",statusAux));
-                }
                 //Añadimos el cliente a todas las otras centrales
                 for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()){
                     if(!centralIter.getKey().equals(relacion.getIdCentral()) && status.canServe(cliente,centralIter.getValue())) {

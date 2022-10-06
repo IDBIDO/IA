@@ -8,9 +8,9 @@ public class Status {
     Relaciones relaciones;
 
     public Status(int seed) throws Exception {
-        int test = 1;
-        centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
-        clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
+        int test = 0;
+        centrales= new Centrales(new int[]{1+5*test,10*test,25*test},seed);
+        clientes = new Clientes(10+1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales);
         initialSolution1(false,seed);
     }
@@ -97,7 +97,7 @@ public class Status {
     }
 
     public double heuristic2() throws Exception{
-        return beneficioPorCentral()-totalDesperdiciado();
+        return beneficioPorCentral()-totalDesperdiciado()*300;
     }
 
 

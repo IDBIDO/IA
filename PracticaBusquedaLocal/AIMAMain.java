@@ -5,6 +5,7 @@ import aima.search.framework.Search;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.AStarSearch;
 import aima.search.informed.HillClimbingSearch;
+import aima.search.informed.SimulatedAnnealingSearch;
 
 import java.util.Iterator;
 import java.util.List;
@@ -37,7 +38,7 @@ public class AIMAMain {
         // method getGoalState of class Search
 
         Status finalStatus = (Status)alg.getGoalState();
-        //finalStatus.printState();
+        finalStatus.printState();
         System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
         System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));
     }

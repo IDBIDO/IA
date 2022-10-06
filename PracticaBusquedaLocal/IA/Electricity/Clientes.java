@@ -41,6 +41,7 @@ public class Clientes{
                 }
 
                 double var6 = this.myRandom.nextDouble() * consumos[var11][0] + consumos[var11][1];
+                //System.out.println(var6); Consumos clientes
                 this.clientes.put(count,new Cliente(TIPOCL[var11], truncate(var6), TIPOCNT[var12], this.myRandom.nextInt(100), this.myRandom.nextInt(100),count));
                 ++count;
             }

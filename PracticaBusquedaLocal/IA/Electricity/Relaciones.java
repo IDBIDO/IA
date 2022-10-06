@@ -6,7 +6,6 @@ import java.util.*;
 public class Relaciones{
     double brutoTotal;
     double costeTotal;
-
     double desperdiciadoTotal;
     ArrayList<Relacion> relaciones;
     public Relaciones(Centrales centrales) throws Exception {

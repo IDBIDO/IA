@@ -13,12 +13,8 @@ import java.util.Properties;
 
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
-        /**
-         *  For a problem to be solvable:
-         *    count(0,prob) % 2 == count(0,sol) %2
-         */
 
-        Status status = new Status(1234);
+        Status status = new Status(20);
         double beneficioInicial = status.beneficioPorCentral();
 
         // Create the Problem object

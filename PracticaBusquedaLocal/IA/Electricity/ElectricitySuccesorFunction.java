@@ -56,26 +56,41 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         }
         return retval;
     }
-    /*
+
     private List getSuccessorsSecondExperiment(Object state) throws Exception {
-        List retval = getSuccessorsFirstExperiment(state);
+        List retval =getSuccessorsFirstExperiment(state);
         Status status = (Status)state;
         Relaciones relaciones= status.getRelaciones();
         Clientes clientes= status.getClientes();
         Centrales centrales = status.getCentrales();
 
-        for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()) {
-            Set<Cliente> clientesCentral = new HashSet<Cliente>();
+        for(int i=0;i<relaciones.getRelaciones().size()-1;++i){
+            Central central1 = centrales.get(relaciones.getRelaciones().get(i).getIdCentral());
+            Central central2 = centrales.get(relaciones.getRelaciones().get(i+1).getIdCentral());
+            ArrayList<Integer> clientes1 = relaciones.getRelaciones().get(i).getClientes();
+            ArrayList<Integer> clientes2 = relaciones.getRelaciones().get(i+1).getClientes();
 
+            for(int j=0;j<clientes1.size();++j){
+                Cliente cliente1 = clientes.get(clientes1.get(j));
+                for(int z = 0;z<clientes2.size();++z){
+                    Cliente cliente2 = clientes.get(clientes2.get(z));
+                    Status statusAux = new Status(status);
+                    if(status.canChange(cliente1,cliente2,relaciones.getRelaciones().get(i+1)) && status.canChange(cliente2,cliente1,relaciones.getRelaciones().get(i))) {
+                        statusAux.swapCliente(cliente1, central1, cliente2, central2);
+                        retval.add(new Successor("MoverCliente(" + String.valueOf(cliente1.getId()) + "," + String.valueOf(cliente2.getId()) + ")", statusAux));
+                    }
+                }
+            }
         }
+        //System.out.println(retval.size());
         return retval;
     }
-     */
+
 
 
     public List getSuccessors(Object state){
         try {
-            return getSuccessorsFirstExperiment(state);
+            return getSuccessorsSecondExperiment(state);
         }
         catch (Exception e){
             System.out.println("Excepcion: "+e.toString());

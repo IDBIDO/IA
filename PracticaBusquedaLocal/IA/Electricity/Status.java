@@ -97,7 +97,7 @@ public class Status {
     }
 
     public double heuristic2() throws Exception{
-        return beneficioPorCentral()-totalDesperdiciado();
+        return beneficioPorCentral()-totalDesperdiciado()*300;
     }
 
 
@@ -125,4 +125,11 @@ public class Status {
         relaciones.asignaCliente(cliente2,central1);
     }
 
+    public double costeTotal() {
+        return relaciones.getCosteTotal();
+    }
+
+    public double brutoTotal() {
+        return relaciones.getBrutoTotal();
+    }
 }

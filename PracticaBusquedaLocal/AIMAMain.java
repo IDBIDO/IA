@@ -5,6 +5,7 @@ import aima.search.framework.Search;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.AStarSearch;
 import aima.search.informed.HillClimbingSearch;
+import aima.search.informed.SimulatedAnnealingSearch;
 
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +16,7 @@ public class AIMAMain {
     public static void main(String[] args) throws Exception{
 
         Status status = new Status(20);
+        //status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 
         // Create the Problem object
@@ -37,9 +39,11 @@ public class AIMAMain {
         // method getGoalState of class Search
 
         Status finalStatus = (Status)alg.getGoalState();
-        //finalStatus.printState();
+        finalStatus.printState();
         System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
         System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));
+        System.out.println("Coste total:"+String.valueOf(finalStatus.costeTotal()));
+        System.out.println("Bruto total:"+String.valueOf(finalStatus.brutoTotal()));
     }
 
     private static void printInstrumentation(Properties properties) {

@@ -6,7 +6,7 @@ public class Clientes{
     private Random myRandom;
     private static final int[] TIPOCL = new int[]{0, 1, 2};
     private static final int[] TIPOCNT = new int[]{0, 1};
-    private static final double[][] consumos = new double[][]{{15.0, 5.0}, {3.0, 2.0}, {2.0, 1.0}};
+    private static final double[][] consumos = new double[][]{{15.0, 5.0}, {3.0, 2.0}, {1.0, 1.0}};
 
     Map<Integer,Cliente> clientes;
 
@@ -41,6 +41,7 @@ public class Clientes{
                 }
 
                 double var6 = this.myRandom.nextDouble() * consumos[var11][0] + consumos[var11][1];
+                //System.out.println(var6); Consumos clientes
                 this.clientes.put(count,new Cliente(TIPOCL[var11], truncate(var6), TIPOCNT[var12], this.myRandom.nextInt(100), this.myRandom.nextInt(100),count));
                 ++count;
             }

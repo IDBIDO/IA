@@ -6,6 +6,7 @@ import aima.search.framework.Successor;
 import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -70,7 +71,9 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         ArrayList<Central> centrales = new ArrayList<Central>(centralesaux.getCentrales().values());
 
         ArrayList<Integer>centralesClientes = relaciones.getClientes();
-        for(int i=0;i<centralesClientes.size();++i) {
+        retval = Collections.synchronizedList(retval);
+        List finalRetval = retval;
+        IntStream.range(0, centralesClientes.size()).parallel().forEach(i -> {
             if (centralesClientes.get(i) != -1) {
                 Cliente cliente1 = clientes.get(i);
                 for (int j = i + 1; j < centralesClientes.size(); ++j) {
@@ -79,18 +82,22 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                         Central central1 = centrales.get(centralesClientes.get(i));
                         Central central2 = centrales.get(centralesClientes.get(j));
                         if (status.canChange(cliente1, cliente2, central1) && status.canChange(cliente2, cliente1, central2)) {
-                            if (status.makesSenseChange(cliente1, cliente2, central1, central2)) {
+                            if (status.makesSenseChange(cliente1,cliente2,central1,central2)) {
                                 Status statusAux = new Status(status);
-                                statusAux.swapCliente(cliente1, central1, cliente2, central2);
-                                retval.add(new Successor("MoverCliente(" + i + "," + j + ")", statusAux));
+                                try {
+                                    statusAux.swapCliente(cliente1, central1, cliente2, central2);
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+                                finalRetval.add(new Successor("MoverCliente(" + i + "," + j + ")", statusAux));
                             }
                         }
                     }
                 }
             }
-        }
+        });
         System.out.println(retval.size());
-        return retval;
+        return finalRetval;
     }
 /*
     private Successor getSuccessor(Status status, Relaciones relaciones, ArrayList<Cliente> clientes, Central central1, Central central2, Cliente cliente1, int finalI, Integer cliente2id) {

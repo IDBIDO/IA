@@ -147,6 +147,14 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         return retval;
     }
 
+    public List getSuccessorsFourthExperiment(Object state) throws Exception {
+        List retval = getSuccessorsFirstExperiment(state);
+        retval.addAll(getSuccessorsSecondExperiment(state));
+        retval.addAll(getSuccessorsThirdExperiment(state));
+
+        return retval;
+    }
+
     public List getSuccessors(Object state){
         try {
             Runtime runtime = Runtime.getRuntime();
@@ -155,7 +163,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             //System.out.println ("Memoria total: " + runtime.totalMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria libre: " + runtime.freeMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria usada: " + (runtime.totalMemory() - runtime.freeMemory()) / (1024*1024) + "MB");
-            return getSuccessorsThirdExperiment(state);
+            return getSuccessorsFourthExperiment(state);
         }
         catch (Exception e){
             System.out.println("Excepcion: "+e.toString());

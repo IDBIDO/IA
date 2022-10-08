@@ -138,25 +138,24 @@ public class Relaciones{
 
     public void print(Clientes clientes, Centrales centrales) {
         Set<Integer> clientesServidos = new HashSet<Integer>();
-        for(Integer relacion: relaciones){
-            clientes.get(relacion).print();
-            /*
-            System.out.println("Capacidad usada: "+String.valueOf(getMWUsadosCentral(relacion.getKey())));
-            for(Integer clientId: relacion.getValue()){
-                Cliente cliente = clientes.get(clientId);
-                cliente.print();
-                clientesServidos.add(clientId);
+        for (Map.Entry<Integer,Central> entry : centrales.entrySet()) {
+            System.out.println("Capacidad usada: "+String.valueOf(mwUsados.get(entry.getKey())));
+            int i=0;
+            for(Integer centralid: relaciones){
+                if(centralid ==entry.getKey()) {
+                    Cliente cliente = clientes.get(i);
+                    cliente.print();
+                    clientesServidos.add(i);
+                }
+                ++i;
             }
-            */
         }
-        /*
         System.out.println("\nClientes no asignados a central: ");
         for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
             if(!clientesServidos.contains(entry.getKey())){
                 entry.getValue().print();
             }
         }
-        */
     }
 
     public double getMWUsadosCentral(Integer key) {

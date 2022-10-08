@@ -14,8 +14,11 @@ import java.util.Properties;
 
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
-
-        Status status = new Status(1);
+        int seed=2;
+        if(args.length == 1){
+            seed = Integer.parseInt(args[0]);
+        }
+        Status status = new Status(seed);
         //status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 

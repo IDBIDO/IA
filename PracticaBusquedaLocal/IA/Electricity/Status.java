@@ -20,7 +20,7 @@ public class Status {
         this.clientes=status.getClientes();
         this.relaciones=new Relaciones(status.getRelaciones());
     }
-
+    //Adds the guaranteed or not guaranteed customers to a random available power plant
     void initialSolution1(boolean includeNoGuaranteed, int seed) throws Exception {
 
         Random r = new Random(seed);
@@ -56,7 +56,51 @@ public class Status {
             }
         }
         System.out.println("------------------------------------------ ");
-
+        System.out.println("Initial solutions: ");
+        //relaciones.print(clientes,centrales);
+        System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
+    }
+    //Adds the customers to powerplants in a way that tries to minimize the distance (and then the lost energy)
+    //It is likely that this greedy algorithm yields the optimal distance configuration, though it may be close (or not) to it.
+    void initialSolution2(boolean includeNoGuaranteed) throws Exception {
+        ArrayList<Integer>centralIds = centrales.getIds();
+        for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
+            {
+                if (entry.getValue().isGuaranteed()) {
+                    double max = -1;
+                    int idCentral =0;
+                    for(int i=0;i<centralIds.size();++i){
+                        double perdida = VEnergia.getPerdida(centrales.get(centralIds.get(i)).getCoordX(),
+                                centrales.get(centralIds.get(i)).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
+                        if((max==-1 || max>perdida)&&(canServe(entry.getValue(),centrales.get(centralIds.get(i))))){
+                            max = perdida;
+                            idCentral = centralIds.get(i);
+                        }
+                    }
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(idCentral)));
+                }
+            }
+        }
+        if(includeNoGuaranteed) {
+            for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
+                {
+                    if (!entry.getValue().isGuaranteed()) {
+                        double max = -1;
+                        int idCentral =0;
+                        for(int i=0;i<centralIds.size();++i){
+                            double perdida = VEnergia.getPerdida(centrales.get(centralIds.get(i)).getCoordX(),
+                                    centrales.get(centralIds.get(i)).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
+                            if((max==-1 || max>perdida)&&(canServe(entry.getValue(),centrales.get(centralIds.get(i))))){
+                                max = perdida;
+                                idCentral = centralIds.get(i);
+                            }
+                        }
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(idCentral)));
+                    }
+                }
+            }
+        }
+        System.out.println("------------------------------------------ ");
         System.out.println("Initial solutions: ");
         //relaciones.print(clientes,centrales);
         System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));

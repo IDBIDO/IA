@@ -97,6 +97,7 @@ public class Status {
     }
 
     public double heuristic2() throws Exception{
+        //System.out.println(beneficioPorCentral()-totalDesperdiciado()*300);
         return beneficioPorCentral()-totalDesperdiciado()*300;
     }
 

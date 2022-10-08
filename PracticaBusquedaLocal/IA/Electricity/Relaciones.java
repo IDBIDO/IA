@@ -106,6 +106,17 @@ public class Relaciones{
         return (-venta*precio);
     }
 
+    public void mueveCliente(Cliente cliente, Central central) throws Exception {
+        if (this.puedeAsignarse(cliente, central)) {
+            this.quitarCliente(cliente, central);
+            this.asignaCliente(cliente, central);
+        }
+    }
+
+    public boolean puedeQuitarse(Cliente cliente) {
+        return false;
+    }
+
     public boolean puedeAsignarse(Cliente cliente, Central central){
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
         double gasto = cliente.getConsumo()*(1+perdida);

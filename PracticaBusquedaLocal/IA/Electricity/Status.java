@@ -60,8 +60,8 @@ public class Status {
         //relaciones.print(clientes,centrales);
         System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
     }
-    //Adds the customers to powerplants in a way that tries to minimize the distance (and then the lost energy)
-    //It is likely that this greedy algorithm yields the optimal distance configuration, though it may be close (or not) to it.
+    //Adds the customers to powerplants in such a way that tries to minimize the distance (and then the lost energy)
+    //It is unlikely that this greedy algorithm yields the optimal distance configuration, though it may be close (or not) to it.
     void initialSolution2(boolean includeNoGuaranteed) throws Exception {
         ArrayList<Integer>centralIds = centrales.getIds();
         for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
@@ -105,6 +105,35 @@ public class Status {
         //relaciones.print(clientes,centrales);
         System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
     }
+    //Adds clients to power plants in such a way that minimises the number of power plants working
+    void initialSolution3(boolean includeNoGuaranteed) throws Exception {
+        ArrayList<Integer>centralIds = centrales.getIds();
+        int central =0;
+        for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
+            {
+                if (entry.getValue().isGuaranteed()) {
+                    while(!canServe(entry.getValue(),centrales.get(central)))++central;
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                }
+            }
+        }
+        if(includeNoGuaranteed) {
+            for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
+                {
+                    if (!entry.getValue().isGuaranteed()) {
+                        while(central<centralIds.size() && !canServe(entry.getValue(),centrales.get(central)))++central;
+                        if(central>=centralIds.size())break;
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                    }
+                }
+            }
+        }
+        System.out.println("------------------------------------------ ");
+        System.out.println("Initial solutions: ");
+        //relaciones.print(clientes,centrales);
+        System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
+    }
+
 
     public void printState() throws Exception {
         relaciones.print(clientes,centrales);

@@ -163,7 +163,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             //System.out.println ("Memoria total: " + runtime.totalMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria libre: " + runtime.freeMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria usada: " + (runtime.totalMemory() - runtime.freeMemory()) / (1024*1024) + "MB");
-            return getSuccessorsFourthExperiment(state);
+            return getSuccessorsThirdExperiment(state);
         }
         catch (Exception e){
             System.out.println("Excepcion: "+e.toString());

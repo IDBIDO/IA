@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
-        int seed=2;
+        int seed=6;
         if(args.length == 1){
             seed = Integer.parseInt(args[0]);
         }
@@ -30,18 +30,32 @@ public class AIMAMain {
 
         // Instantiate the search algorithm
         // AStarSearch(new GraphSearch()) or IterativeDeepeningAStarSearch()
-        Search alg = new HillClimbingSearch();
-        // Instantiate the SearchAgent object
-        SearchAgent agent = new SearchAgent(p, alg);
+
+        //Search alg = new HillClimbingSearch();
+        //SearchAgent agent = new SearchAgent(p, alg);
+
+
+
+
+        // Instantiate the SearchAgent object SA
+        Problem pSA = new  Problem(status,
+                new ElectricitySuccesorFunctionSA(),
+                new ElectricityGoalTest(),
+                new ElectricityHeuristicFunction());
+
+        //steps stiter k lamda
+        //Search algSA = new SimulatedAnnealingSearch();
+        Search algSA = new SimulatedAnnealingSearch(1000000, 20, 5, 0.001);
+        SearchAgent agent = new SearchAgent(pSA, algSA);
 
         // We print the results of the search
-        printActions(agent.getActions());
-        printInstrumentation(agent.getInstrumentation());
+        //printActions(agent.getActions());
+        //printInstrumentation(agent.getInstrumentation());
 
         // You can access also to the goal state using the
         // method getGoalState of class Search
 
-        Status finalStatus = (Status)alg.getGoalState();
+        Status finalStatus = (Status)algSA.getGoalState();
         //finalStatus.printState();
         System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
         System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));

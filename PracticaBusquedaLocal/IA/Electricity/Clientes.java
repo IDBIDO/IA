@@ -47,6 +47,7 @@ public class Clientes{
             }
 
         }
+        clientes = Collections.unmodifiableMap(clientes);
     }
 
 

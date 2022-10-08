@@ -15,7 +15,7 @@ import java.util.Properties;
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
 
-        Status status = new Status(20);
+        Status status = new Status(1);
         //status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 
@@ -39,7 +39,7 @@ public class AIMAMain {
         // method getGoalState of class Search
 
         Status finalStatus = (Status)alg.getGoalState();
-        finalStatus.printState();
+        //finalStatus.printState();
         System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
         System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));
         System.out.println("Coste total:"+String.valueOf(finalStatus.costeTotal()));

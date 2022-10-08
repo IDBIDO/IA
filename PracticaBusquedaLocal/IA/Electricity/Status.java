@@ -11,7 +11,7 @@ public class Status {
         int test = 1;
         centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
         clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
-        relaciones = new Relaciones(centrales);
+        relaciones = new Relaciones(centrales,clientes);
         initialSolution1(false,seed);
     }
 
@@ -71,8 +71,8 @@ public class Status {
         return relaciones.puedeAsignarse(cliente,central);
     }
 
-    public boolean canChange(Cliente cliente1, Cliente cliente2,Relacion relacion){
-        return relaciones.puedeCambiarse(cliente1, cliente2,relacion, centrales.get(relacion.getIdCentral()));
+    public boolean canChange(Cliente cliente1, Cliente cliente2,Central central){
+        return relaciones.puedeCambiarse(cliente1, cliente2,central);
     }
 
     //Funcion que calcule el beneficio
@@ -132,4 +132,14 @@ public class Status {
     public double brutoTotal() {
         return relaciones.getBrutoTotal();
     }
+
+    public boolean makesSenseChange(Cliente cliente1, Cliente cliente2, Central central1, Central central2) {
+        double perdidaActual =VEnergia.getPerdida(central1.getCoordX(),central1.getCoordY(),cliente1.getCoordX(),cliente1.getCoordY())
+                              + VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),cliente2.getCoordX(),cliente2.getCoordY());
+        double perdidaNueva = VEnergia.getPerdida(central1.getCoordX(),central1.getCoordY(),cliente2.getCoordX(),cliente2.getCoordY())
+                              + VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),cliente1.getCoordX(),cliente1.getCoordY());
+
+        return perdidaNueva<=perdidaActual;
+    }
+
 }

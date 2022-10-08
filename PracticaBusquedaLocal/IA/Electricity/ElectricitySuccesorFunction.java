@@ -4,6 +4,10 @@ import aima.search.framework.SuccessorFunction;
 import aima.search.framework.Successor;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Created by bejar on 17/01/17
@@ -17,37 +21,41 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         Clientes clientes= status.getClientes();
         Centrales centrales = status.getCentrales();
         Set<Integer> served = new HashSet<Integer>();
-        for (Relacion relacion: relaciones.getRelaciones()){
-            Central centralRelacion = centrales.get(relacion.getIdCentral());
-            //Por cada cliente de la central que hay en cada relación
-            for(Integer clienteId: relacion.getClientes()){
-                Cliente cliente = clientes.get(clienteId);
+        int i=0;
+        for(Integer relacion: relaciones.getClientes()){
+            if(relacion!=-1) {
+                Central centralRelacion = centrales.get(relacion);
+                //Por cada cliente de la central que hay en cada relación
+                Cliente cliente = clientes.get(i);
                 //Añadimos el cliente a todas las otras centrales
-                for(Map.Entry<Integer,Central> centralIter: centrales.entrySet()){
-                    if(!centralIter.getKey().equals(relacion.getIdCentral()) && status.canServe(cliente,centralIter.getValue())) {
+                for (Map.Entry<Integer, Central> centralIter : centrales.entrySet()) {
+                    if (relacion!=centralIter.getKey() && status.canServe(cliente, centralIter.getValue())) {
                         Status statusAux = new Status(status);
                         statusAux.asignarCliente(cliente, centralIter.getValue());
-                        statusAux.quitarCliente(cliente,centralRelacion);
-                        retval.add(new Successor("AsignarCliente(" + String.valueOf(clienteId) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
+                        statusAux.quitarCliente(cliente, centralRelacion);
+                        retval.add(new Successor("AsignarCliente(" + String.valueOf(i) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
                     }
                 }
-                served.add(clienteId);
+                served.add(relacion);
             }
+            ++i;
         }
+        i=0;
 
-        for(Map.Entry<Integer,Cliente> clienteIter: clientes.entrySet()) {
-            if (!served.contains(clienteIter.getKey())) {
+        for(Integer relacion: relaciones.getClientes()){
+            if (!served.contains(relacion)) {
                 //Antes no hemos tratado a este cliente porque no estaba en ninguna central
                 //Le asignamos a cualquier posible central
-                Cliente cliente = clienteIter.getValue();
+                Cliente cliente = clientes.get(i);
                 for (Map.Entry<Integer, Central> centralIter : centrales.entrySet()) {
                     if (status.canServe(cliente, centralIter.getValue())) {
                         Status statusAux = new Status(status);
                         statusAux.asignarCliente(cliente, centralIter.getValue());
-                        retval.add(new Successor("AsignarCliente(" + String.valueOf(clienteIter.getKey()) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
+                        retval.add(new Successor("AsignarCliente(" + String.valueOf(i) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
                     }
                 }
             }
+            ++i;
         }
         return retval;
     }
@@ -56,36 +64,69 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         List retval =getSuccessorsFirstExperiment(state);
         Status status = (Status)state;
         Relaciones relaciones= status.getRelaciones();
-        Clientes clientes= status.getClientes();
-        Centrales centrales = status.getCentrales();
+        Clientes clientesaux= status.getClientes();
+        Centrales centralesaux = status.getCentrales();
 
-        for(int i=0;i<relaciones.getRelaciones().size()-1;++i){
-            Central central1 = centrales.get(relaciones.getRelaciones().get(i).getIdCentral());
-            Central central2 = centrales.get(relaciones.getRelaciones().get(i+1).getIdCentral());
-            ArrayList<Integer> clientes1 = relaciones.getRelaciones().get(i).getClientes();
-            ArrayList<Integer> clientes2 = relaciones.getRelaciones().get(i+1).getClientes();
+        ArrayList<Cliente> clientes = new ArrayList<Cliente>(clientesaux.getClientes().values());
+        ArrayList<Central> centrales = new ArrayList<Central>(centralesaux.getCentrales().values());
 
-            for(int j=0;j<clientes1.size();++j){
-                Cliente cliente1 = clientes.get(clientes1.get(j));
-                for(int z = 0;z<clientes2.size();++z){
-                    Cliente cliente2 = clientes.get(clientes2.get(z));
-                    Status statusAux = new Status(status);
-                    if(status.canChange(cliente1,cliente2,relaciones.getRelaciones().get(i+1)) && status.canChange(cliente2,cliente1,relaciones.getRelaciones().get(i))) {
-                        statusAux.swapCliente(cliente1, central1, cliente2, central2);
-                        retval.add(new Successor("MoverCliente(" + String.valueOf(cliente1.getId()) + "," + String.valueOf(cliente2.getId()) + ")", statusAux));
+        ArrayList<Integer>centralesClientes = relaciones.getClientes();
+        retval = Collections.synchronizedList(retval);
+        List finalRetval = retval;
+        IntStream.range(0, centralesClientes.size()).parallel().forEach(i -> {
+            if (centralesClientes.get(i) != -1) {
+                Cliente cliente1 = clientes.get(i);
+                for (int j = i + 1; j < centralesClientes.size(); ++j) {
+                    if (centralesClientes.get(j) != -1) {
+                        Cliente cliente2 = clientes.get(j);
+                        Central central1 = centrales.get(centralesClientes.get(i));
+                        Central central2 = centrales.get(centralesClientes.get(j));
+                        if (status.canChange(cliente1, cliente2, central1) && status.canChange(cliente2, cliente1, central2)) {
+                            if (status.makesSenseChange(cliente1,cliente2,central1,central2)) {
+                                Status statusAux = new Status(status);
+                                try {
+                                    statusAux.swapCliente(cliente1, central1, cliente2, central2);
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
+                                finalRetval.add(new Successor("MoverCliente(" + i + "," + j + ")", statusAux));
+                            }
+                        }
                     }
                 }
             }
-        }
-        //System.out.println(retval.size());
-        return retval;
+        });
+        System.out.println(retval.size());
+        return finalRetval;
     }
-
-
+/*
+    private Successor getSuccessor(Status status, Relaciones relaciones, ArrayList<Cliente> clientes, Central central1, Central central2, Cliente cliente1, int finalI, Integer cliente2id) {
+        Cliente cliente2 = clientes.get(cliente2id);
+        Status statusAux = new Status(status);
+        if(status.canChange(cliente1,cliente2, relaciones.getRelaciones().get(finalI +1)) && status.canChange(cliente2, cliente1, relaciones.getRelaciones().get(finalI))) {
+            if(status.makesSenseChange(cliente1,cliente2, relaciones.getRelaciones().get(finalI +1), relaciones.getRelaciones().get(finalI))) {
+                try {
+                    statusAux.swapCliente(cliente1, central1, cliente2, central2);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                Successor successor = new Successor("MoverCliente(", statusAux);
+                return successor;
+            }
+        }
+        return null;
+    }
+ */
 
     public List getSuccessors(Object state){
         try {
-            return getSuccessorsFirstExperiment(state);
+            //Runtime runtime = Runtime.getRuntime();
+
+            //System.out.println ("Memoria máxima: " + runtime.maxMemory() / (1024*1024) + "MB");
+            //System.out.println ("Memoria total: " + runtime.totalMemory() / (1024*1024) + "MB");
+            //System.out.println ("Memoria libre: " + runtime.freeMemory() / (1024*1024) + "MB");
+            //System.out.println ("Memoria usada: " + (runtime.totalMemory() - runtime.freeMemory()) / (1024*1024) + "MB");
+            return getSuccessorsSecondExperiment(state);
         }
         catch (Exception e){
             System.out.println("Excepcion: "+e.toString());

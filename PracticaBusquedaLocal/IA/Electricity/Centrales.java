@@ -30,6 +30,7 @@ public class Centrales{
                 }
             }
         }
+        centrales = Collections.unmodifiableMap(centrales);
     }
 
 
@@ -54,5 +55,9 @@ public class Centrales{
 
     public Iterable<? extends Map.Entry<Integer, Central>> entrySet() {
         return centrales.entrySet();
+    }
+
+    public Map<Integer, Central> getCentrales() {
+        return centrales;
     }
 }

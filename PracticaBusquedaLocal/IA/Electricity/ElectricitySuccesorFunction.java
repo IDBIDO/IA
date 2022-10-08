@@ -89,6 +89,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                 }
             }
         }
+        System.out.println(retval.size());
         return retval;
     }
 /*

@@ -142,4 +142,19 @@ public class Status {
         return perdidaNueva<=perdidaActual;
     }
 
+    public boolean canSwapCentral(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {
+        double consumo=0;
+        for(int i=0;i<clientes1.size();++i){
+            consumo=consumo+((1+VEnergia.getPerdida(central1.getCoordX(),central1.getCoordY(),
+                        clientes.get(clientes1.get(i)).getCoordX(),clientes.get(clientes1.get(i)).getCoordY())))*clientes.get(clientes1.get(i)).getConsumo();
+        }
+        if(consumo>central1.getProduccion())return false;
+        consumo = 0;
+        for(int i=0;i<clientes2.size();++i){
+            consumo=consumo+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+                    clientes.get(clientes2.get(i)).getCoordX(),clientes.get(clientes2.get(i)).getCoordY())))*clientes.get(clientes2.get(i)).getConsumo();
+        }
+        if(consumo>central2.getProduccion())return false;
+        return true;
+    }
 }

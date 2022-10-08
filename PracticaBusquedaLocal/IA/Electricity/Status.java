@@ -12,7 +12,7 @@ public class Status {
         centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
         clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
-        initialSolution1(false,seed);
+        initialSolution4(false);
     }
 
     public Status(Status status){
@@ -108,6 +108,17 @@ public class Status {
     //Adds clients to power plants in such a way that minimises the number of power plants working
     void initialSolution3(boolean includeNoGuaranteed) throws Exception {
         ArrayList<Integer>centralIds = centrales.getIds();
+        Collections.sort(centralIds, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer central1, Integer central2) {
+                if(centrales.get(central1).getProduccion()>centrales.get(central2).getProduccion())return -1;
+                else if (centrales.get(central1).getProduccion()<centrales.get(central2).getProduccion()) return 1;
+                else{
+                    if(central1<central2)return -1;
+                    else return 1;
+                }
+            }
+        });
         int central =0;
         for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
             {
@@ -124,6 +135,41 @@ public class Status {
                         while(central<centralIds.size() && !canServe(entry.getValue(),centrales.get(central)))++central;
                         if(central>=centralIds.size())break;
                         relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                    }
+                }
+            }
+        }
+        System.out.println("------------------------------------------ ");
+        System.out.println("Initial solutions: ");
+        //relaciones.print(clientes,centrales);
+        System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
+    }
+    //Tries to have a uniform assignation of power plants and clients. Though it may be impossible.
+    void initialSolution4(boolean includeNoGuaranteed) throws Exception {
+        ArrayList<Integer>centralIds = centrales.getIds();
+        int central =0;
+        for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
+            {
+                if (entry.getValue().isGuaranteed()) {
+                    while(!canServe(entry.getValue(),centrales.get(central))){
+                        ++central;
+                        if(central==centrales.size())central=0;
+                    }
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                    ++central;
+                    if(central==centrales.size())central=0;
+                }
+            }
+        }
+        central =0;
+        if(includeNoGuaranteed) {
+            for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
+                {
+                    if (!entry.getValue().isGuaranteed()) {
+                        while(central<centralIds.size() && !canServe(entry.getValue(),centrales.get(central)))++central;
+                        if(central>=centralIds.size())break;
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                        ++central;
                     }
                 }
             }

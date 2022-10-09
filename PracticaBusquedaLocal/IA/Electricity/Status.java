@@ -1,5 +1,6 @@
 package IA.Electricity;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Status {
@@ -181,38 +182,53 @@ public class Status {
     }
     //Assigns power plants to customers so that a customer of type x is assigned to a power plant of type x, if possible.
     void initialSolution5(boolean includeNoGuaranteed) throws Exception {
-        ArrayList<Integer>centralIds = centrales.getIds();
-        int central =0;
-        for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
-            {
+        ArrayList<Integer> centralIds = centrales.getIds();
+        int central = -1;
+        for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
                 if (entry.getValue().isGuaranteed()) {
-                    while(!canServe(entry.getValue(),centrales.get(central))){
-                        ++central;
-                        if(central==centrales.size())central=0;
+                    int type = entry.getValue().getTipo();
+                    for (int i = 0; i < centralIds.size(); ++i) {
+                        if (centrales.get(centralIds.get(i)).getTipo() == type) {
+                            if (canServe(entry.getValue(), centrales.get(centralIds.get(i)))) {
+                                central = i;
+                                break;
+                            }
+                        }
                     }
-                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
-                    ++central;
-                    if(central==centrales.size())central=0;
+                    if (central == -1) {
+                        central = 0;
+                        while (!canServe(entry.getValue(), centrales.get(central))) ++central;
+                    }
+                    relaciones.asignaCliente(entry.getValue(), centrales.get(centralIds.get(central)));
+                    central = -1;
                 }
             }
-        }
-        central =0;
-        if(includeNoGuaranteed) {
-            for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
-                {
-                    if (!entry.getValue().isGuaranteed()) {
-                        while(central<centralIds.size() && !canServe(entry.getValue(),centrales.get(central)))++central;
-                        if(central>=centralIds.size())break;
-                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
-                        ++central;
+            central = -1;
+            if (includeNoGuaranteed) {
+                for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
+                    {
+                        int type = entry.getValue().getTipo();
+                        for (int i = 0; i < centralIds.size(); ++i) {
+                            if (centrales.get(centralIds.get(i)).getTipo() == type) {
+                                if (canServe(entry.getValue(), centrales.get(centralIds.get(i)))) {
+                                    central = i;
+                                    break;
+                                }
+                            }
+                        }
+                        if (central == -1) {
+                            central = 0;
+                            while (!canServe(entry.getValue(), centrales.get(central))) ++central;
+                        }
+                        relaciones.asignaCliente(entry.getValue(), centrales.get(centralIds.get(central)));
+                        central = -1;
                     }
                 }
             }
-        }
-        System.out.println("------------------------------------------ ");
-        System.out.println("Initial solutions: ");
-        //relaciones.print(clientes,centrales);
-        System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
+            System.out.println("------------------------------------------ ");
+            System.out.println("Initial solutions: ");
+            //relaciones.print(clientes,centrales);
+            System.out.println("Beneficio: " + String.valueOf(beneficioPorCentral()));
     }
 
     public ArrayList<Cliente> getNoGuaranteeAsignedClientes() {

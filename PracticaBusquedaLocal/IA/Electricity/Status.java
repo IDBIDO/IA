@@ -1,5 +1,6 @@
 package IA.Electricity;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Status {
@@ -186,8 +187,26 @@ public class Status {
         System.out.println("Beneficio: "+beneficioPorCentral());
     }
 
+    public void printState2() {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        for (int i = 0; i < relaciones.mwUsados.size(); ++i) {
+            System.out.println("Consumido/MaxProduccion:" + df.format(relaciones.mwUsados.get(i)) + " / " + centrales.get(i).getProduccion());
+        }
+    }
+
     public boolean canServe(Cliente cliente,Central central) {
         return relaciones.puedeAsignarse(cliente,central);
+    }
+
+    public Central puedeAsignarAlgunCentral(Cliente cliente) {
+
+        for (Map.Entry<Integer, Central> centralIter : centrales.entrySet()) {
+            if (relaciones.getClientes().get(cliente.getId()) != centralIter.getKey() && this.canServe(cliente, centralIter.getValue())) {
+                return centralIter.getValue();
+            }
+        }
+        return null;
     }
 
     public boolean canChange(Cliente cliente1, Cliente cliente2,Central central){

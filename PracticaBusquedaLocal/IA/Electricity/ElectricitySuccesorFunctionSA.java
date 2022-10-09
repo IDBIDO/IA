@@ -17,6 +17,8 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
         random = new Random();
     }
 
+
+
     @Override
     public List getSuccessors(Object state) {
         ArrayList retval = new ArrayList();
@@ -28,8 +30,12 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
         ArrayList<Central> centrales = new ArrayList<Central>(centralesaux.getCentrales().values());
         ArrayList<Integer>centralesClientes = relaciones.getClientes();
 
+        int clientSize = clientes.size();
+        int noguaranteedSize;
         int ran = random.nextInt(2);    //0 -> swap; 1-> asignar cliente
-        if (ran == 0) {     //swap
+
+
+        if (ran == 4) {
 
             //coger una asignacion cliente-> central valida
             int uidCliente1 = random.nextInt(centralesClientes.size());
@@ -68,25 +74,57 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
             }
             retval.add(new Successor("MoverCliente(" + uidCliente1 + " <-> " + uidCliente2 + ")", statusAux));
 
-        } else if (ran == 1) {
-            int uidCliente = random.nextInt(centralesClientes.size());
+        }
+
+        else if (ran < 9) {
+            int uidCliente = random.nextInt(centralesClientes.size());      //coger un cliente random
             Cliente cliente = clientes.get(uidCliente);
 
-            int centralKey = random.nextInt(centrales.size());
-
-
+            int centralKey = random.nextInt(centrales.size());      //coger una central random
             if (centralesClientes.get(uidCliente) == -1) {     //no central asignado, asignar cliente
+                System.out.println(1);
+                while(!status.canServe(cliente, centrales.get(centralKey))) {
+                    Central aux = status.puedeAsignarAlgunCentral(cliente);
+                    if (aux != null) {
+                        centralKey = aux.getId();
+                    }
+                    else return retval;
+                }
+                Status statusAux = new Status(status);
+                try {
+                    statusAux.asignarCliente(cliente, centrales.get(centralKey));   //asignar nueva central
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                retval.add(new Successor("AsignarCliente(" + String.valueOf(uidCliente) + "," + String.valueOf(centralKey) + ")", statusAux));
 
             }
+
             else {      //hay que quitar de su central
-                while(centralesClientes.get(uidCliente) == centralKey || !status.canServe(cliente, centrales.get(centralKey)))
-                    centralKey = random.nextInt(centrales.size());
+                while(centralesClientes.get(uidCliente) == centralKey || !status.canServe(cliente, centrales.get(centralKey))) {
+                    //centralKey = random.nextInt(centrales.size());
+                    Central aux = status.puedeAsignarAlgunCentral(cliente);
+
+                    if (aux != null) {
+                        centralKey = aux.getId();
+                    }
+                    else return retval;
+                }
 
                 Status statusAux = new Status(status);
-                //
+                try {
+                    statusAux.quitarCliente(cliente, centrales.get( centralesClientes.get(uidCliente) ));       //quitar la central originak
+                    statusAux.asignarCliente(cliente, centrales.get(centralKey));   //asignar nueva central
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                retval.add(new Successor("AsignarCliente(" + String.valueOf(uidCliente) + "," + String.valueOf(centralKey) + ")", statusAux));
+
             }
 
         }
+
+
 
 
         return retval;

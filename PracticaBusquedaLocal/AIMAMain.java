@@ -45,18 +45,20 @@ public class AIMAMain {
 
         //steps stiter k lamda
         //Search algSA = new SimulatedAnnealingSearch();
-        Search algSA = new SimulatedAnnealingSearch(1000000, 20, 5, 0.001);
+        Search algSA = new SimulatedAnnealingSearch(100000, 20, 5, 0.001);
         SearchAgent agent = new SearchAgent(pSA, algSA);
 
         // We print the results of the search
         //printActions(agent.getActions());
-        //printInstrumentation(agent.getInstrumentation());
+        printInstrumentation(agent.getInstrumentation());
 
         // You can access also to the goal state using the
         // method getGoalState of class Search
 
         Status finalStatus = (Status)algSA.getGoalState();
         //finalStatus.printState();
+        finalStatus.printState2();
+
         System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
         System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));
         System.out.println("Coste total:"+String.valueOf(finalStatus.costeTotal()));

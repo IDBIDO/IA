@@ -181,6 +181,18 @@ public class Status {
         System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
     }
 
+    public ArrayList<Cliente> getNoGuaranteeAsignedClientes() {
+        ArrayList<Cliente> ret = new ArrayList<>();
+        for (int i = 0; i < relaciones.getClientes().size(); ++i) {
+            if (relaciones.getClientes().get(i) != -1) {
+                Cliente cliente = clientes.get(i);
+                if (!cliente.isGuaranteed()) {
+                    ret.add(cliente);
+                }
+            }
+        }
+        return ret;
+    }
 
     public void printState() throws Exception {
         relaciones.print(clientes,centrales);

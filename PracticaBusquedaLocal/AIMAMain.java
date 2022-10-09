@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
-        int seed=6;
+        int seed=2;
         if(args.length == 1){
             seed = Integer.parseInt(args[0]);
         }
@@ -22,6 +22,7 @@ public class AIMAMain {
         //status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 
+        /*
         // Create the Problem object
         Problem p = new  Problem(status,
                 new ElectricitySuccesorFunction(),
@@ -31,9 +32,9 @@ public class AIMAMain {
         // Instantiate the search algorithm
         // AStarSearch(new GraphSearch()) or IterativeDeepeningAStarSearch()
 
-        //Search alg = new HillClimbingSearch();
-        //SearchAgent agent = new SearchAgent(p, alg);
-
+        Search alg = new HillClimbingSearch();
+        SearchAgent agent = new SearchAgent(p, alg);
+        */
 
 
 
@@ -45,7 +46,7 @@ public class AIMAMain {
 
         //steps stiter k lamda
         //Search algSA = new SimulatedAnnealingSearch();
-        Search algSA = new SimulatedAnnealingSearch(100000, 20, 5, 0.001);
+        Search algSA = new SimulatedAnnealingSearch(200000, 500, 100, 0.001);
         SearchAgent agent = new SearchAgent(pSA, algSA);
 
         // We print the results of the search

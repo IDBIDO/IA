@@ -30,12 +30,15 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
         ArrayList<Central> centrales = new ArrayList<Central>(centralesaux.getCentrales().values());
         ArrayList<Integer>centralesClientes = relaciones.getClientes();
 
-        int clientSize = clientes.size();
-        int noguaranteedSize;
-        int ran = random.nextInt(2);    //0 -> swap; 1-> asignar cliente
+        int clientSize = relaciones.relaciones.size();
+        ArrayList<Cliente> noGuaranteeAsignedClientes = status.getNoGuaranteeAsignedClientes();
+        int noguaranteedSize = noGuaranteeAsignedClientes.size();
+        int dominioSuccesor = clientSize + noguaranteedSize -1;
+
+        int ran = random.nextInt(dominioSuccesor);    //0 -> swap; 1-> asignar cliente
 
 
-        if (ran == 4) {
+        if (ran == -1) {
 
             //coger una asignacion cliente-> central valida
             int uidCliente1 = random.nextInt(centralesClientes.size());
@@ -76,7 +79,7 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
 
         }
 
-        else if (ran < 9) {
+        else if (ran < clientSize) {
             int uidCliente = random.nextInt(centralesClientes.size());      //coger un cliente random
             Cliente cliente = clientes.get(uidCliente);
 
@@ -121,6 +124,23 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
                 retval.add(new Successor("AsignarCliente(" + String.valueOf(uidCliente) + "," + String.valueOf(centralKey) + ")", statusAux));
 
             }
+
+        }
+
+        else if (ran < noguaranteedSize + clientSize) {
+            //System.out.println("Quitar Cliente");
+            int ranNoGuaranteed = random.nextInt(noguaranteedSize);
+            Cliente cliente = noGuaranteeAsignedClientes.get(ranNoGuaranteed);
+            int centralKey = relaciones.getClientes().get(cliente.getId());
+            Central central = centrales.get(centralKey);
+            Status statusAux = new Status(status);
+            try {
+                statusAux.quitarCliente(cliente, central);
+                //statusAux.asignarCliente(cliente, centrales.get(centralKey));   //asignar nueva central
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            retval.add(new Successor("QuitarCliente (" + String.valueOf(cliente.getId()) + "," + String.valueOf(centralKey) + ")", statusAux));
 
         }
 

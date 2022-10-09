@@ -1,5 +1,6 @@
 package IA.Electricity;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Status {
@@ -15,7 +16,7 @@ public class Status {
         initialSolution4(false);
     }
 
-    public Status(Status status){
+    public Status(Status status) {
         this.centrales=status.getCentrales();
         this.clientes=status.getClientes();
         this.relaciones=new Relaciones(status.getRelaciones());
@@ -180,14 +181,44 @@ public class Status {
         System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
     }
 
+    public ArrayList<Cliente> getNoGuaranteeAsignedClientes() {
+        ArrayList<Cliente> ret = new ArrayList<>();
+        for (int i = 0; i < relaciones.getClientes().size(); ++i) {
+            if (relaciones.getClientes().get(i) != -1) {
+                Cliente cliente = clientes.get(i);
+                if (!cliente.isGuaranteed()) {
+                    ret.add(cliente);
+                }
+            }
+        }
+        return ret;
+    }
 
     public void printState() throws Exception {
         relaciones.print(clientes,centrales);
         System.out.println("Beneficio: "+beneficioPorCentral());
     }
 
+    public void printState2() {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        for (int i = 0; i < relaciones.mwUsados.size(); ++i) {
+            System.out.println("Consumido/MaxProduccion:" + df.format(relaciones.mwUsados.get(i)) + " / " + centrales.get(i).getProduccion());
+        }
+    }
+
     public boolean canServe(Cliente cliente,Central central) {
         return relaciones.puedeAsignarse(cliente,central);
+    }
+
+    public Central puedeAsignarAlgunCentral(Cliente cliente) {
+
+        for (Map.Entry<Integer, Central> centralIter : centrales.entrySet()) {
+            if (relaciones.getClientes().get(cliente.getId()) != centralIter.getKey() && this.canServe(cliente, centralIter.getValue())) {
+                return centralIter.getValue();
+            }
+        }
+        return null;
     }
 
     public boolean canChange(Cliente cliente1, Cliente cliente2,Central central){
@@ -216,6 +247,7 @@ public class Status {
     }
 
     public double heuristic2() throws Exception{
+        //System.out.println(beneficioPorCentral()-totalDesperdiciado()*300);
         return beneficioPorCentral()-totalDesperdiciado()*300;
     }
 

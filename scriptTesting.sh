@@ -1,6 +1,4 @@
-
-
-for i in {1..1000}
+for i in {1..20}
 do
     echo "SEED: " $i
     #Replace all from /usr/lib to /AIMA.jar with the command that appears at the run option at the toolbar of Eclipse

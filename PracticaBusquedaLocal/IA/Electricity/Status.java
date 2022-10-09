@@ -179,6 +179,41 @@ public class Status {
         //relaciones.print(clientes,centrales);
         System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
     }
+    //Assigns power plants to customers so that a customer of type x is assigned to a power plant of type x, if possible.
+    void initialSolution5(boolean includeNoGuaranteed) throws Exception {
+        ArrayList<Integer>centralIds = centrales.getIds();
+        int central =0;
+        for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
+            {
+                if (entry.getValue().isGuaranteed()) {
+                    while(!canServe(entry.getValue(),centrales.get(central))){
+                        ++central;
+                        if(central==centrales.size())central=0;
+                    }
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                    ++central;
+                    if(central==centrales.size())central=0;
+                }
+            }
+        }
+        central =0;
+        if(includeNoGuaranteed) {
+            for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
+                {
+                    if (!entry.getValue().isGuaranteed()) {
+                        while(central<centralIds.size() && !canServe(entry.getValue(),centrales.get(central)))++central;
+                        if(central>=centralIds.size())break;
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                        ++central;
+                    }
+                }
+            }
+        }
+        System.out.println("------------------------------------------ ");
+        System.out.println("Initial solutions: ");
+        //relaciones.print(clientes,centrales);
+        System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
+    }
 
 
     public void printState() throws Exception {
@@ -216,6 +251,10 @@ public class Status {
     }
 
     public double heuristic2() throws Exception{
+        return beneficioPorCentral()-totalDesperdiciado();
+    }
+
+    public double heuristic3() throws Exception{
         return beneficioPorCentral()-totalDesperdiciado()*300;
     }
 

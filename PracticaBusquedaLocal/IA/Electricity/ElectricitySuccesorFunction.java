@@ -131,20 +131,24 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                 if(centrales.get(i).getTipo()==centrales.get(j).getTipo()){
                     if(status.canSwapCentral(centrales.get(i),centrales.get(j),centralesClientes.get(i),centralesClientes.get(j))){
                         Status statusAux = new Status(status);
-                        for(int p=0;p<centralesClientes.get(i).size();++p){
-                            statusAux.quitarCliente(clientes.get(centralesClientes.get(i).get(p)),centrales.get(i));
-                            statusAux.asignarCliente(clientes.get(centralesClientes.get(i).get(p)),centrales.get(j));
-                        }
-                        for(int p=0;p<centralesClientes.get(j).size();++p){
-                            statusAux.quitarCliente(clientes.get(centralesClientes.get(j).get(p)),centrales.get(j));
-                            statusAux.asignarCliente(clientes.get(centralesClientes.get(j).get(p)),centrales.get(i));
-                        }
+                        swapcentrales(clientes, centrales, centralesClientes, i, j, statusAux);
                         retval.add(new Successor("SwapCentral(" + i + "," + j + ")", statusAux));
                     }
                 }
             }
         }
         return retval;
+    }
+
+    public static void swapcentrales(ArrayList<Cliente> clientes, ArrayList<Central> centrales, Map<Integer, ArrayList<Integer>> centralesClientes, int i, int j, Status statusAux) throws Exception {
+        for(int p = 0; p< centralesClientes.get(i).size(); ++p){
+            statusAux.quitarCliente(clientes.get(centralesClientes.get(i).get(p)), centrales.get(i));
+            statusAux.asignarCliente(clientes.get(centralesClientes.get(i).get(p)), centrales.get(j));
+        }
+        for(int p = 0; p< centralesClientes.get(j).size(); ++p){
+            statusAux.quitarCliente(clientes.get(centralesClientes.get(j).get(p)), centrales.get(j));
+            statusAux.asignarCliente(clientes.get(centralesClientes.get(j).get(p)), centrales.get(i));
+        }
     }
 
     public List getSuccessorsFourthExperiment(Object state) throws Exception {

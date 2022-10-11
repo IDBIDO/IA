@@ -32,15 +32,26 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                 //Añadimos el cliente a todas las otras centrales
                 for (Map.Entry<Integer, Central> centralIter : centrales.entrySet()) {
                     if (relaciones.getClientes().get(relacion)!=centralIter.getKey() && status.canServe(cliente, centralIter.getValue())) {
-                        Status statusAux = new Status(status);
-                        try {
-                            statusAux.quitarCliente(cliente, centralRelacion);
-                            statusAux.asignarCliente(cliente, centralIter.getValue());
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                        if(status.makesSense(cliente,centralIter.getValue(),centrales.get(relaciones.getClientes().get(relacion)))) {
+                            Status statusAux = new Status(status);
+                            try {
+                                statusAux.quitarCliente(cliente, centralRelacion);
+                                statusAux.asignarCliente(cliente, centralIter.getValue());
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                            finalRetval.add(new Successor("AsignarCliente(" + String.valueOf(relacion) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
                         }
-                        finalRetval.add(new Successor("AsignarCliente(" + String.valueOf(relacion) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
                     }
+                }
+                if(!cliente.isGuaranteed()){
+                    Status statusAux = new Status(status);
+                    try {
+                        statusAux.quitarCliente(cliente, centralRelacion);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    finalRetval.add(new Successor("QuitarCliente(" + String.valueOf(relacion)+")", statusAux));
                 }
             }
         });

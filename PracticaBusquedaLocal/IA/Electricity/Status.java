@@ -13,7 +13,7 @@ public class Status {
         centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
         clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
-        initialSolution3(false);
+        initialSolution2(false);
     }
 
     public Status(Status status) {
@@ -368,4 +368,9 @@ public class Status {
         return ((mwUsados1+mwUsados2)>(consumo1+consumo2));
     }
 
+    public boolean makesSense(Cliente cliente, Central centralNueva, Central centralVieja) {
+        double perdida1 = VEnergia.getPerdida(cliente.getCoordX(),cliente.getCoordY(),centralNueva.getCoordX(),centralNueva.getCoordY());
+        double perdida2 = VEnergia.getPerdida(cliente.getCoordX(),cliente.getCoordY(),centralVieja.getCoordX(),centralVieja.getCoordY());
+        return perdida1<perdida2;
+    }
 }

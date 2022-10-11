@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
-        int seed=2;
+        int seed=1111;
         if(args.length == 1){
             seed = Integer.parseInt(args[0]);
         }
@@ -56,7 +56,7 @@ public class AIMAMain {
         // method getGoalState of class Search
 
         Status finalStatus = (Status)alg.getGoalState();
-        //finalStatus.printState();
+        finalStatus.printState();
         //finalStatus.printState2();
 
         System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));

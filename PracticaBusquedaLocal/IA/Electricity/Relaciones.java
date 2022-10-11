@@ -139,7 +139,8 @@ public class Relaciones{
     public void print(Clientes clientes, Centrales centrales) {
         Set<Integer> clientesServidos = new HashSet<Integer>();
         for (Map.Entry<Integer,Central> entry : centrales.entrySet()) {
-            System.out.println("Capacidad usada: "+String.valueOf(mwUsados.get(entry.getKey())));
+            System.out.println("Capacidad usada: "+mwUsados.get(entry.getKey())+"/"+entry.getValue().getProduccion());
+            System.out.println("Coordenadas: ("+entry.getValue().getCoordX()+","+entry.getValue().getCoordY()+")");
             int i=0;
             for(Integer centralid: relaciones){
                 if(centralid ==entry.getKey()) {

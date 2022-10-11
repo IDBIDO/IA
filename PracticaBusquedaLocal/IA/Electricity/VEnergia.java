@@ -60,10 +60,19 @@ public class VEnergia {
     }
 
     public static double getPerdida(double var0) {
-        int index;
-        for(index = 0;index <perdida.length && perdida[index][0]<var0;++index){}
-        if(index==perdida.length)index=index-1;
-        return perdida[index][1];
+        if(var0<=perdida[0][0])
+            return perdida[0][1];
+
+        if(var0<=perdida[1][0])
+            return perdida[1][1];
+
+        if(var0<=perdida[2][0])
+            return perdida[2][1];
+
+        if(var0<=perdida[3][0])
+            return perdida[3][1];
+
+        return perdida[4][1];
     }
 
     public static double euclidea(double var0, double var2, double var4, double var6) {

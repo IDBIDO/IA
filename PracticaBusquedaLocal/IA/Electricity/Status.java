@@ -288,7 +288,7 @@ public class Status {
     }
 
     //Funcion que calcule el beneficio
-    public double beneficioPorCentral() throws Exception{
+    public double beneficioPorCentral(){
         return relaciones.getBrutoTotal()-relaciones.getCosteTotal()-relaciones.getIndemnizaciones();
     }
 

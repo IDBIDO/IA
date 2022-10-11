@@ -14,6 +14,18 @@ public class Status {
         clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
         initialSolution2(false);
+        calculaIndemnizaciones();
+    }
+
+    private void calculaIndemnizaciones() throws Exception {
+        ArrayList<Integer> clientesCentral = relaciones.getClientes();
+        double indemnizar = 0;
+        for(int i=0;i<clientesCentral.size();++i){
+            if(clientesCentral.get(i)==-1){
+                indemnizar+=VEnergia.getTarifaClientePenalizacion(clientes.get(i).getTipo())*clientes.get(i).getConsumo();
+            }
+        }
+        relaciones.setIndemnizacion(indemnizar);
     }
 
     public Status(Status status) {
@@ -68,13 +80,13 @@ public class Status {
         for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
             {
                 if (entry.getValue().isGuaranteed()) {
-                    double max = -1;
+                    double min = -1;
                     int idCentral =0;
                     for(int i=0;i<centralIds.size();++i){
                         double perdida = VEnergia.getPerdida(centrales.get(centralIds.get(i)).getCoordX(),
                                 centrales.get(centralIds.get(i)).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
-                        if((max==-1 || max>perdida)&&(canServe(entry.getValue(),centrales.get(centralIds.get(i))))){
-                            max = perdida;
+                        if((min==-1 || min>perdida)&&(canServe(entry.getValue(),centrales.get(centralIds.get(i))))){
+                            min = perdida;
                             idCentral = centralIds.get(i);
                         }
                     }
@@ -277,7 +289,7 @@ public class Status {
 
     //Funcion que calcule el beneficio
     public double beneficioPorCentral() throws Exception{
-        return relaciones.getBrutoTotal()-relaciones.getCosteTotal();
+        return relaciones.getBrutoTotal()-relaciones.getCosteTotal()-relaciones.getIndemnizaciones();
     }
 
     //operadores

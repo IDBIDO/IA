@@ -11,6 +11,8 @@ public class Relaciones{
     double brutoTotal;
     double costeTotal;
     double desperdiciadoTotal;
+
+    double indemnizaciones;
     ArrayList<Integer> relaciones;
     ArrayList<Double> mwUsados;
     public Relaciones(Centrales centrales, Clientes clientes) throws Exception {
@@ -18,6 +20,7 @@ public class Relaciones{
         this.mwUsados = new ArrayList<Double>();
         this.brutoTotal = 0;
         this.desperdiciadoTotal=0;
+        this.indemnizaciones = 0;
         for (Map.Entry<Integer, Central> entry : centrales.entrySet()) {
             mwUsados.add(0.0);
             this.costeTotal+=VEnergia.getCosteParada(entry.getValue().getTipo());
@@ -37,6 +40,11 @@ public class Relaciones{
         this.brutoTotal = relaciones.getBrutoTotal();
         this.costeTotal = relaciones.getCosteTotal();
         this.desperdiciadoTotal = relaciones.getDesperdiciadoTotal();
+        this.indemnizaciones = relaciones.getIndemnizaciones();
+    }
+
+    public double getIndemnizaciones() {
+        return indemnizaciones;
     }
 
     public ArrayList<Integer> getClientes() {
@@ -78,6 +86,9 @@ public class Relaciones{
             costeTotal=costeTotal+(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal+(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
         }
+        if(!cliente.isGuaranteed()) {
+            indemnizaciones -= VEnergia.getTarifaClientePenalizacion(cliente.getTipo())*cliente.getConsumo();
+        }
         /*
         System.out.println(brutoTotal - costeTotal);
         System.out.println("\n\n\n");
@@ -97,6 +108,10 @@ public class Relaciones{
         if(floor(abs(mwUsados.get(central.getId())))==0){
             costeTotal=costeTotal-(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal-(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
+            mwUsados.set(central.getId(),0.0);
+        }
+        if(!cliente.isGuaranteed()) {
+            indemnizaciones += VEnergia.getTarifaClientePenalizacion(cliente.getTipo())*cliente.getConsumo();
         }
     }
 
@@ -161,5 +176,9 @@ public class Relaciones{
 
     public double getMWUsadosCentral(Integer key) {
         return mwUsados.get(key);
+    }
+
+    public void setIndemnizacion(double indemnizar) {
+        this.indemnizaciones = indemnizar;
     }
 }

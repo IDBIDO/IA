@@ -43,10 +43,10 @@ public class Status {
         for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
             {
                 if (entry.getValue().isGuaranteed()) {
-                    Central actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                    Central actualCentral = centrales.get(actualCentralIndex);
                     while (!canServe(entry.getValue(),actualCentral)) {
                         actualCentralIndex = r.nextInt(centrales.size());
-                        actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                        actualCentral = centrales.get(actualCentralIndex);
                     }
                     relaciones.asignaCliente(entry.getValue(),actualCentral);
                 }
@@ -57,10 +57,10 @@ public class Status {
             for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
                 {
                     if (!entry.getValue().isGuaranteed()) {
-                        Central actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                        Central actualCentral = centrales.get(actualCentralIndex);
                         while (!canServe(entry.getValue(),actualCentral)) {
                             actualCentralIndex = r.nextInt(centrales.size());
-                            actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                            actualCentral = centrales.get(actualCentralIndex);
                         }
                         relaciones.asignaCliente(entry.getValue(),actualCentral);
                     }
@@ -83,14 +83,14 @@ public class Status {
                     double min = -1;
                     int idCentral =0;
                     for(int i=0;i<centralIds.size();++i){
-                        double perdida = VEnergia.getPerdida(centrales.get(centralIds.get(i)).getCoordX(),
-                                centrales.get(centralIds.get(i)).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
-                        if((min==-1 || min>perdida)&&(canServe(entry.getValue(),centrales.get(centralIds.get(i))))){
+                        double perdida = VEnergia.getPerdida(centrales.get(i).getCoordX(),
+                                centrales.get(i).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
+                        if((min==-1 || min>perdida)&&(canServe(entry.getValue(),centrales.get(i)))){
                             min = perdida;
-                            idCentral = centralIds.get(i);
+                            idCentral = i;
                         }
                     }
-                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(idCentral)));
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(idCentral));
                 }
             }
         }
@@ -101,14 +101,14 @@ public class Status {
                         double max = -1;
                         int idCentral =0;
                         for(int i=0;i<centralIds.size();++i){
-                            double perdida = VEnergia.getPerdida(centrales.get(centralIds.get(i)).getCoordX(),
-                                    centrales.get(centralIds.get(i)).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
-                            if((max==-1 || max>perdida)&&(canServe(entry.getValue(),centrales.get(centralIds.get(i))))){
+                            double perdida = VEnergia.getPerdida(centrales.get(i).getCoordX(),
+                                    centrales.get(i).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
+                            if((max==-1 || max>perdida)&&(canServe(entry.getValue(),centrales.get(i)))){
                                 max = perdida;
-                                idCentral = centralIds.get(i);
+                                idCentral = i;
                             }
                         }
-                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(idCentral)));
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(idCentral));
                     }
                 }
             }
@@ -147,7 +147,7 @@ public class Status {
                     if (!entry.getValue().isGuaranteed()) {
                         while(central<centralIds.size() && !canServe(entry.getValue(),centrales.get(central)))++central;
                         if(central>=centralIds.size())break;
-                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(central));
                     }
                 }
             }
@@ -168,7 +168,7 @@ public class Status {
                         ++central;
                         if(central==centrales.size())central=0;
                     }
-                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(central));
                     ++central;
                     if(central==centrales.size())central=0;
                 }
@@ -181,7 +181,7 @@ public class Status {
                     if (!entry.getValue().isGuaranteed()) {
                         while(central<centralIds.size() && !canServe(entry.getValue(),centrales.get(central)))++central;
                         if(central>=centralIds.size())break;
-                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(central));
                         ++central;
                     }
                 }

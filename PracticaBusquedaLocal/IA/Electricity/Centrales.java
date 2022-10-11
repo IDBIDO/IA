@@ -9,11 +9,11 @@ public class Centrales{
     private static final int[] TIPO = new int[]{0, 1, 2};
 
     Map<Integer,Central> centrales;
-    ArrayList<Integer>idsClientes;
+    ArrayList<Integer> idsCentrales;
 
     public Centrales(int[] powerPlantsPerType, int seed) throws Exception {
         centrales = new HashMap<Integer,Central>();
-        idsClientes = new ArrayList<Integer>();
+        idsCentrales = new ArrayList<Integer>();
         if (powerPlantsPerType.length != 3) {
             throw new Exception("Vector Centrales de tamaño incorrecto");
         } else {
@@ -25,7 +25,7 @@ public class Centrales{
                     double var4 = this.myRandom.nextDouble() * prod[i][0] + prod[i][1];
                     Central central = new Central(TIPO[i], truncate(var4), this.myRandom.nextInt(100), this.myRandom.nextInt(100),count);
                     this.centrales.put(count,central);
-                    this.idsClientes.add(count);
+                    this.idsCentrales.add(count);
                     ++count;
                 }
             }
@@ -44,7 +44,7 @@ public class Centrales{
 
 
     public ArrayList<Integer>getIds(){
-        return this.idsClientes;
+        return this.idsCentrales;
     }
 
 

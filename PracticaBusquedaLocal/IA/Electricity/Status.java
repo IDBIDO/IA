@@ -13,7 +13,7 @@ public class Status {
         centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
         clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
-        initialSolution4(false);
+        initialSolution3(false);
     }
 
     public Status(Status status) {
@@ -125,7 +125,7 @@ public class Status {
             {
                 if (entry.getValue().isGuaranteed()) {
                     while(!canServe(entry.getValue(),centrales.get(central)))++central;
-                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(central));
                 }
             }
         }
@@ -346,19 +346,26 @@ public class Status {
         return perdidaNueva<=perdidaActual;
     }
 
-    public boolean canSwapCentral(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {
-        double consumo=0;
+    public boolean canSwapCentralAndMakesSense(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {
+        double consumo1=0;
+        double consumo2=0;
+
+        double mwUsados1 = relaciones.getMWUsadosCentral(central1.getId());
+        double mwUsados2 = relaciones.getMWUsadosCentral(central2.getId());
+
         for(int i=0;i<clientes1.size();++i){
-            consumo=consumo+((1+VEnergia.getPerdida(central1.getCoordX(),central1.getCoordY(),
-                        clientes.get(clientes1.get(i)).getCoordX(),clientes.get(clientes1.get(i)).getCoordY())))*clientes.get(clientes1.get(i)).getConsumo();
+            consumo1=consumo1+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+                    clientes.get(clientes1.get(i)).getCoordX(),clientes.get(clientes1.get(i)).getCoordY())))*clientes.get(clientes1.get(i)).getConsumo();
         }
-        if(consumo>central1.getProduccion())return false;
-        consumo = 0;
+        if(consumo1>central2.getProduccion())return false;
+
         for(int i=0;i<clientes2.size();++i){
-            consumo=consumo+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+            consumo2=consumo2+((1+VEnergia.getPerdida(central1.getCoordX(),central1.getCoordY(),
                     clientes.get(clientes2.get(i)).getCoordX(),clientes.get(clientes2.get(i)).getCoordY())))*clientes.get(clientes2.get(i)).getConsumo();
         }
-        if(consumo>central2.getProduccion())return false;
-        return true;
+        if(consumo2>central1.getProduccion())return false;
+                        //So that we only generate the successor if the assignation reduces the energy loss
+        return ((mwUsados1+mwUsados2)>(consumo1+consumo2));
     }
+
 }

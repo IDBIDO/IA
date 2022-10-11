@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.lang.Math.abs;
+
 /**
  * Created by bejar on 17/01/17
  */
@@ -129,7 +131,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         for(int i=0;i<centrales.size();++i){
             for(int j=i+1;j<centrales.size();++j){
                 if(centrales.get(i).getTipo()==centrales.get(j).getTipo()){
-                    if(status.canSwapCentral(centrales.get(i),centrales.get(j),centralesClientes.get(i),centralesClientes.get(j))){
+                    if(status.canSwapCentralAndMakesSense(centrales.get(i),centrales.get(j),centralesClientes.get(i),centralesClientes.get(j))){
                         Status statusAux = new Status(status);
                         swapcentrales(clientes, centrales, centralesClientes, i, j, statusAux);
                         retval.add(new Successor("SwapCentral(" + i + "," + j + ")", statusAux));
@@ -167,7 +169,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             //System.out.println ("Memoria total: " + runtime.totalMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria libre: " + runtime.freeMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria usada: " + (runtime.totalMemory() - runtime.freeMemory()) / (1024*1024) + "MB");
-            return getSuccessorsThirdExperiment(state);
+            return getSuccessorsFirstExperiment(state);
         }
         catch (Exception e){
             System.out.println("Excepcion: "+e.toString());

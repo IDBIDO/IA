@@ -19,10 +19,10 @@ public class AIMAMain {
             seed = Integer.parseInt(args[0]);
         }
         Status status = new Status(seed);
-        //status.printState();
+        status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 
-        /*
+
         // Create the Problem object
         Problem p = new  Problem(status,
                 new ElectricitySuccesorFunction(),
@@ -34,31 +34,30 @@ public class AIMAMain {
 
         Search alg = new HillClimbingSearch();
         SearchAgent agent = new SearchAgent(p, alg);
-        */
 
 
 
         // Instantiate the SearchAgent object SA
-        Problem pSA = new  Problem(status,
-                new ElectricitySuccesorFunctionSA(),
-                new ElectricityGoalTest(),
-                new ElectricityHeuristicFunction());
+        //Problem pSA = new  Problem(status,
+        //        new ElectricitySuccesorFunctionSA(),
+        //        new ElectricityGoalTest(),
+        //        new ElectricityHeuristicFunction());
 
         //steps stiter k lamda
         //Search algSA = new SimulatedAnnealingSearch();
-        Search algSA = new SimulatedAnnealingSearch(200000, 500, 100, 0.001);
-        SearchAgent agent = new SearchAgent(pSA, algSA);
+        //Search algSA = new SimulatedAnnealingSearch(200000, 500, 100, 0.001);
+        //SearchAgent agent = new SearchAgent(pSA, algSA);
 
         // We print the results of the search
-        //printActions(agent.getActions());
+        printActions(agent.getActions());
         printInstrumentation(agent.getInstrumentation());
 
         // You can access also to the goal state using the
         // method getGoalState of class Search
 
-        Status finalStatus = (Status)algSA.getGoalState();
+        Status finalStatus = (Status)alg.getGoalState();
         //finalStatus.printState();
-        finalStatus.printState2();
+        //finalStatus.printState2();
 
         System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
         System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));

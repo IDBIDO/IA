@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.lang.Math.abs;
+
 /**
  * Created by bejar on 17/01/17
  */
@@ -30,15 +32,26 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                 //Añadimos el cliente a todas las otras centrales
                 for (Map.Entry<Integer, Central> centralIter : centrales.entrySet()) {
                     if (relaciones.getClientes().get(relacion)!=centralIter.getKey() && status.canServe(cliente, centralIter.getValue())) {
-                        Status statusAux = new Status(status);
-                        try {
-                            statusAux.quitarCliente(cliente, centralRelacion);
-                            statusAux.asignarCliente(cliente, centralIter.getValue());
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                        if(status.makesSense(cliente,centralIter.getValue(),centrales.get(relaciones.getClientes().get(relacion)))) {
+                            Status statusAux = new Status(status);
+                            try {
+                                statusAux.quitarCliente(cliente, centralRelacion);
+                                statusAux.asignarCliente(cliente, centralIter.getValue());
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                            finalRetval.add(new Successor("AsignarCliente(" + String.valueOf(relacion) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
                         }
-                        finalRetval.add(new Successor("AsignarCliente(" + String.valueOf(relacion) + "," + String.valueOf(centralIter.getKey()) + ")", statusAux));
                     }
+                }
+                if(!cliente.isGuaranteed()){
+                    Status statusAux = new Status(status);
+                    try {
+                        statusAux.quitarCliente(cliente, centralRelacion);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    finalRetval.add(new Successor("QuitarCliente(" + String.valueOf(relacion)+")", statusAux));
                 }
             }
         });
@@ -129,22 +142,26 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         for(int i=0;i<centrales.size();++i){
             for(int j=i+1;j<centrales.size();++j){
                 if(centrales.get(i).getTipo()==centrales.get(j).getTipo()){
-                    if(status.canSwapCentral(centrales.get(i),centrales.get(j),centralesClientes.get(i),centralesClientes.get(j))){
+                    if(status.canSwapCentralAndMakesSense(centrales.get(i),centrales.get(j),centralesClientes.get(i),centralesClientes.get(j))){
                         Status statusAux = new Status(status);
-                        for(int p=0;p<centralesClientes.get(i).size();++p){
-                            statusAux.quitarCliente(clientes.get(centralesClientes.get(i).get(p)),centrales.get(i));
-                            statusAux.asignarCliente(clientes.get(centralesClientes.get(i).get(p)),centrales.get(j));
-                        }
-                        for(int p=0;p<centralesClientes.get(j).size();++p){
-                            statusAux.quitarCliente(clientes.get(centralesClientes.get(j).get(p)),centrales.get(j));
-                            statusAux.asignarCliente(clientes.get(centralesClientes.get(j).get(p)),centrales.get(i));
-                        }
+                        swapcentrales(clientes, centrales, centralesClientes, i, j, statusAux);
                         retval.add(new Successor("SwapCentral(" + i + "," + j + ")", statusAux));
                     }
                 }
             }
         }
         return retval;
+    }
+
+    public static void swapcentrales(ArrayList<Cliente> clientes, ArrayList<Central> centrales, Map<Integer, ArrayList<Integer>> centralesClientes, int i, int j, Status statusAux) throws Exception {
+        for(int p = 0; p< centralesClientes.get(i).size(); ++p){
+            statusAux.quitarCliente(clientes.get(centralesClientes.get(i).get(p)), centrales.get(i));
+            statusAux.asignarCliente(clientes.get(centralesClientes.get(i).get(p)), centrales.get(j));
+        }
+        for(int p = 0; p< centralesClientes.get(j).size(); ++p){
+            statusAux.quitarCliente(clientes.get(centralesClientes.get(j).get(p)), centrales.get(j));
+            statusAux.asignarCliente(clientes.get(centralesClientes.get(j).get(p)), centrales.get(i));
+        }
     }
 
     public List getSuccessorsFourthExperiment(Object state) throws Exception {
@@ -163,7 +180,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             //System.out.println ("Memoria total: " + runtime.totalMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria libre: " + runtime.freeMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria usada: " + (runtime.totalMemory() - runtime.freeMemory()) / (1024*1024) + "MB");
-            return getSuccessorsThirdExperiment(state);
+            return getSuccessorsFirstExperiment(state);
         }
         catch (Exception e){
             System.out.println("Excepcion: "+e.toString());

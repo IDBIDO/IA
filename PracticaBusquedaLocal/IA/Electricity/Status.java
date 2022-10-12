@@ -13,7 +13,19 @@ public class Status {
         centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
         clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
-        initialSolution4(false);
+        initialSolution2(false);
+        calculaIndemnizaciones();
+    }
+
+    private void calculaIndemnizaciones() throws Exception {
+        ArrayList<Integer> clientesCentral = relaciones.getClientes();
+        double indemnizar = 0;
+        for(int i=0;i<clientesCentral.size();++i){
+            if(clientesCentral.get(i)==-1){
+                indemnizar+=VEnergia.getTarifaClientePenalizacion(clientes.get(i).getTipo())*clientes.get(i).getConsumo();
+            }
+        }
+        relaciones.setIndemnizacion(indemnizar);
     }
 
     public Status(Status status) {
@@ -31,10 +43,10 @@ public class Status {
         for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
             {
                 if (entry.getValue().isGuaranteed()) {
-                    Central actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                    Central actualCentral = centrales.get(actualCentralIndex);
                     while (!canServe(entry.getValue(),actualCentral)) {
                         actualCentralIndex = r.nextInt(centrales.size());
-                        actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                        actualCentral = centrales.get(actualCentralIndex);
                     }
                     relaciones.asignaCliente(entry.getValue(),actualCentral);
                 }
@@ -45,10 +57,10 @@ public class Status {
             for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
                 {
                     if (!entry.getValue().isGuaranteed()) {
-                        Central actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                        Central actualCentral = centrales.get(actualCentralIndex);
                         while (!canServe(entry.getValue(),actualCentral)) {
                             actualCentralIndex = r.nextInt(centrales.size());
-                            actualCentral = centrales.get(centralIds.get(actualCentralIndex));
+                            actualCentral = centrales.get(actualCentralIndex);
                         }
                         relaciones.asignaCliente(entry.getValue(),actualCentral);
                     }
@@ -68,17 +80,17 @@ public class Status {
         for (Map.Entry<Integer,Cliente> entry : clientes.entrySet()) {
             {
                 if (entry.getValue().isGuaranteed()) {
-                    double max = -1;
+                    double min = -1;
                     int idCentral =0;
                     for(int i=0;i<centralIds.size();++i){
-                        double perdida = VEnergia.getPerdida(centrales.get(centralIds.get(i)).getCoordX(),
-                                centrales.get(centralIds.get(i)).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
-                        if((max==-1 || max>perdida)&&(canServe(entry.getValue(),centrales.get(centralIds.get(i))))){
-                            max = perdida;
-                            idCentral = centralIds.get(i);
+                        double perdida = VEnergia.getPerdida(centrales.get(i).getCoordX(),
+                                centrales.get(i).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
+                        if((min==-1 || min>perdida)&&(canServe(entry.getValue(),centrales.get(i)))){
+                            min = perdida;
+                            idCentral = i;
                         }
                     }
-                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(idCentral)));
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(idCentral));
                 }
             }
         }
@@ -89,14 +101,14 @@ public class Status {
                         double max = -1;
                         int idCentral =0;
                         for(int i=0;i<centralIds.size();++i){
-                            double perdida = VEnergia.getPerdida(centrales.get(centralIds.get(i)).getCoordX(),
-                                    centrales.get(centralIds.get(i)).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
-                            if((max==-1 || max>perdida)&&(canServe(entry.getValue(),centrales.get(centralIds.get(i))))){
+                            double perdida = VEnergia.getPerdida(centrales.get(i).getCoordX(),
+                                    centrales.get(i).getCoordY(),entry.getValue().getCoordX(),entry.getValue().getCoordY());
+                            if((max==-1 || max>perdida)&&(canServe(entry.getValue(),centrales.get(i)))){
                                 max = perdida;
-                                idCentral = centralIds.get(i);
+                                idCentral = i;
                             }
                         }
-                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(idCentral)));
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(idCentral));
                     }
                 }
             }
@@ -125,7 +137,7 @@ public class Status {
             {
                 if (entry.getValue().isGuaranteed()) {
                     while(!canServe(entry.getValue(),centrales.get(central)))++central;
-                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(central));
                 }
             }
         }
@@ -135,7 +147,7 @@ public class Status {
                     if (!entry.getValue().isGuaranteed()) {
                         while(central<centralIds.size() && !canServe(entry.getValue(),centrales.get(central)))++central;
                         if(central>=centralIds.size())break;
-                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(central));
                     }
                 }
             }
@@ -156,7 +168,7 @@ public class Status {
                         ++central;
                         if(central==centrales.size())central=0;
                     }
-                    relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                    relaciones.asignaCliente(entry.getValue(),centrales.get(central));
                     ++central;
                     if(central==centrales.size())central=0;
                 }
@@ -169,7 +181,7 @@ public class Status {
                     if (!entry.getValue().isGuaranteed()) {
                         while(central<centralIds.size() && !canServe(entry.getValue(),centrales.get(central)))++central;
                         if(central>=centralIds.size())break;
-                        relaciones.asignaCliente(entry.getValue(),centrales.get(centralIds.get(central)));
+                        relaciones.asignaCliente(entry.getValue(),centrales.get(central));
                         ++central;
                     }
                 }
@@ -179,6 +191,56 @@ public class Status {
         System.out.println("Initial solutions: ");
         //relaciones.print(clientes,centrales);
         System.out.println("Beneficio: "+String.valueOf(beneficioPorCentral()));
+    }
+    //Assigns power plants to customers so that a customer of type x is assigned to a power plant of type x, if possible.
+    void initialSolution5(boolean includeNoGuaranteed) throws Exception {
+        ArrayList<Integer> centralIds = centrales.getIds();
+        int central = -1;
+        for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
+                if (entry.getValue().isGuaranteed()) {
+                    int type = entry.getValue().getTipo();
+                    for (int i = 0; i < centralIds.size(); ++i) {
+                        if (centrales.get(centralIds.get(i)).getTipo() == type) {
+                            if (canServe(entry.getValue(), centrales.get(centralIds.get(i)))) {
+                                central = i;
+                                break;
+                            }
+                        }
+                    }
+                    if (central == -1) {
+                        central = 0;
+                        while (!canServe(entry.getValue(), centrales.get(central))) ++central;
+                    }
+                    relaciones.asignaCliente(entry.getValue(), centrales.get(centralIds.get(central)));
+                    central = -1;
+                }
+            }
+            central = -1;
+            if (includeNoGuaranteed) {
+                for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
+                    {
+                        int type = entry.getValue().getTipo();
+                        for (int i = 0; i < centralIds.size(); ++i) {
+                            if (centrales.get(centralIds.get(i)).getTipo() == type) {
+                                if (canServe(entry.getValue(), centrales.get(centralIds.get(i)))) {
+                                    central = i;
+                                    break;
+                                }
+                            }
+                        }
+                        if (central == -1) {
+                            central = 0;
+                            while (!canServe(entry.getValue(), centrales.get(central))) ++central;
+                        }
+                        relaciones.asignaCliente(entry.getValue(), centrales.get(centralIds.get(central)));
+                        central = -1;
+                    }
+                }
+            }
+            System.out.println("------------------------------------------ ");
+            System.out.println("Initial solutions: ");
+            //relaciones.print(clientes,centrales);
+            System.out.println("Beneficio: " + String.valueOf(beneficioPorCentral()));
     }
 
 
@@ -227,8 +289,8 @@ public class Status {
     }
 
     //Funcion que calcule el beneficio
-    public double beneficioPorCentral() throws Exception{
-        return relaciones.getBrutoTotal()-relaciones.getCosteTotal();
+    public double beneficioPorCentral(){
+        return relaciones.getBrutoTotal()-relaciones.getCosteTotal()-relaciones.getIndemnizaciones();
     }
 
     //operadores
@@ -248,7 +310,10 @@ public class Status {
     }
 
     public double heuristic2() throws Exception{
-        //System.out.println(beneficioPorCentral()-totalDesperdiciado()*300);
+        return beneficioPorCentral()-totalDesperdiciado();
+    }
+
+    public double heuristic3() throws Exception{
         return beneficioPorCentral()-totalDesperdiciado()*300;
     }
 
@@ -294,19 +359,31 @@ public class Status {
         return perdidaNueva<=perdidaActual;
     }
 
-    public boolean canSwapCentral(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {
-        double consumo=0;
+    public boolean canSwapCentralAndMakesSense(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {
+        double consumo1=0;
+        double consumo2=0;
+
+        double mwUsados1 = relaciones.getMWUsadosCentral(central1.getId());
+        double mwUsados2 = relaciones.getMWUsadosCentral(central2.getId());
+
         for(int i=0;i<clientes1.size();++i){
-            consumo=consumo+((1+VEnergia.getPerdida(central1.getCoordX(),central1.getCoordY(),
-                        clientes.get(clientes1.get(i)).getCoordX(),clientes.get(clientes1.get(i)).getCoordY())))*clientes.get(clientes1.get(i)).getConsumo();
+            consumo1=consumo1+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+                    clientes.get(clientes1.get(i)).getCoordX(),clientes.get(clientes1.get(i)).getCoordY())))*clientes.get(clientes1.get(i)).getConsumo();
         }
-        if(consumo>central1.getProduccion())return false;
-        consumo = 0;
+        if(consumo1>central2.getProduccion())return false;
+
         for(int i=0;i<clientes2.size();++i){
-            consumo=consumo+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+            consumo2=consumo2+((1+VEnergia.getPerdida(central1.getCoordX(),central1.getCoordY(),
                     clientes.get(clientes2.get(i)).getCoordX(),clientes.get(clientes2.get(i)).getCoordY())))*clientes.get(clientes2.get(i)).getConsumo();
         }
-        if(consumo>central2.getProduccion())return false;
-        return true;
+        if(consumo2>central1.getProduccion())return false;
+                        //So that we only generate the successor if the assignation reduces the energy loss
+        return ((mwUsados1+mwUsados2)>(consumo1+consumo2));
+    }
+
+    public boolean makesSense(Cliente cliente, Central centralNueva, Central centralVieja) {
+        double perdida1 = VEnergia.getPerdida(cliente.getCoordX(),cliente.getCoordY(),centralNueva.getCoordX(),centralNueva.getCoordY());
+        double perdida2 = VEnergia.getPerdida(cliente.getCoordX(),cliente.getCoordY(),centralVieja.getCoordX(),centralVieja.getCoordY());
+        return perdida1<perdida2;
     }
 }

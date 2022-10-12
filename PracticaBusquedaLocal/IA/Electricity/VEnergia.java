@@ -11,63 +11,72 @@ public class VEnergia {
     public VEnergia() {
     }
 
-    public static double getTarifaClienteGarantizada(int var0) throws Exception {
-        if (var0 >= 0 && var0 <= 2) {
-            return precios[var0][0];
+    public static double getTarifaClienteGarantizada(int tipo) throws Exception {
+        if (tipo >= 0 && tipo <= 2) {
+            return precios[tipo][0];
         } else {
             throw new Exception("Tipo fuera de rango");
         }
     }
 
-    public static double getTarifaClienteNoGarantizada(int var0) throws Exception {
-        if (var0 >= 0 && var0 <= 2) {
-            return precios[var0][1];
+    public static double getTarifaClienteNoGarantizada(int tipo) throws Exception {
+        if (tipo >= 0 && tipo <= 2) {
+            return precios[tipo][1];
         } else {
             throw new Exception("Tipo fuera de rango");
         }
     }
 
-    public static double getTarifaClientePenalizacion(int var0) throws Exception {
-        if (var0 >= 0 && var0 <= 2) {
-            return precios[var0][2];
+    public static double getTarifaClientePenalizacion(int tipo) throws Exception {
+        if (tipo >= 0 && tipo <= 2) {
+            return precios[tipo][2];
         } else {
             throw new Exception("Tipo fuera de rango");
         }
     }
 
-    public static double getCosteProduccionMW(int var0) throws Exception {
-        if (var0 >= 0 && var0 <= 2) {
-            return costes[var0][0];
+    public static double getCosteProduccionMW(int tipo) throws Exception {
+        if (tipo >= 0 && tipo <= 2) {
+            return costes[tipo][0];
         } else {
             throw new Exception("Tipo fuera de rango");
         }
     }
 
-    public static double getCosteMarcha(int var0) throws Exception {
-        if (var0 >= 0 && var0 <= 2) {
-            return costes[var0][1];
+    public static double getCosteMarcha(int tipo) throws Exception {
+        if (tipo >= 0 && tipo <= 2) {
+            return costes[tipo][1];
         } else {
             throw new Exception("Tipo fuera de rango");
         }
     }
 
-    public static double getCosteParada(int var0) throws Exception {
-        if (var0 >= 0 && var0 <= 2) {
-            return costes[var0][2];
+    public static double getCosteParada(int tipo) throws Exception {
+        if (tipo >= 0 && tipo <= 2) {
+            return costes[tipo][2];
         } else {
             throw new Exception("Tipo fuera de rango");
         }
     }
 
-    public static double getPerdida(double var0) {
-        int index;
-        for(index = 0;index <perdida.length && perdida[index][0]<var0;++index){}
-        if(index==perdida.length)index=index-1;
-        return perdida[index][1];
+    public static double getPerdida(double tipo) {
+        if(tipo<=perdida[0][0])
+            return perdida[0][1];
+
+        if(tipo<=perdida[1][0])
+            return perdida[1][1];
+
+        if(tipo<=perdida[2][0])
+            return perdida[2][1];
+
+        if(tipo<=perdida[3][0])
+            return perdida[3][1];
+
+        return perdida[4][1];
     }
 
-    public static double euclidea(double var0, double var2, double var4, double var6) {
-        return Math.sqrt((var0 - var4) * (var0 - var4) + (var2 - var6) * (var2 - var6));
+    public static double euclidea(double x1, double y1, double x2, double y2) {
+        return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     }
 
     public static double getPerdida(double coordX1, double coordY1,double coordX2, double coordY2){

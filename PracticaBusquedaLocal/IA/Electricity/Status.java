@@ -1,5 +1,8 @@
 package IA.Electricity;
 
+import aima.util.Pair;
+
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -305,6 +308,24 @@ public class Status {
         return relaciones;
     }
 
+    public double getMwTotal() {
+        double sum = 0;
+        for (int i = 0; i < centrales.size(); ++i) {
+            sum += centrales.get(i).getProduccion();
+        }
+        return sum;
+    }
+
+    public double getMwUsadoTotal() {
+        ArrayList<Double> mwUsadoPorCentral = relaciones.getMwUsados();
+        double sum = 0;
+        for (int i = 0; i < mwUsadoPorCentral.size(); ++i) {
+            sum += mwUsadoPorCentral.get(i);
+        }
+        return sum;
+    }
+
+
     public double heuristic1() throws Exception {
         return beneficioPorCentral();
     }
@@ -317,10 +338,55 @@ public class Status {
         return beneficioPorCentral()-totalDesperdiciado()*300;
     }
 
+    public double beneficioCentral(int keyCentral) {
+        ArrayList<Integer> clienteCentral = relaciones.getClientes();
+        double brutoTotal = 0.0;
+        double costeTotal = 0.0;
+        for (int i = 0; i < clienteCentral.size(); ++i) {
+
+            if (clienteCentral.get(i) == keyCentral) {
+                Cliente cliente = clientes.get(i);
+                Central central = centrales.get(clienteCentral.get(i));
+                brutoTotal += cliente.getConsumo()*cliente.getPrecio();
+                double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
+                costeTotal += perdida*cliente.getConsumo();
+            }
+        }
+        return brutoTotal-costeTotal;
+    }
+
+    public double heuristicEntropy2() throws  Exception {
+
+        Map<Integer, Central> centralMap = centrales.getCentrales();
+
+        double act = 0.0;
+
+        double mediaIndemnizacionesCentral = relaciones.indemnizaciones/centrales.size();
+        for (int i = 0; i < centrales.size(); ++i) {
+            double aux = Math.max(0.0, beneficioCentral(i)-mediaIndemnizacionesCentral);
+            double p = aux/(getMwTotal()*600);
+
+
+            //System.out.println(p);
+            if (p > 0)
+                act += p*Math.log(p);
+            //System.out.println(act);
+        }
+        System.out.println(act);
+        return act*10000000;
+
+    }
+
+    public double heuristicEntropy() throws  Exception {
+
+        double p = beneficioPorCentral()/getMwTotal()*600;
+        return p*Math.log(p);
+    }
 
     private double totalDesperdiciado() {
         return relaciones.getDesperdiciadoTotal();
     }
+
 
     public boolean is_goal(){
         return false;
@@ -357,6 +423,61 @@ public class Status {
                               + VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),cliente1.getCoordX(),cliente1.getCoordY());
 
         return perdidaNueva<=perdidaActual;
+    }
+
+    public ArrayList<Pair> getCanSwapCentral() {
+        Clientes clientesaux = getClientes();
+        Centrales centralesaux = getCentrales();
+        //Pair pair = new Pair(1, "One");
+        ArrayList<Cliente> clientes = new ArrayList<Cliente>(clientesaux.getClientes().values());
+        ArrayList<Central> centrales = new ArrayList<Central>(centralesaux.getCentrales().values());
+
+        Map<Integer,ArrayList<Integer>> centralesClientes= new HashMap<Integer,ArrayList<Integer>>();
+        for(int i=0;i<centrales.size();++i){
+            centralesClientes.put(centrales.get(i).getId(),new ArrayList<Integer>());
+        }
+        for(int i=0;i<relaciones.getClientes().size();++i){
+            if(relaciones.getClientes().get(i)!=-1){
+                ArrayList<Integer> lista = centralesClientes.get(relaciones.getClientes().get(i));
+                lista.add(i);
+                centralesClientes.put(relaciones.getClientes().get(i),lista);
+            }
+        }
+        ArrayList<Pair> aux = new ArrayList<>();
+        for (int i = 0; i < centrales.size(); ++i) {
+            for (int j = i+1; j < centrales.size(); ++j) {
+                if(centrales.get(i).getTipo()==centrales.get(j).getTipo()) {
+                    if (canSwapCentral(centrales.get(i), centrales.get(j), centralesClientes.get(i), centralesClientes.get(j))) {
+                        Pair a = new Pair(i, j);
+                        aux.add(a);
+                    }
+                }
+            }
+        }
+
+
+        return aux;
+    }
+
+    public boolean canSwapCentral(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {
+        double consumo1=0;
+        double consumo2=0;
+
+        //double mwUsados1 = relaciones.getMWUsadosCentral(central1.getId());
+        //double mwUsados2 = relaciones.getMWUsadosCentral(central2.getId());
+
+        for(int i=0;i<clientes1.size();++i){
+            consumo1=consumo1+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+                    clientes.get(clientes1.get(i)).getCoordX(),clientes.get(clientes1.get(i)).getCoordY())))*clientes.get(clientes1.get(i)).getConsumo();
+        }
+        if(consumo1>central2.getProduccion())return false;
+
+        for(int i=0;i<clientes2.size();++i){
+            consumo2=consumo2+((1+VEnergia.getPerdida(central1.getCoordX(),central1.getCoordY(),
+                    clientes.get(clientes2.get(i)).getCoordX(),clientes.get(clientes2.get(i)).getCoordY())))*clientes.get(clientes2.get(i)).getConsumo();
+        }
+        if(consumo2>central1.getProduccion())return false;
+        return true;
     }
 
     public boolean canSwapCentralAndMakesSense(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {

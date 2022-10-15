@@ -11,7 +11,6 @@ public class Relaciones{
     double brutoTotal;
     double costeTotal;
     double desperdiciadoTotal;
-
     double indemnizaciones;
     ArrayList<Integer> relaciones;
     ArrayList<Double> mwUsados;
@@ -34,7 +33,6 @@ public class Relaciones{
     public Relaciones(Relaciones relaciones){
         this.relaciones = new ArrayList<Integer>();
         this.relaciones.addAll(relaciones.getClientes());
-
         this.mwUsados = new ArrayList<Double>();
         this.mwUsados.addAll(relaciones.getMwUsados());
         this.brutoTotal = relaciones.getBrutoTotal();

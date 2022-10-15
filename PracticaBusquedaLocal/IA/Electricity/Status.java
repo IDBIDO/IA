@@ -385,4 +385,21 @@ public class Status {
         double perdida2 = VEnergia.getPerdida(cliente.getCoordX(),cliente.getCoordY(),centralVieja.getCoordX(),centralVieja.getCoordY());
         return perdida1<perdida2;
     }
+
+    public boolean canShutDownCentral(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {
+        double consumo1=0;
+        for(int i=0;i<clientes1.size();++i){
+            if(clientes.get(clientes1.get(i)).isGuaranteed())
+                consumo1=consumo1+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+                    clientes.get(clientes1.get(i)).getCoordX(),clientes.get(clientes1.get(i)).getCoordY())))*clientes.get(clientes1.get(i)).getConsumo();
+        }
+        if(consumo1>central2.getProduccion())return false;
+
+        for(int i=0;i<clientes2.size();++i){
+            if(clientes.get(clientes2.get(i)).isGuaranteed())
+                consumo1=consumo1+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+                    clientes.get(clientes2.get(i)).getCoordX(),clientes.get(clientes2.get(i)).getCoordY())))*clientes.get(clientes2.get(i)).getConsumo();
+        }
+        return consumo1<central2.getProduccion();
+    }
 }

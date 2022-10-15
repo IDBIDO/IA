@@ -15,6 +15,13 @@ import static java.lang.Math.abs;
  * Created by bejar on 17/01/17
  */
 public class ElectricitySuccesorFunction implements SuccessorFunction{
+    private double successors;
+    public ElectricitySuccesorFunction(){
+        this.successors = 0;
+    }
+    public double getNumberSuccessors(){
+        return successors;
+    }
 
     public List getSuccessorsFirstExperiment(Object state) throws Exception {
         List retval = new ArrayList();
@@ -114,7 +121,6 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                 }
             }
         });
-        System.out.println(retval.size());
         return finalRetval;
     }
 
@@ -166,9 +172,55 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
 
     public List getSuccessorsFourthExperiment(Object state) throws Exception {
         List retval = getSuccessorsFirstExperiment(state);
-        retval.addAll(getSuccessorsSecondExperiment(state));
         retval.addAll(getSuccessorsThirdExperiment(state));
 
+        Status status = (Status) state;
+        Relaciones relaciones = status.getRelaciones();
+        Clientes clientesaux = status.getClientes();
+        Centrales centralesaux = status.getCentrales();
+
+        ArrayList<Cliente> clientes = new ArrayList<Cliente>(clientesaux.getClientes().values());
+        ArrayList<Central> centrales = new ArrayList<Central>(centralesaux.getCentrales().values());
+
+        Map<Integer,ArrayList<Integer>> centralesClientes= new HashMap<Integer,ArrayList<Integer>>();
+        for(int i=0;i<centrales.size();++i){
+            centralesClientes.put(centrales.get(i).getId(),new ArrayList<Integer>());
+        }
+        for(int i=0;i<relaciones.getClientes().size();++i){
+            if(relaciones.getClientes().get(i)!=-1){
+                ArrayList<Integer> lista = centralesClientes.get(relaciones.getClientes().get(i));
+                lista.add(i);
+                centralesClientes.put(relaciones.getClientes().get(i),lista);
+            }
+        }
+
+        retval = Collections.synchronizedList(retval);
+        List finalRetval = retval;
+        IntStream.range(0, centralesClientes.size()).parallel().forEach(i -> {
+            for(int j=i+1;j<centrales.size();++j){
+                if(status.canShutDownCentral(centrales.get(i),centrales.get(j),centralesClientes.get(i),centralesClientes.get(j))){
+                    Status statusAux = new Status(status);
+                    for(int p = 0; p< centralesClientes.get(i).size(); ++p){
+                        try {
+                            statusAux.quitarCliente(clientes.get(centralesClientes.get(i).get(p)), centrales.get(i));
+                            if(clientes.get(centralesClientes.get(i).get(p)).isGuaranteed()) {
+                                statusAux.asignarCliente(clientes.get(centralesClientes.get(i).get(p)), centrales.get(j));
+                            }
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    finalRetval.add(new Successor("ApagarCentral(" + i + "," + j + ")", statusAux));
+                }
+            }
+        });
+        return finalRetval;
+    }
+
+    public List getSuccessorsFifthExperiment(Object state) throws Exception{
+        List retval = getSuccessorsFirstExperiment(state);
+        retval.addAll(getSuccessorsSecondExperiment(state));
+        retval.addAll(getSuccessorsThirdExperiment(state));
         return retval;
     }
 
@@ -180,7 +232,9 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             //System.out.println ("Memoria total: " + runtime.totalMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria libre: " + runtime.freeMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria usada: " + (runtime.totalMemory() - runtime.freeMemory()) / (1024*1024) + "MB");
-            return getSuccessorsFirstExperiment(state);
+            List successorsList = getSuccessorsFourthExperiment(state);
+            successors=successors+successorsList.size();
+            return successorsList;
         }
         catch (Exception e){
             System.out.println("Excepcion: "+e.toString());

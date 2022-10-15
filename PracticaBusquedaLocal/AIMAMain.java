@@ -14,17 +14,19 @@ import java.util.Properties;
 
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
-        int seed=1123;
+        int seed=1234;
         if(args.length == 1){
             seed = Integer.parseInt(args[0]);
         }
         Status status = new Status(seed);
+        status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 
 
+        ElectricitySuccesorFunction succesorFunction = new ElectricitySuccesorFunction();
         // Create the Problem object
         Problem p = new  Problem(status,
-                new ElectricitySuccesorFunction(),
+                succesorFunction,
                 new ElectricityGoalTest(),
                 new ElectricityHeuristicFunction());
 
@@ -49,16 +51,17 @@ public class AIMAMain {
 
         // We print the results of the search
         printActions(agent.getActions());
-        printInstrumentation(agent.getInstrumentation());
 
         // You can access also to the goal state using the
         // method getGoalState of class Search
 
         Status finalStatus = (Status)alg.getGoalState();
         finalStatus.printState();
+        printInstrumentation(agent.getInstrumentation());
         //finalStatus.printState2();
 
-        System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
+        System.out.println("Numero Sucesores generados: "+String.valueOf(succesorFunction.getNumberSuccessors()));
+        System.out.println("Beneficio inicial: "+String.valueOf(status.beneficioPorCentral()));
         System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));
         System.out.println("Coste total:"+String.valueOf(finalStatus.costeTotal()));
         System.out.println("Bruto total:"+String.valueOf(finalStatus.brutoTotal()));

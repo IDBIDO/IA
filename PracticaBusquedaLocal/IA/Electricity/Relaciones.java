@@ -41,6 +41,8 @@ public class Relaciones{
         this.indemnizaciones = relaciones.getIndemnizaciones();
     }
 
+
+
     public double getIndemnizaciones() {
         return indemnizaciones;
     }
@@ -70,6 +72,7 @@ public class Relaciones{
 
     public void asignaCliente(Cliente cliente, Central central) throws Exception {
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
+        //System.out.println(perdida);
         /*
         System.out.println(brutoTotal - costeTotal);
         System.out.println(cliente.getConsumo());
@@ -101,6 +104,7 @@ public class Relaciones{
 
     public void quitarCliente(Cliente cliente, Central central) throws Exception {
         double perdida = VEnergia.getPerdida(central.getCoordX(),central.getCoordY(),cliente.getCoordX(),cliente.getCoordY());
+
         brutoTotal+=deleteCliente(central.getId(),cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
         desperdiciadoTotal -=perdida*cliente.getConsumo();
         if(floor(abs(mwUsados.get(central.getId())))==0){

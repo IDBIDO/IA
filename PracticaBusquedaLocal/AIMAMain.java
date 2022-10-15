@@ -15,6 +15,10 @@ import java.util.Properties;
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
         int seed=1234;
+
+        long start = System.nanoTime();
+
+        int seed=1123;
         if(args.length == 1){
             seed = Integer.parseInt(args[0]);
         }
@@ -49,15 +53,18 @@ public class AIMAMain {
         //Search algSA = new SimulatedAnnealingSearch(200000, 500, 100, 0.001);
         //SearchAgent agent = new SearchAgent(pSA, algSA);
 
+        long end = System.nanoTime();
+
+        System.out.println("Location: " + (end - start)/1000000);
         // We print the results of the search
         printActions(agent.getActions());
+        printInstrumentation(agent.getInstrumentation());
 
         // You can access also to the goal state using the
         // method getGoalState of class Search
 
         Status finalStatus = (Status)alg.getGoalState();
         finalStatus.printState();
-        printInstrumentation(agent.getInstrumentation());
         //finalStatus.printState2();
 
         System.out.println("Numero Sucesores generados: "+String.valueOf(succesorFunction.getNumberSuccessors()));

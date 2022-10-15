@@ -17,8 +17,6 @@ public class AIMAMain {
         int seed=1234;
 
         long start = System.nanoTime();
-
-        int seed=1123;
         if(args.length == 1){
             seed = Integer.parseInt(args[0]);
         }

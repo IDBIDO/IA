@@ -1,9 +1,9 @@
 ------------------------------------------ 
 Initial solutions: 
 Beneficio: 776432.3999999999
-Location: 8707
+Location: 13724
 nodesExpanded : 200001
 Beneficio inicial: 720638.3999999999
-Beneficio final: 1185467.9
-Coste total:792729.1000000001
+Beneficio final: 1191963.4
+Coste total:786233.6000000001
 Bruto total:1978197.0

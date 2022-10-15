@@ -14,16 +14,6 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
         random = new Random();
     }
 
-    public static void swapcentrales(ArrayList<Cliente> clientes, ArrayList<Central> centrales, Map<Integer, ArrayList<Integer>> centralesClientes, int i, int j, Status statusAux) throws Exception {
-        for(int p = 0; p< centralesClientes.get(i).size(); ++p){
-            statusAux.quitarCliente(clientes.get(centralesClientes.get(i).get(p)), centrales.get(i));
-            statusAux.asignarCliente(clientes.get(centralesClientes.get(i).get(p)), centrales.get(j));
-        }
-        for(int p = 0; p< centralesClientes.get(j).size(); ++p){
-            statusAux.quitarCliente(clientes.get(centralesClientes.get(j).get(p)), centrales.get(j));
-            statusAux.asignarCliente(clientes.get(centralesClientes.get(j).get(p)), centrales.get(i));
-        }
-    }
 
     @Override
     public List getSuccessors(Object state) {
@@ -37,7 +27,16 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
         ArrayList<Integer>centralesClientes = relaciones.getClientes();
 
         int swapCliente = relaciones.getClientes().size();
-        int clientSize = relaciones.getClientes().size();
+        //int clientSize = relaciones.getClientes().size();
+
+        ArrayList<Cliente> asignedClientes = status.getAsignedClientes();
+        int asignedClientesSize = asignedClientes.size();
+
+        ArrayList<Cliente> noAsignedClientes = status.getNoAsignedClientes();
+        int noAsignedClientesSize = noAsignedClientes.size();
+
+
+
         ArrayList<Cliente> noGuaranteeAsignedClientes = status.getNoGuaranteeAsignedClientes();
         int noguaranteedSize = noGuaranteeAsignedClientes.size();
 
@@ -52,7 +51,7 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
         //System.out.println("Centrales:" +centrales.size());1172958.4  1230648.0
         //System.out.println("nSwapCentral:" + nSwapCentral);
 
-        int dominioSuccesor = swapCliente + clientSize + noguaranteedSize -1;
+        int dominioSuccesor = swapCliente + asignedClientesSize + noAsignedClientesSize + noguaranteedSize -1;
 
 
         int ran = random.nextInt(dominioSuccesor);    // [0, clientes.size -1] -> asignar cliente,
@@ -101,55 +100,61 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
 
         }
 
-        else if (ran < swapCliente+clientSize) {
-            int uidCliente = random.nextInt(centralesClientes.size());      //coger un cliente random
-            Cliente cliente = clientes.get(uidCliente);
+        else if (ran < swapCliente+asignedClientesSize) {
+            int uidCliente = random.nextInt(asignedClientesSize);      //coger un cliente random asignado
+            Cliente cliente = asignedClientes.get(uidCliente);
 
             int centralKey = random.nextInt(centrales.size());      //coger una central random
-            if (centralesClientes.get(uidCliente) == -1) {     //no central asignado, asignar cliente
-                //System.out.println(1);
-                while(!status.canServe(cliente, centrales.get(centralKey))) {
-                    Central aux = status.puedeAsignarAlgunCentral(cliente);
-                    if (aux != null) {
-                        centralKey = aux.getId();
-                    }
-                    else return retval;
-                }
-                Status statusAux = new Status(status);
-                try {
-                    statusAux.asignarCliente(cliente, centrales.get(centralKey));   //asignar nueva central
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                retval.add(new Successor("AsignarCliente(" + String.valueOf(uidCliente) + "," + String.valueOf(centralKey) + ")", statusAux));
 
+
+            //hay que quitar de su central
+            while(centralesClientes.get(cliente.getId()) == centralKey || !status.canServe(cliente, centrales.get(centralKey))) {
+                //centralKey = random.nextInt(centrales.size());
+                Central aux = status.puedeAsignarAlgunCentral(cliente);
+
+                if (aux != null) {
+                    centralKey = aux.getId();
+                }
+                else return retval;
             }
 
-            else {      //hay que quitar de su central
-                while(centralesClientes.get(uidCliente) == centralKey || !status.canServe(cliente, centrales.get(centralKey))) {
-                    //centralKey = random.nextInt(centrales.size());
-                    Central aux = status.puedeAsignarAlgunCentral(cliente);
-
-                    if (aux != null) {
-                        centralKey = aux.getId();
-                    }
-                    else return retval;
-                }
-
-                Status statusAux = new Status(status);
-                try {
-                    statusAux.quitarCliente(cliente, centrales.get( centralesClientes.get(uidCliente) ));       //quitar la central originak
-                    statusAux.asignarCliente(cliente, centrales.get(centralKey));   //asignar nueva central
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                retval.add(new Successor("AsignarCliente(" + String.valueOf(uidCliente) + "," + String.valueOf(centralKey) + ")", statusAux));
-
+            Status statusAux = new Status(status);
+            try {
+                statusAux.quitarCliente(cliente, centrales.get( centralesClientes.get(cliente.getId()) ));       //quitar la central originak
+                statusAux.asignarCliente(cliente, centrales.get(centralKey));   //asignar nueva central
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
+            retval.add(new Successor("MoverAsignado(" + String.valueOf(uidCliente) + "," + String.valueOf(centralKey) + ")", statusAux));
+
+
 
         }
 
-        else if (ran < noguaranteedSize + swapCliente+clientSize) {
+        else if (ran < swapCliente+asignedClientesSize + noAsignedClientesSize ) {
+            int uidCliente = random.nextInt(noAsignedClientesSize);      //coger un cliente random no asignado
+            Cliente cliente = noAsignedClientes.get(uidCliente);
+
+            int centralKey = random.nextInt(centrales.size());      //coger una central random
+            while(!status.canServe(cliente, centrales.get(centralKey))) {
+                Central aux = status.puedeAsignarAlgunCentral(cliente);
+                if (aux != null) {
+                    centralKey = aux.getId();
+                }
+                else return retval;
+            }
+            Status statusAux = new Status(status);
+            try {
+                statusAux.asignarCliente(cliente, centrales.get(centralKey));   //asignar nueva central
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            retval.add(new Successor("AsignarCliente(" + String.valueOf(uidCliente) + "," + String.valueOf(centralKey) + ")", statusAux));
+
+
+        }
+
+        else if (ran < noguaranteedSize + swapCliente + asignedClientesSize + noAsignedClientesSize) {
             //System.out.println("Quitar Cliente");
             int ranNoGuaranteed = random.nextInt(noguaranteedSize);
             Cliente cliente = noGuaranteeAsignedClientes.get(ranNoGuaranteed);

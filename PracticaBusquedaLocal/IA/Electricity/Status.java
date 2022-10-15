@@ -246,6 +246,27 @@ public class Status {
             System.out.println("Beneficio: " + String.valueOf(beneficioPorCentral()));
     }
 
+    public ArrayList<Cliente> getAsignedClientes() {
+        ArrayList<Cliente> ret = new ArrayList<>();
+        for (int i = 0; i < relaciones.getClientes().size(); ++i) {
+            if (relaciones.getClientes().get(i) != -1) {
+                Cliente cliente = clientes.get(i);
+                ret.add(cliente);
+            }
+        }
+        return ret;
+    }
+
+    public ArrayList<Cliente> getNoAsignedClientes() {
+        ArrayList<Cliente> ret = new ArrayList<>();
+        for (int i = 0; i < relaciones.getClientes().size(); ++i) {
+            if (relaciones.getClientes().get(i) == -1) {
+                Cliente cliente = clientes.get(i);
+                ret.add(cliente);
+            }
+        }
+        return ret;
+    }
 
     public ArrayList<Cliente> getNoGuaranteeAsignedClientes() {
         ArrayList<Cliente> ret = new ArrayList<>();

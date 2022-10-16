@@ -15,7 +15,7 @@ import static java.lang.Math.abs;
  * Created by bejar on 17/01/17
  */
 public class ElectricitySuccesorFunction implements SuccessorFunction{
-    private double successors;
+    private Integer successors;
     public ElectricitySuccesorFunction(){
         this.successors = 0;
     }
@@ -171,8 +171,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
     }
 
     public List getSuccessorsFourthExperiment(Object state) throws Exception {
-        List retval = getSuccessorsFirstExperiment(state);
-        retval.addAll(getSuccessorsThirdExperiment(state));
+        List retval = getSuccessorsThirdExperiment(state);
 
         Status status = (Status) state;
         Relaciones relaciones = status.getRelaciones();
@@ -232,7 +231,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
             //System.out.println ("Memoria total: " + runtime.totalMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria libre: " + runtime.freeMemory() / (1024*1024) + "MB");
             //System.out.println ("Memoria usada: " + (runtime.totalMemory() - runtime.freeMemory()) / (1024*1024) + "MB");
-            List successorsList = getSuccessorsFourthExperiment(state);
+            List successorsList = getSuccessorsThirdExperiment(state);
             successors=successors+successorsList.size();
             return successorsList;
         }

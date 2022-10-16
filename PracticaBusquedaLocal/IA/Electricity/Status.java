@@ -11,12 +11,16 @@ public class Status {
     Clientes clientes;
     Relaciones relaciones;
 
+    long generacion;
     public Status(int seed) throws Exception {
         int test = 1;
         centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
         clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
+        long startTime = (System.nanoTime());
         initialSolution2(false);
+        generacion = (System.nanoTime() - startTime);
+
         calculaIndemnizaciones();
     }
 
@@ -35,6 +39,7 @@ public class Status {
         this.centrales=status.getCentrales();
         this.clientes=status.getClientes();
         this.relaciones=new Relaciones(status.getRelaciones());
+        this.generacion = status.getGeneracion();
     }
     //Adds the guaranteed or not guaranteed customers to a random available power plant
     void initialSolution1(boolean includeNoGuaranteed, int seed) throws Exception {
@@ -544,5 +549,9 @@ public class Status {
                     clientes.get(clientes2.get(i)).getCoordX(),clientes.get(clientes2.get(i)).getCoordY())))*clientes.get(clientes2.get(i)).getConsumo();
         }
         return consumo1<central2.getProduccion();
+    }
+
+    public long getGeneracion() {
+        return generacion;
     }
 }

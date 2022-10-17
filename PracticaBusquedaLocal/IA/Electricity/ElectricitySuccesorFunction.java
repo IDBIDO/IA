@@ -51,7 +51,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
                         }
                     }
                 }
-                if(!cliente.isGuaranteed()){
+                if(true){//change to if(true) for test 5
                     Status statusAux = new Status(status);
                     try {
                         statusAux.quitarCliente(cliente, centralRelacion);

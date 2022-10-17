@@ -12,6 +12,7 @@ public class Relaciones{
     double costeTotal;
     double desperdiciadoTotal;
     double indemnizaciones;
+    int garantizadosNo;
     ArrayList<Integer> relaciones;
     ArrayList<Double> mwUsados;
     public Relaciones(Centrales centrales, Clientes clientes) throws Exception {
@@ -20,6 +21,10 @@ public class Relaciones{
         this.brutoTotal = 0;
         this.desperdiciadoTotal=0;
         this.indemnizaciones = 0;
+        this.garantizadosNo = 0;//Only for test 5
+        for(int i=0;i<clientes.size();++i)
+            if(clientes.get(i).isGuaranteed())
+                ++this.garantizadosNo;
         for (Map.Entry<Integer, Central> entry : centrales.entrySet()) {
             mwUsados.add(0.0);
             this.costeTotal+=VEnergia.getCosteParada(entry.getValue().getTipo());
@@ -39,6 +44,7 @@ public class Relaciones{
         this.costeTotal = relaciones.getCosteTotal();
         this.desperdiciadoTotal = relaciones.getDesperdiciadoTotal();
         this.indemnizaciones = relaciones.getIndemnizaciones();
+        this.garantizadosNo = relaciones.getGarantizadosNo();//Only for test 5
     }
 
 
@@ -90,6 +96,9 @@ public class Relaciones{
         if(!cliente.isGuaranteed()) {
             indemnizaciones -= VEnergia.getTarifaClientePenalizacion(cliente.getTipo())*cliente.getConsumo();
         }
+        else{
+            garantizadosNo-=1;//Only for test 5
+        }
         /*
         System.out.println(brutoTotal - costeTotal);
         System.out.println("\n\n\n");
@@ -114,6 +123,9 @@ public class Relaciones{
         }
         if(!cliente.isGuaranteed()) {
             indemnizaciones += VEnergia.getTarifaClientePenalizacion(cliente.getTipo())*cliente.getConsumo();
+        }
+        else{
+            garantizadosNo+=1;//Only for test 5
         }
     }
 
@@ -182,5 +194,10 @@ public class Relaciones{
 
     public void setIndemnizacion(double indemnizar) {
         this.indemnizaciones = indemnizar;
+    }
+
+    //Only for test 5. Otherwise the value is 0.
+    public int getGarantizadosNo() {
+        return garantizadosNo;
     }
 }

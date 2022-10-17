@@ -2,7 +2,6 @@ package IA.Electricity;
 
 import aima.util.Pair;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -18,8 +17,8 @@ public class Status {
         clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
         long startTime = (System.nanoTime());
-        initialSolution2(false);
-        generacion = (System.nanoTime() - startTime);
+        //initialSolution2(false);//Comment out for test 5
+        generacion = (System.nanoTime() - startTime); //To measure how long the program takes to generate the initial solution
 
         calculaIndemnizaciones();
     }
@@ -362,6 +361,25 @@ public class Status {
 
     public double heuristic3() throws Exception{
         return beneficioPorCentral()-totalDesperdiciado()*300;
+    }
+    //This heuristic penalises having non-assigned guaranteed customers
+    public double heuristic4() throws Exception{
+        return beneficioPorCentral()-totalDesperdiciado()*300-garantizadosNoAsignados()*10000-centralesApagadas()*20000;
+    }
+
+    private int centralesApagadas() {
+        int count = 0;
+        //The number of times this function is called (only in the test 5) and the number of power plants that are in the system
+        //are the reasons why creating a variable to compute this faster does not outweigh computing this loop, the loop is better.
+        for(int i=0;i<relaciones.getMwUsados().size();++i){
+            if(relaciones.getMwUsados().get(i)==0.0)
+                ++count;
+        }
+        return count;
+    }
+
+    private int garantizadosNoAsignados() {
+        return relaciones.getGarantizadosNo();
     }
 
     public double beneficioCentral(int keyCentral) {

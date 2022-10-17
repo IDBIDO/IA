@@ -71,7 +71,7 @@ public class AIMAMain {
         System.out.println("Coste total:"+String.valueOf(finalStatus.costeTotal()));
         System.out.println("Bruto total:"+String.valueOf(finalStatus.brutoTotal()));
         System.out.println("Generación solucion inicial: "+finalStatus.getGeneracion());
-        System.out.println("Centrales en uso: "+(finalStatus.getCentrales().size()-finalStatus.centralesApagadas()));
+        System.out.println("Centrales en uso: "+(finalStatus.getCentrales().size()-finalStatus.centralesApagadas())+"/"+finalStatus.getCentrales().size());
     }
 
     private static void printInstrumentation(Properties properties) {

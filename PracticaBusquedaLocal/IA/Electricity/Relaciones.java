@@ -14,6 +14,7 @@ public class Relaciones{
     double indemnizaciones;
     int garantizadosNo;
     int apagadas;
+    double mwTirados;
     ArrayList<Integer> relaciones;
     ArrayList<Double> mwUsados;
     public Relaciones(Centrales centrales, Clientes clientes) throws Exception {
@@ -24,6 +25,7 @@ public class Relaciones{
         this.indemnizaciones = 0;
         this.garantizadosNo = 0;//Only for test 5
         this.apagadas = centrales.size(); //Only for test 5
+        this.mwTirados = 0;
         for(int i=0;i<clientes.size();++i)
             if(clientes.get(i).isGuaranteed())
                 ++this.garantizadosNo;
@@ -49,6 +51,8 @@ public class Relaciones{
 
         this.garantizadosNo = relaciones.getGarantizadosNo();//Only for test 5
         this.apagadas = relaciones.getCentralesApagadas();//Only for test 5
+
+        this.mwTirados = relaciones.getDesbalance(); //For test 6
     }
 
 
@@ -93,10 +97,12 @@ public class Relaciones{
 
         brutoTotal+=addCliente(central.getId(),cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
         desperdiciadoTotal +=perdida*cliente.getConsumo();
+        mwTirados-=(1+perdida)*cliente.getConsumo();
         if(vacioAntes){
             costeTotal=costeTotal+(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal+(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
             apagadas-=1;
+            mwTirados+=central.getProduccion();
         }
         if(!cliente.isGuaranteed()) {
             indemnizaciones -= VEnergia.getTarifaClientePenalizacion(cliente.getTipo())*cliente.getConsumo();
@@ -121,11 +127,14 @@ public class Relaciones{
 
         brutoTotal+=deleteCliente(central.getId(),cliente.getId(),cliente.getPrecio(),perdida*cliente.getConsumo(), cliente.getConsumo());
         desperdiciadoTotal -=perdida*cliente.getConsumo();
+        mwTirados+=(1+perdida)*cliente.getConsumo();
+
         if(floor(abs(mwUsados.get(central.getId())))==0){
             costeTotal=costeTotal-(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal-(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
             mwUsados.set(central.getId(),0.0);
             apagadas+=1;
+            mwTirados-=central.getProduccion();
         }
         if(!cliente.isGuaranteed()) {
             indemnizaciones += VEnergia.getTarifaClientePenalizacion(cliente.getTipo())*cliente.getConsumo();
@@ -173,18 +182,21 @@ public class Relaciones{
 
     public void print(Clientes clientes, Centrales centrales) {
         Set<Integer> clientesServidos = new HashSet<Integer>();
+        int count =0;
         for (Map.Entry<Integer,Central> entry : centrales.entrySet()) {
+            System.out.println("Id"+count);
             System.out.println("Capacidad usada: "+mwUsados.get(entry.getKey())+"/"+entry.getValue().getProduccion());
             System.out.println("Coordenadas: ("+entry.getValue().getCoordX()+","+entry.getValue().getCoordY()+")");
             int i=0;
             for(Integer centralid: relaciones){
-                if(centralid ==entry.getKey()) {
+                if(centralid ==count) {
                     Cliente cliente = clientes.get(i);
                     cliente.print();
                     clientesServidos.add(i);
                 }
                 ++i;
             }
+            ++count;
         }
         System.out.println("\nClientes no asignados a central: ");
         for (Map.Entry<Integer, Cliente> entry : clientes.entrySet()) {
@@ -209,5 +221,9 @@ public class Relaciones{
 
     public int getCentralesApagadas() {
         return apagadas;
+    }
+
+    public double getDesbalance() {
+        return mwTirados;
     }
 }

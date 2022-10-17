@@ -13,11 +13,11 @@ public class Status {
     long generacion;
     public Status(int seed) throws Exception {
         int test = 1;
-        centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
+        centrales= new Centrales(new int[]{5*test,10*test,50*test},seed);
         clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
         long startTime = (System.nanoTime());
-        //initialSolution2(false);//Comment out for test 5
+        initialSolution2(false);//Comment out for test 5
         generacion = (System.nanoTime() - startTime); //To measure how long the program takes to generate the initial solution
 
         calculaIndemnizaciones();
@@ -366,6 +366,14 @@ public class Status {
     public double heuristic4() throws Exception{
         return beneficioPorCentral()-totalDesperdiciado()*300-garantizadosNoAsignados()*0-centralesApagadas()*42500;
     }
+    public double heuristic5() throws Exception{
+        return beneficioPorCentral()-centralesApagadas()*42500;
+    }
+
+    private double desbalanceMw() {
+        return relaciones.getDesbalance();
+    }
+
 
     public int centralesApagadas() {
         return relaciones.getCentralesApagadas();

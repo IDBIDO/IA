@@ -364,18 +364,11 @@ public class Status {
     }
     //This heuristic penalises having non-assigned guaranteed customers
     public double heuristic4() throws Exception{
-        return beneficioPorCentral()-totalDesperdiciado()*300-garantizadosNoAsignados()*10000-centralesApagadas()*20000;
+        return beneficioPorCentral()-totalDesperdiciado()*300-garantizadosNoAsignados()*0-centralesApagadas()*42500;
     }
 
-    private int centralesApagadas() {
-        int count = 0;
-        //The number of times this function is called (only in the test 5) and the number of power plants that are in the system
-        //are the reasons why creating a variable to compute this faster does not outweigh computing this loop, the loop is better.
-        for(int i=0;i<relaciones.getMwUsados().size();++i){
-            if(relaciones.getMwUsados().get(i)==0.0)
-                ++count;
-        }
-        return count;
+    public int centralesApagadas() {
+        return relaciones.getCentralesApagadas();
     }
 
     private int garantizadosNoAsignados() {
@@ -409,7 +402,6 @@ public class Status {
         for (int i = 0; i < centrales.size(); ++i) {
             double aux = Math.max(0.0, beneficioCentral(i)-mediaIndemnizacionesCentral);
             double p = aux/(getMwTotal()*600);
-
 
             //System.out.println(p);
             if (p > 0)

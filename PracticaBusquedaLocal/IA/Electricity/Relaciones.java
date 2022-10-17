@@ -13,6 +13,7 @@ public class Relaciones{
     double desperdiciadoTotal;
     double indemnizaciones;
     int garantizadosNo;
+    int apagadas;
     ArrayList<Integer> relaciones;
     ArrayList<Double> mwUsados;
     public Relaciones(Centrales centrales, Clientes clientes) throws Exception {
@@ -22,6 +23,7 @@ public class Relaciones{
         this.desperdiciadoTotal=0;
         this.indemnizaciones = 0;
         this.garantizadosNo = 0;//Only for test 5
+        this.apagadas = centrales.size(); //Only for test 5
         for(int i=0;i<clientes.size();++i)
             if(clientes.get(i).isGuaranteed())
                 ++this.garantizadosNo;
@@ -44,7 +46,9 @@ public class Relaciones{
         this.costeTotal = relaciones.getCosteTotal();
         this.desperdiciadoTotal = relaciones.getDesperdiciadoTotal();
         this.indemnizaciones = relaciones.getIndemnizaciones();
+
         this.garantizadosNo = relaciones.getGarantizadosNo();//Only for test 5
+        this.apagadas = relaciones.getCentralesApagadas();//Only for test 5
     }
 
 
@@ -92,6 +96,7 @@ public class Relaciones{
         if(vacioAntes){
             costeTotal=costeTotal+(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal+(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
+            apagadas-=1;
         }
         if(!cliente.isGuaranteed()) {
             indemnizaciones -= VEnergia.getTarifaClientePenalizacion(cliente.getTipo())*cliente.getConsumo();
@@ -120,6 +125,7 @@ public class Relaciones{
             costeTotal=costeTotal-(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal-(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
             mwUsados.set(central.getId(),0.0);
+            apagadas+=1;
         }
         if(!cliente.isGuaranteed()) {
             indemnizaciones += VEnergia.getTarifaClientePenalizacion(cliente.getTipo())*cliente.getConsumo();
@@ -199,5 +205,9 @@ public class Relaciones{
     //Only for test 5. Otherwise the value is 0.
     public int getGarantizadosNo() {
         return garantizadosNo;
+    }
+
+    public int getCentralesApagadas() {
+        return apagadas;
     }
 }

@@ -29,6 +29,7 @@ public class Relaciones{
         for(int i=0;i<clientes.size();++i)
             if(clientes.get(i).isGuaranteed())
                 ++this.garantizadosNo;
+
         for (Map.Entry<Integer, Central> entry : centrales.entrySet()) {
             mwUsados.add(0.0);
             this.costeTotal+=VEnergia.getCosteParada(entry.getValue().getTipo());
@@ -133,14 +134,14 @@ public class Relaciones{
             costeTotal=costeTotal-(VEnergia.getCosteMarcha(central.getTipo())-VEnergia.getCosteParada(central.getTipo()));
             costeTotal=costeTotal-(VEnergia.getCosteProduccionMW(central.getTipo())* central.getProduccion());
             mwUsados.set(central.getId(),0.0);
-            apagadas+=1;
+            //apagadas+=1;
             mwTirados-=central.getProduccion();
         }
         if(!cliente.isGuaranteed()) {
             indemnizaciones += VEnergia.getTarifaClientePenalizacion(cliente.getTipo())*cliente.getConsumo();
         }
         else{
-            garantizadosNo+=1;//Only for test 5
+            //garantizadosNo+=1;//Only for test 5
         }
     }
 
@@ -219,7 +220,8 @@ public class Relaciones{
         return garantizadosNo;
     }
 
-    public int getCentralesApagadas() {
+    public int getCentralesApagadas()
+    {
         return apagadas;
     }
 

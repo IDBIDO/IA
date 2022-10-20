@@ -12,9 +12,9 @@ public class Status {
 
     long generacion;
     public Status(int seed) throws Exception {
-        int test = 1;
-        centrales= new Centrales(new int[]{5*test,10*test,50*test},seed);
-        clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
+        int test = 10;
+        centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
+        clientes = new Clientes(1000+test*0,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
         long startTime = (System.nanoTime());
         initialSolution2(false);//Comment out for test 5

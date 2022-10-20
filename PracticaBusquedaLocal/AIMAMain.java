@@ -14,14 +14,14 @@ import java.util.Properties;
 
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
-        int seed=1;
+        int seed=1234;
 
         long start = System.nanoTime();
         if(args.length == 1){
             seed = Integer.parseInt(args[0]);
         }
         Status status = new Status(seed);
-        status.printState();
+        //status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 
 
@@ -62,7 +62,7 @@ public class AIMAMain {
         // method getGoalState of class Search
 
         Status finalStatus = (Status)alg.getGoalState();
-        finalStatus.printState();
+        //finalStatus.printState();
         //finalStatus.printState2();
 
         System.out.println("Numero Sucesores generados: "+String.valueOf(succesorFunction.getNumberSuccessors()));

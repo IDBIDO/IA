@@ -2,7 +2,6 @@ package IA.Electricity;
 
 import aima.util.Pair;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -11,12 +10,16 @@ public class Status {
     Clientes clientes;
     Relaciones relaciones;
 
+    long generacion;
     public Status(int seed) throws Exception {
-        int test = 1;
+        int test = 10;
         centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
-        clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
+        clientes = new Clientes(1000+test*0,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
-        initialSolution2(false);
+        long startTime = (System.nanoTime());
+        initialSolution2(false);//Comment out for test 5
+        generacion = (System.nanoTime() - startTime); //To measure how long the program takes to generate the initial solution
+
         calculaIndemnizaciones();
     }
 
@@ -35,6 +38,7 @@ public class Status {
         this.centrales=status.getCentrales();
         this.clientes=status.getClientes();
         this.relaciones=new Relaciones(status.getRelaciones());
+        this.generacion = status.getGeneracion();
     }
     //Adds the guaranteed or not guaranteed customers to a random available power plant
     void initialSolution1(boolean includeNoGuaranteed, int seed) throws Exception {
@@ -358,6 +362,26 @@ public class Status {
     public double heuristic3() throws Exception{
         return beneficioPorCentral()-totalDesperdiciado()*300;
     }
+    //This heuristic penalises having non-assigned guaranteed customers
+    public double heuristic4() throws Exception{
+        return beneficioPorCentral()-totalDesperdiciado()*300-garantizadosNoAsignados()*0-centralesApagadas()*42500;
+    }
+    public double heuristic5() throws Exception{
+        return beneficioPorCentral()-centralesApagadas()*42500;
+    }
+
+    private double desbalanceMw() {
+        return relaciones.getDesbalance();
+    }
+
+
+    public int centralesApagadas() {
+        return relaciones.getCentralesApagadas();
+    }
+
+    private int garantizadosNoAsignados() {
+        return relaciones.getGarantizadosNo();
+    }
 
     public double heuristic4() throws  Exception {
         return beneficioPorCentral()-totalDesperdiciado()*300;
@@ -391,7 +415,6 @@ public class Status {
         for (int i = 0; i < centrales.size(); ++i) {
             double aux = Math.max(0.0, beneficioCentral(i)-mediaIndemnizacionesCentral);
             double p = aux/(getMwTotal()*600);
-
 
             //System.out.println(p);
             if (p > 0)
@@ -532,5 +555,26 @@ public class Status {
         double perdida1 = VEnergia.getPerdida(cliente.getCoordX(),cliente.getCoordY(),centralNueva.getCoordX(),centralNueva.getCoordY());
         double perdida2 = VEnergia.getPerdida(cliente.getCoordX(),cliente.getCoordY(),centralVieja.getCoordX(),centralVieja.getCoordY());
         return perdida1<perdida2;
+    }
+
+    public boolean canShutDownCentral(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {
+        double consumo1=0;
+        for(int i=0;i<clientes1.size();++i){
+            if(clientes.get(clientes1.get(i)).isGuaranteed())
+                consumo1=consumo1+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+                    clientes.get(clientes1.get(i)).getCoordX(),clientes.get(clientes1.get(i)).getCoordY())))*clientes.get(clientes1.get(i)).getConsumo();
+        }
+        if(consumo1>central2.getProduccion())return false;
+
+        for(int i=0;i<clientes2.size();++i){
+            if(clientes.get(clientes2.get(i)).isGuaranteed())
+                consumo1=consumo1+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
+                    clientes.get(clientes2.get(i)).getCoordX(),clientes.get(clientes2.get(i)).getCoordY())))*clientes.get(clientes2.get(i)).getConsumo();
+        }
+        return consumo1<central2.getProduccion();
+    }
+
+    public long getGeneracion() {
+        return generacion;
     }
 }

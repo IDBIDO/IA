@@ -7,6 +7,7 @@ import aima.search.informed.AStarSearch;
 import aima.search.informed.HillClimbingSearch;
 import aima.search.informed.SimulatedAnnealingSearch;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -14,6 +15,7 @@ import java.util.Properties;
 
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
+       // ArrayList<Double> k = new ArrayList<>([1, 5, 10, 25 , 125]);
 
         long start = System.nanoTime();
 
@@ -47,7 +49,7 @@ public class AIMAMain {
 
         //steps stiter k lamda
         //Search algSA = new SimulatedAnnealingSearch();
-        Search algSA = new SimulatedAnnealingSearch(200000, 500, 100, 0.001);
+        Search algSA = new SimulatedAnnealingSearch(9000, 500, 1, 0.01);
         SearchAgent agent = new SearchAgent(pSA, algSA);
 
 

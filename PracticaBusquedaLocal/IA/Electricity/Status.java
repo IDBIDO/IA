@@ -359,6 +359,11 @@ public class Status {
         return beneficioPorCentral()-totalDesperdiciado()*300;
     }
 
+    public double heuristic4() throws  Exception {
+        return beneficioPorCentral()-totalDesperdiciado()*300;
+
+    }
+
     public double beneficioCentral(int keyCentral) {
         ArrayList<Integer> clienteCentral = relaciones.getClientes();
         double brutoTotal = 0.0;

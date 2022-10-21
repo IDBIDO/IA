@@ -26,7 +26,7 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
         ArrayList<Central> centrales = new ArrayList<Central>(centralesaux.getCentrales().values());
         ArrayList<Integer>centralesClientes = relaciones.getClientes();
 
-        int swapCliente = relaciones.getClientes().size();
+        int swapCliente = 0;
         //int clientSize = relaciones.getClientes().size();
 
         ArrayList<Cliente> asignedClientes = status.getAsignedClientes();

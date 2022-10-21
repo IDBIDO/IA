@@ -12,9 +12,9 @@ public class Status {
 
     long generacion;
     public Status(int seed) throws Exception {
-        int test = 10;
+        int test = 1;
         centrales= new Centrales(new int[]{5*test,10*test,25*test},seed);
-        clientes = new Clientes(1000+test*0,new double[]{0.25,0.3,0.45},0.75,seed);
+        clientes = new Clientes(1000*test,new double[]{0.25,0.3,0.45},0.75,seed);
         relaciones = new Relaciones(centrales,clientes);
         long startTime = (System.nanoTime());
         initialSolution2(false);//Comment out for test 5
@@ -364,7 +364,7 @@ public class Status {
     }
     //This heuristic penalises having non-assigned guaranteed customers
     public double heuristic4() throws Exception{
-        return beneficioPorCentral()-totalDesperdiciado()*300-garantizadosNoAsignados()*0-centralesApagadas()*42500;
+        return beneficioPorCentral()-totalDesperdiciado()*300-garantizadosNoAsignados()*8500 -centralesApagadas()*34000;
     }
     public double heuristic5() throws Exception{
         return beneficioPorCentral()-centralesApagadas()*42500;
@@ -382,6 +382,8 @@ public class Status {
     private int garantizadosNoAsignados() {
         return relaciones.getGarantizadosNo();
     }
+
+
 
     public double beneficioCentral(int keyCentral) {
         ArrayList<Integer> clienteCentral = relaciones.getClientes();

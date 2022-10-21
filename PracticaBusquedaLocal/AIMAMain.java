@@ -7,6 +7,7 @@ import aima.search.informed.AStarSearch;
 import aima.search.informed.HillClimbingSearch;
 import aima.search.informed.SimulatedAnnealingSearch;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -14,21 +15,21 @@ import java.util.Properties;
 
 public class AIMAMain {
     public static void main(String[] args) throws Exception{
-        int seed=1234;
+       // ArrayList<Double> k = new ArrayList<>([1, 5, 10, 25 , 125]);
 
         long start = System.nanoTime();
+
+        int seed=1234;
         if(args.length == 1){
             seed = Integer.parseInt(args[0]);
         }
         Status status = new Status(seed);
-        //status.printState();
         double beneficioInicial = status.beneficioPorCentral();
 
-
-        ElectricitySuccesorFunction succesorFunction = new ElectricitySuccesorFunction();
+        /*
         // Create the Problem object
         Problem p = new  Problem(status,
-                succesorFunction,
+                new ElectricitySuccesorFunction(),
                 new ElectricityGoalTest(),
                 new ElectricityHeuristicFunction());
 
@@ -37,41 +38,39 @@ public class AIMAMain {
 
         Search alg = new HillClimbingSearch();
         SearchAgent agent = new SearchAgent(p, alg);
-
+*/
 
 
         // Instantiate the SearchAgent object SA
-        //Problem pSA = new  Problem(status,
-        //        new ElectricitySuccesorFunctionSA(),
-        //        new ElectricityGoalTest(),
-        //        new ElectricityHeuristicFunction());
+        Problem pSA = new  Problem(status,
+                new ElectricitySuccesorFunctionSA(),
+                new ElectricityGoalTest(),
+                new ElectricityHeuristicFunction());
 
         //steps stiter k lamda
         //Search algSA = new SimulatedAnnealingSearch();
-        //Search algSA = new SimulatedAnnealingSearch(200000, 500, 100, 0.001);
-        //SearchAgent agent = new SearchAgent(pSA, algSA);
+        Search algSA = new SimulatedAnnealingSearch(9000, 500, 1, 0.01);
+        SearchAgent agent = new SearchAgent(pSA, algSA);
+
 
         long end = System.nanoTime();
 
         System.out.println("Location: " + (end - start)/1000000);
         // We print the results of the search
-        printActions(agent.getActions());
+        //printActions(agent.getActions());
         printInstrumentation(agent.getInstrumentation());
 
         // You can access also to the goal state using the
         // method getGoalState of class Search
 
-        Status finalStatus = (Status)alg.getGoalState();
+        Status finalStatus = (Status)algSA.getGoalState();
         //finalStatus.printState();
         //finalStatus.printState2();
 
-        System.out.println("Numero Sucesores generados: "+String.valueOf(succesorFunction.getNumberSuccessors()));
-        System.out.println("Beneficio inicial: "+String.valueOf(status.beneficioPorCentral()));
+        System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));
         System.out.println("Beneficio final: "+String.valueOf(finalStatus.beneficioPorCentral()));
         System.out.println("Coste total:"+String.valueOf(finalStatus.costeTotal()));
         System.out.println("Bruto total:"+String.valueOf(finalStatus.brutoTotal()));
-        System.out.println("Generación solucion inicial: "+finalStatus.getGeneracion());
-        System.out.println("Centrales en uso: "+(finalStatus.getCentrales().size()-finalStatus.centralesApagadas())+"/"+finalStatus.getCentrales().size());
     }
 
     private static void printInstrumentation(Properties properties) {

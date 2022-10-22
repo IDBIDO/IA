@@ -148,7 +148,7 @@ public class ElectricitySuccesorFunction implements SuccessorFunction{
         for(int i=0;i<centrales.size();++i){
             for(int j=i+1;j<centrales.size();++j){
                 if(centrales.get(i).getTipo()==centrales.get(j).getTipo()){
-                    if(status.canSwapCentralAndMakesSense(centrales.get(i),centrales.get(j),centralesClientes.get(i),centralesClientes.get(j))){
+                    if(status.canSwapCentral(centrales.get(i),centrales.get(j),centralesClientes.get(i),centralesClientes.get(j))){
                         Status statusAux = new Status(status);
                         swapcentrales(clientes, centrales, centralesClientes, i, j, statusAux);
                         retval.add(new Successor("SwapCentral(" + i + "," + j + ")", statusAux));

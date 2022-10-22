@@ -509,27 +509,6 @@ public class Status {
         double consumo1=0;
         double consumo2=0;
 
-        //double mwUsados1 = relaciones.getMWUsadosCentral(central1.getId());
-        //double mwUsados2 = relaciones.getMWUsadosCentral(central2.getId());
-
-        for(int i=0;i<clientes1.size();++i){
-            consumo1=consumo1+((1+VEnergia.getPerdida(central2.getCoordX(),central2.getCoordY(),
-                    clientes.get(clientes1.get(i)).getCoordX(),clientes.get(clientes1.get(i)).getCoordY())))*clientes.get(clientes1.get(i)).getConsumo();
-        }
-        if(consumo1>central2.getProduccion())return false;
-
-        for(int i=0;i<clientes2.size();++i){
-            consumo2=consumo2+((1+VEnergia.getPerdida(central1.getCoordX(),central1.getCoordY(),
-                    clientes.get(clientes2.get(i)).getCoordX(),clientes.get(clientes2.get(i)).getCoordY())))*clientes.get(clientes2.get(i)).getConsumo();
-        }
-        if(consumo2>central1.getProduccion())return false;
-        return true;
-    }
-
-    public boolean canSwapCentralAndMakesSense(Central central1, Central central2, ArrayList<Integer> clientes1, ArrayList<Integer> clientes2) {
-        double consumo1=0;
-        double consumo2=0;
-
         double mwUsados1 = relaciones.getMWUsadosCentral(central1.getId());
         double mwUsados2 = relaciones.getMWUsadosCentral(central2.getId());
 
@@ -544,7 +523,6 @@ public class Status {
                     clientes.get(clientes2.get(i)).getCoordX(),clientes.get(clientes2.get(i)).getCoordY())))*clientes.get(clientes2.get(i)).getConsumo();
         }
         if(consumo2>central1.getProduccion())return false;
-                        //So that we only generate the successor if the assignation reduces the energy loss
         return ((mwUsados1+mwUsados2)>(consumo1+consumo2));
     }
 

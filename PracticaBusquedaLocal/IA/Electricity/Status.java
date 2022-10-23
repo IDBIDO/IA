@@ -526,7 +526,7 @@ public class Status {
         return ((mwUsados1+mwUsados2)>(consumo1+consumo2));
     }
 
-    public boolean makesSense(Cliente cliente, Central centralNueva, Central centralVieja) {
+    public boolean isPossible(Cliente cliente, Central centralNueva, Central centralVieja) {
         double perdida1 = VEnergia.getPerdida(cliente.getCoordX(),cliente.getCoordY(),centralNueva.getCoordX(),centralNueva.getCoordY());
         double perdida2 = VEnergia.getPerdida(cliente.getCoordX(),cliente.getCoordY(),centralVieja.getCoordX(),centralVieja.getCoordY());
         return perdida1<perdida2;

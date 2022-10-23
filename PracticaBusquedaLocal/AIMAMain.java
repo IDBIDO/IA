@@ -26,7 +26,6 @@ public class AIMAMain {
         Status status = new Status(seed);
         double beneficioInicial = status.beneficioPorCentral();
 
-        /*
         // Create the Problem object
         Problem p = new  Problem(status,
                 new ElectricitySuccesorFunction(),
@@ -36,11 +35,11 @@ public class AIMAMain {
         // Instantiate the search algorithm
         // AStarSearch(new GraphSearch()) or IterativeDeepeningAStarSearch()
 
-        Search alg = new HillClimbingSearch();
-        SearchAgent agent = new SearchAgent(p, alg);
-*/
+        Search algHC = new HillClimbingSearch();
+        SearchAgent agent = new SearchAgent(p, algHC);
 
 
+/*
         // Instantiate the SearchAgent object SA
         Problem pSA = new  Problem(status,
                 new ElectricitySuccesorFunctionSA(),
@@ -51,7 +50,7 @@ public class AIMAMain {
         //Search algSA = new SimulatedAnnealingSearch();
         Search algSA = new SimulatedAnnealingSearch(9000, 500, 1, 0.01);
         SearchAgent agent = new SearchAgent(pSA, algSA);
-
+*/
 
         long end = System.nanoTime();
 
@@ -63,8 +62,8 @@ public class AIMAMain {
         // You can access also to the goal state using the
         // method getGoalState of class Search
 
-        Status finalStatus = (Status)algSA.getGoalState();
-        //finalStatus.printState();
+        Status finalStatus = (Status)algHC.getGoalState();
+        finalStatus.printState();
         //finalStatus.printState2();
 
         System.out.println("Beneficio inicial: "+String.valueOf(beneficioInicial));

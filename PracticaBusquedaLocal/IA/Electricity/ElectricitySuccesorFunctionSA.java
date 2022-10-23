@@ -171,56 +171,6 @@ public class ElectricitySuccesorFunctionSA implements SuccessorFunction {
 
         }
 
-        //swap central
-        /*
-        else {
-            //System.out.println("Swap central");
-            ArrayList<Pair> canSwapCentral =  status.getCanSwapCentral();
-            int ranPair = random.nextInt(canSwapCentral.size());
-
-
-            Map<Integer,ArrayList<Integer>> centralesClientes1= new HashMap<Integer,ArrayList<Integer>>();
-            for(int i=0;i<centrales.size();++i){
-                centralesClientes1.put(centrales.get(i).getId(),new ArrayList<Integer>());
-            }
-            for(int i=0;i<relaciones.getClientes().size();++i){
-                if(relaciones.getClientes().get(i)!=-1){
-                    ArrayList<Integer> lista = centralesClientes1.get(relaciones.getClientes().get(i));
-                    lista.add(i);
-                    centralesClientes1.put(relaciones.getClientes().get(i),lista);
-                }
-            }
-            ArrayList<Pair> aux = new ArrayList<>();
-            for (int i = 0; i < centrales.size(); ++i) {
-                for (int j = i+1; j < centrales.size(); ++j) {
-                    if(centrales.get(i).getTipo()==centrales.get(j).getTipo()) {
-                        if (status.canSwapCentral(centrales.get(i), centrales.get(j), centralesClientes1.get(i), centralesClientes1.get(j))) {
-                            Pair a = new Pair(i, j);
-                            aux.add(a);
-                        }
-                    }
-                }
-            }
-            if (aux.size() > 0) {
-                int ranSwapPair = random.nextInt(aux.size());
-                Pair a = aux.get(ranSwapPair);
-                int central1Key = (Integer) a.getFirst();
-                int central2Key = (Integer) a.getSecond();
-                Status statusAux = new Status(status);
-                try {
-                    swapcentrales(clientes, centrales, centralesClientes1, central1Key, central2Key, statusAux);
-                    retval.add(new Successor("SwapCentral(" + central1Key + "," + central2Key + ")", statusAux));
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-
-            }
-
-        }
-        */
-
-
-
         return retval;
     }
 }

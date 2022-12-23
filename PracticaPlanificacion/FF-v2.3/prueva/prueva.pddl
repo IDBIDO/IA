@@ -1,12 +1,18 @@
 (define (domain prueva)
 
-    (:requirements :strips :typing :adl)
+    (:requirements :typing :adl)
 
     (:types base rover - object
             asentamiento almacenen - base
             suministro personal - transportable
             
     )
+
+    ;;(:functions
+    ;;    (suministro_disponible ?al - almacenen ?s - suministro)
+    ;;    (personal_disponible ?as - asentamiento ?p - personal)
+
+    ;;)
 
     (:predicates
         
@@ -19,7 +25,6 @@
         (servido ?t - transportable)                      ;; transportable t sevido      
 
         (cogido ?r - rover ?t - transportable)      ;; rover r ha cogido el transportable t
-
 
         ;;(reservado ?b - base ?t - transportable)
 

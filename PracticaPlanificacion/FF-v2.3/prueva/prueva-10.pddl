@@ -1,4 +1,6 @@
 ;;./ff -o prueva/prueva.pddl -f prueva/prueva-10.pddl
+;; ./ff -o rovers/domain.pddl -f rovers/pfile01
+;; ./ff -o SmartBus-domain-fluents-v0.pddl -f SmartBus-prob1-fluents-v0.pddl
 (define (problem prueva1) 
 (:domain prueva)
 (:objects   rv0 - rover
@@ -6,7 +8,6 @@
             alm0 alm1 alm2 - almacenen
             sum0 sum1 sum2 - suministro
             per0 per1 per2 - personal
-
 )
 
 (:init

@@ -7,5 +7,62 @@ problem 'PRUEVA1' defined
  ... done.
 
 
-undeclared variable ?T in literal PETICION. check input files
+no metric specified. plan length assumed.
+
+checking for cyclic := effects --- OK.
+
+ff: search configuration is EHC, if that fails then  best-first on 1*g(s) + 5*h(s) where
+    metric is  plan length
+
+Cueing down from goal distance:    9 into depth [1]
+                                   7            [1]
+                                   6            [1]
+                                   5            [1][2][3][4]
+                                   4            [1][2][3][4][5][6][7]
+                                   3            [1][2][3][4][5][6][7]
+                                   2            [1][2][3][4][5][6][7][8]
+                                   1            [1]
+                                   0            
+
+ff: found legal plan as follows
+
+step    0: MOVER_ROVER ROVER0 ALMACEN0 VIVIENDA0
+        1: CARGAR_TRANSPORTABLE X004 TECNICO VIVIENDA2 ROVER0 VIVIENDA0
+        2: MOVER_ROVER ROVER0 VIVIENDA0 VIVIENDA2
+        3: DESCARGAR_TRANSPORTABLE ROVER0 VIVIENDA2 X004 TECNICO VIVIENDA2 X004 X005
+        4: MOVER_ROVER ROVER0 VIVIENDA2 VIVIENDA0
+        5: CARGAR_TRANSPORTABLE X003 MEDICO VIVIENDA1 ROVER0 VIVIENDA0
+        6: MOVER_ROVER ROVER0 VIVIENDA0 VIVIENDA1
+        7: DESCARGAR_TRANSPORTABLE ROVER0 VIVIENDA1 X003 MEDICO VIVIENDA1 X003 X005
+        8: MOVER_ROVER ROVER0 VIVIENDA1 VIVIENDA0
+        9: MOVER_ROVER ROVER0 VIVIENDA0 ALMACEN0
+       10: MOVER_ROVER ROVER0 ALMACEN0 ALMACEN2
+       11: CARGAR_TRANSPORTABLE X005 AGUA VIVIENDA2 ROVER0 ALMACEN2
+       12: MOVER_ROVER ROVER0 ALMACEN2 ALMACEN0
+       13: MOVER_ROVER ROVER0 ALMACEN0 VIVIENDA0
+       14: DESCARGAR_TRANSPORTABLE ROVER0 VIVIENDA0 X005 AGUA VIVIENDA2 X001 X005
+       15: MOVER_ROVER ROVER0 VIVIENDA0 ALMACEN0
+       16: MOVER_ROVER ROVER0 ALMACEN0 ALMACEN2
+       17: CARGAR_TRANSPORTABLE X005 AGUA VIVIENDA2 ROVER0 ALMACEN2
+       18: MOVER_ROVER ROVER0 ALMACEN2 ALMACEN0
+       19: MOVER_ROVER ROVER0 ALMACEN0 VIVIENDA0
+       20: MOVER_ROVER ROVER0 VIVIENDA0 VIVIENDA2
+       21: DESCARGAR_TRANSPORTABLE ROVER0 VIVIENDA2 X005 AGUA VIVIENDA2 X005 X005
+       22: MOVER_ROVER ROVER0 VIVIENDA2 VIVIENDA0
+       23: MOVER_ROVER ROVER0 VIVIENDA0 ALMACEN0
+       24: MOVER_ROVER ROVER0 ALMACEN0 ALMACEN2
+       25: CARGAR_TRANSPORTABLE X002 COMIDA VIVIENDA2 ROVER0 ALMACEN2
+       26: MOVER_ROVER ROVER0 ALMACEN2 ALMACEN0
+       27: MOVER_ROVER ROVER0 ALMACEN0 VIVIENDA0
+       28: MOVER_ROVER ROVER0 VIVIENDA0 VIVIENDA2
+       29: DESCARGAR_TRANSPORTABLE ROVER0 VIVIENDA2 X002 COMIDA VIVIENDA2 X002 X005
+     
+
+time spent:    0.00 seconds instantiating 15360 easy, 10 hard action templates
+               0.00 seconds reachability analysis, yielding 21 facts and 127 actions
+               0.00 seconds creating final representation with 21 relevant facts, 6 relevant fluents
+               0.00 seconds computing LNF
+               0.00 seconds building connectivity graph
+               0.00 seconds searching, evaluating 35 states, to a max depth of 8
+               0.00 seconds total time
 

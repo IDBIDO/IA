@@ -8,24 +8,26 @@
             
     )
 
-
     (:functions
-        ;;(suministro_disponible ?s - suministro ?al - almacenen)  ;;suministro ?s disponible en almacen ?al
-        ;;(personal_disponible ?p - personal ?as - asentamiento)  ;; personal ?p disponible en asentamiento ?as
 
-        (transportable_disponible ?t - transportable ?b - base)    
-        (peticiones_hechas) 
+        (transportable_disponible ?t - transportable ?b - base)      
+        
+        (personal_en_rover ?r - rover)          ;; num persona cargados en rover
 
-        ;;(personal_en_rover ?r - rover)
-        ;;(suministro_en_rover ?r - rover)
+        (combustible ?r - rover)
+
+        (peticiones_hechas)                   ;; para ver si hemos terminado
         
     )
 
     (:predicates
         
-        (peticion ?id - id ?t - transportable ?as - asentamiento)       ;; peticion
 
-        (peticion_en_curso ?r - rover ?id - id)      ;; rover r ha cogido el transportable de la peticion ?id
+        (contenido_peticion ?id - id ?t - transportable)         ;; continido de la peticion ?id
+        (destino_peticion ?id - id ?as - asentamiento)           ;; destino de la peticion ?id
+
+
+        (peticion_rover ?id - id ?r - rover)                    ;; rover ?r carga con el contenido de la peticion ?id
 
         (estacionado ?r - rover ?b - base)            ;; rover estacionado en base ?b
 
@@ -35,50 +37,51 @@
     )
 
     (:action cargar_transportable
-        :parameters (?id - id               
-                    ?t - transportable        
-                    ?as - asentamiento
-                    ?r - rover
-                    ?b - base)
+        :parameters (
+                ?r - rover
+                ?b - base 
+                ?id - id
+                ?t - transportable
+        )
 
         :precondition (and 
-            (peticion ?id ?t ?as)               ;; existe una peticion de ?t hecho por el asentamiento ?as
-            (not (peticion_en_curso ?r ?id))    ;; esta peticion no lo ha cogido ningun rover
-            (estacionado ?r ?b)                 ;; el rover esta estacionado en la base ?b
-            ( > (transportable_disponible ?t ?b) 0 )    ;; en la base ?b donde esta el rover, hay un transportable ?t disponible
+                            (estacionado ?r ?b)                     ;; ?r estacionado en ?b
+                            (contenido_peticion ?id ?t)             ;; hay una peticion de ?t disponible
+                            (> (transportable_disponible ?t ?b) 0)  ;; en ?b hay ?t para cargar
+                            
         )
         
-        :effect (and    (peticion_en_curso ?r ?id)                      ;; guarda el id de la peticion con el rover
-                        (decrease (transportable_disponible ?t ?b) 1)   ;; decrementar 
+        ;; rover ?r carga con ?t
+        ;; ?t en ?b disminuye una unidad
+        :effect (and    
+                        (peticion_rover ?id ?r)
+                        (decrease (transportable_disponible ?t ?b) 1)
+        
                 )
     )
 
     (:action descargar_transportable
-        :parameters (?r - rover
-                     ?as - asentamiento
-                    ?idr - id
-                    ?t - transportable
-                    ?asx - asentamiento 
-                    ?id - id
-                    ?b - base
+        :parameters (
+                        ?r - rover
+                        ?as - asentamiento
+                        ?id - id
+                        ?idx - id 
+                        ?t - transportable
                     )
-        ;;:precondition (and  (cogido ?r ?t)     
-        ;;                    (estacionado ?r ?b)
-        ;;                    (destino ?t ?b)
-        ;;                )
+
 
         :precondition (and 
-            (estacionado ?r ?as)                ;; rover estacionado en la asentamiento ?as
-            (peticion_en_curso ?r ?idr)         ;; rover tiene una peticion cogida con ident. ?idr
-            (peticion ?idr ?t ?asx)               ;; el rover tiene transportable ?t //// ?asx no nos importa
-            (peticion ?id ?t ?as)               ;; ?as donde esta el rover tiene una peticion de ?t con identificador ?id
+                            (estacionado ?r ?as)
+                            (peticion_rover ?id ?r)
+                            (contenido_peticion ?id ?t)     ;; rover ?r lleva ?t
+
+                            (destino_peticion ?idx ?as)     
+                            (contenido_peticion ?idx ?t)    ;; peticion cualquiera con destino donde esta el rover
         )
-        :effect (and    ;;(en ?t ?b) 
-                        ;;(not (cogido ?r ?t))
-                        ;;(servido ?t)
-                        (not (peticion ?id ?t ?as))
-                        (not (peticion_en_curso ?r ?idr))
-                        (increase (peticiones_hechas) 1)
+        :effect (and    
+                            (not (contenido_peticion ?id ?t))
+                            (not (destino_peticion ?id ?as))
+                            (increase (peticiones_hechas) 1)
                 )
     )
 
@@ -88,6 +91,8 @@
         )
         :effect (and    (estacionado ?r ?d)
                         (not (estacionado ?r ?o))
+                        (decrease (combustible ?r) 1)
+                        
         )
     )
     

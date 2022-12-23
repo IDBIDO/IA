@@ -1,0 +1,11 @@
+
+ff: parsing domain file
+domain 'PRUEVA' defined
+ ... done.
+ff: parsing problem file
+problem 'PRUEVA1' defined
+ ... done.
+
+
+undeclared variable ?T in literal PETICION. check input files
+

@@ -15,6 +15,9 @@
 
         (transportable_disponible ?t - transportable ?b - base)    
         (peticiones_hechas) 
+
+        ;;(personal_en_rover ?r - rover)
+        ;;(suministro_en_rover ?r - rover)
         
     )
 
@@ -32,8 +35,8 @@
     )
 
     (:action cargar_transportable
-        :parameters (?id - id
-                    ?t - transportable
+        :parameters (?id - id               
+                    ?t - transportable        
                     ?as - asentamiento
                     ?r - rover
                     ?b - base)

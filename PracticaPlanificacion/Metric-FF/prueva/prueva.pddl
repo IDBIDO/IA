@@ -42,13 +42,16 @@
                 ?b - base 
                 ?id - id
                 ?t - transportable
+
+               ?rx - rover
         )
 
         :precondition (and 
                             (estacionado ?r ?b)                     ;; ?r estacionado en ?b
                             (contenido_peticion ?id ?t)             ;; hay una peticion de ?t disponible
                             (> (transportable_disponible ?t ?b) 0)  ;; en ?b hay ?t para cargar
-                            
+
+                            (not(peticion_rover ?id ?rx))           ;; ningun otro rover ha cogido el contenido del pedido
         )
         
         ;; rover ?r carga con ?t

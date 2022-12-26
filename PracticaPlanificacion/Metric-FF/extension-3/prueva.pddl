@@ -20,7 +20,9 @@
 
         (peticiones_hechas)                   ;; para ver si hemos terminado
 
-        (tipo_transportable ?r - rover)          ;;
+        (prioridad_peticion ?id - id)        ;; entre 1-3, 3 la maxima
+
+        (peso_total_prioridades_hechas)             
         
         
     )
@@ -128,6 +130,7 @@
                             (not (destino_peticion ?id ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (suministro_en_rover ?r) 1)
+                            (increase (peso_total_prioridades_hechas) (*(prioridad_peticion ?id) 10))     ;; incrementar peso 
                 )
     )
 
@@ -155,6 +158,7 @@
                             (not (destino_peticion ?id ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (personal_en_rover ?r) 1)
+                            (increase (peso_total_prioridades_hechas) (*(prioridad_peticion ?id) 10))     ;; incrementar peso 
                 )
     )
 

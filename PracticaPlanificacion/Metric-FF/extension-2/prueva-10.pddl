@@ -3,9 +3,9 @@
 ;; ./ff -o SmartBus-domain-fluents-v0.pddl -f SmartBus-prob1-fluents-v0.pddl
 (define (problem prueva1) 
 (:domain prueva)
-(:objects   rover0 rover1 - rover
+(:objects   rover0 - rover
             vivienda0 vivienda1 vivienda2 - asentamiento
-            almacen0 almacen1 almacen2 - almacenen
+            almacen0 almacen1 almacen2 - almacen
             agua comida  - suministro
             medico tecnico - personal
             x001 x002 x003 x004 x005 - id
@@ -13,31 +13,30 @@
 
 (:init
     ;;posicion de las peticiones ;; base de peticion  ;; 
-    (= (transportable_disponible medico vivienda0) 1)
-    (= (transportable_disponible tecnico vivienda1) 1)
+    (= (personal_disponible medico vivienda0) 1)
+    (= (personal_disponible tecnico vivienda1) 1)
     ;;(= (transportable_disponible agua almacen0) 2)
     ;;(= (transportable_disponible comida almacen1) 2)
-    (= (transportable_disponible agua almacen2) 2)
-    (= (transportable_disponible comida almacen2) 1)
+    (= (suministro_disponible agua almacen2) 2)
+    (= (suministro_disponible comida almacen2) 1)
 
     
-    
-    (=(combustible rover0) 50)
+    (=(combustible rover0) 100)
     (estacionado rover0 almacen0)
     (=(personal_en_rover rover0 ) 0)        
     (=(suministro_en_rover rover0) 0)
 
-    (=(combustible rover1) 50)
-    (estacionado rover1 almacen1)
-    (=(personal_en_rover rover1 ) 0)        
-    (=(suministro_en_rover rover1) 0)
+    ;;(=(combustible rover1) 100)
+    ;;(estacionado rover1 almacen1)
+    ;;(=(personal_en_rover rover1 ) 0)        
+    ;;(=(suministro_en_rover rover1) 0)
 
 
     ;; PETICIONES
 
     (contenido_peticion x001 agua)     
     (destino_peticion x001 vivienda0)
-    (=(prioridad_peticion x001) 1)
+    
 
     (contenido_peticion x003 medico)     
     (destino_peticion x003 vivienda1) 

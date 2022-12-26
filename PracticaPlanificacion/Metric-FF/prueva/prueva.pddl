@@ -1,6 +1,6 @@
 (define (domain prueva)
 
-    (:requirements :typing :adl :fluents)
+    (:requirements :strips :typing :adl :fluents)
 
     (:types base rover id object
             asentamiento almacenen - base
@@ -11,13 +11,15 @@
     (:functions
 
         (transportable_disponible ?t - transportable ?b - base)      
-        
         (personal_en_rover ?r - rover)          ;; num persona cargados en rover
-
+        (suministro_en_rover ?r - rover)        ;; num suministro en rover
         (combustible ?r - rover)
 
         (peticiones_hechas)                   ;; para ver si hemos terminado
+
+        (tipo_transportable ?r - rover)          ;;
         
+        (prioridad_peticion ?id - id)   
     )
 
     (:predicates
@@ -28,6 +30,7 @@
 
 
         (peticion_rover ?id - id ?r - rover)                    ;; rover ?r carga con el contenido de la peticion ?id
+        
 
         (estacionado ?r - rover ?b - base)            ;; rover estacionado en base ?b
 
@@ -85,12 +88,16 @@
                             (not (contenido_peticion ?id ?t))
                             (not (destino_peticion ?id ?as))
                             (increase (peticiones_hechas) 1)
+                        
                 )
     )
 
     (:action mover_rover
         :parameters (?r - rover ?o - base ?d - base)
-        :precondition (and  (estacionado ?r ?o) (or (conectado ?o ?d) (conectado ?d ?o))
+        :precondition (and  (estacionado ?r ?o)
+                             (or (conectado ?o ?d) (conectado ?d ?o))
+                             (> (combustible ?r) 0)
+                             
         )
         :effect (and    (estacionado ?r ?d)
                         (not (estacionado ?r ?o))

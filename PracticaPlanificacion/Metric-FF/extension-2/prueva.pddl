@@ -20,7 +20,6 @@
 
         (peticiones_hechas)                   ;; para ver si hemos terminado
 
-        (tipo_transportable ?r - rover)          ;;
         
         
     )
@@ -50,6 +49,7 @@
                 ?s - suministro
 
                ?rx - rover
+               ?asx - asentamiento
         )
 
         :precondition (and 
@@ -57,7 +57,9 @@
                             (< (suministro_en_rover ?r) 1)          ;; menos de 1 suministro en rover
                             (estacionado ?r ?alm)                     ;; ?r estacionado en almacen ?alm
                             (contenido_peticion ?id ?s)             ;; hay una peticion de suministro ?s disponible
-                            
+                            (destino_peticion ?id ?asx)             ;; ---------------------
+
+
                             (> (suministro_disponible ?s ?alm) 0)  ;; en almacen ?alm hay ?s para cargar
 
                             (not(peticion_rover ?id ?rx))           ;; ningun otro rover ha cogido el contenido del pedido
@@ -81,6 +83,8 @@
                 ?p - personal
 
                ?rx - rover
+               ?asx - asentamiento
+
         )
 
         :precondition (and 
@@ -88,6 +92,9 @@
                             (< (personal_en_rover ?r) 2)            ;; menos de 2 personal
                             (estacionado ?r ?as)                     ;; ?r estacionado en un asentamiento ?as
                             (contenido_peticion ?id ?p)             ;; hay una peticion de personal ?p disponible
+                            (destino_peticion ?id ?asx)              ;; con destino asentamiento cualquiera -----------------
+
+
                             (> (personal_disponible ?p ?as) 0)  ;; en ?as hay ?p para cargar
 
                             (not(peticion_rover ?id ?rx))           ;; ningun otro rover ha cogido el contenido del pedido
@@ -118,14 +125,16 @@
         :precondition (and 
                             (estacionado ?r ?as)
                             (peticion_rover ?id ?r)
-                            (contenido_peticion ?id ?s)     ;; rover ?r lleva ?t
+                            (contenido_peticion ?id ?s)     ;; rover ?r lleva ?s de la peticion ?id
 
-                            (destino_peticion ?idx ?as)     
+                            (destino_peticion ?idx ?as)     ;; ?idx es la peticion objetivo para descargar
                             (contenido_peticion ?idx ?s)    ;; peticion cualquiera con destino donde esta el rover
         )
         :effect (and    
-                            (not (contenido_peticion ?id ?s))
-                            (not (destino_peticion ?id ?as))
+                            (not (peticion_rover ?id ?r))   ;; el rover ya no tiene la peticion ?id
+
+                            (not (contenido_peticion ?id ?s))   ;; eliminar el contenido para la peticion ?id
+                            (not (destino_peticion ?idx ?as))   ;; peticion objetivo hecho
                             (increase (peticiones_hechas) 1)
                             (decrease (suministro_en_rover ?r) 1)
                 )
@@ -151,8 +160,10 @@
                             (contenido_peticion ?idx ?p)    ;; peticion cualquiera con destino donde esta el rover
         )
         :effect (and    
+                            (not (peticion_rover ?id ?r))   ;; el rover ya no tiene la peticion ?id
+
                             (not (contenido_peticion ?id ?p))
-                            (not (destino_peticion ?id ?as))
+                            (not (destino_peticion ?idx ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (personal_en_rover ?r) 1)
                 )

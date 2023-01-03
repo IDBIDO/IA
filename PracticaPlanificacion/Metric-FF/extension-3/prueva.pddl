@@ -2,6 +2,7 @@
 
     (:requirements :strips :typing :adl :fluents)
 
+
     (:types base rover id object
             asentamiento almacen - base
             suministro personal - transportable

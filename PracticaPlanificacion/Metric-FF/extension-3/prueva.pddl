@@ -128,10 +128,10 @@
                             (contenido_peticion ?id ?s)     ;; rover ?r lleva ?t
 
                             (destino_peticion ?idx ?as)     
-                            (contenido_peticion ?idx ?s)    ;; peticion cualquiera con destino donde esta el rover
+                            ;;(contenido_peticion ?idx ?s)    ;; peticion cualquiera con destino donde esta el rover
         )
         :effect (and    
-                            ;;(not (contenido_peticion ?id ?s))  ;--------------------------
+                            (not (contenido_peticion ?id ?s))  ;--------------------------
                             (not (destino_peticion ?id ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (suministro_en_rover ?r) 1)
@@ -156,10 +156,10 @@
                             (contenido_peticion ?id ?p)     ;; rover ?r lleva un personal ?p
 
                             (destino_peticion ?idx ?as)     
-                            (contenido_peticion ?idx ?p)    ;; peticion cualquiera con destino donde esta el rover
+                            ;;(contenido_peticion ?idx ?p)    ;; peticion cualquiera con destino donde esta el rover
         )
         :effect (and    
-                            ;(not (contenido_peticion ?id ?p))   ;-----------------------------
+                            (not (contenido_peticion ?id ?p))   ;-----------------------------
                             (not (destino_peticion ?id ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (personal_en_rover ?r) 1)

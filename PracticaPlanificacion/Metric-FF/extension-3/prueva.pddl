@@ -135,7 +135,7 @@
                             (not (destino_peticion ?id ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (suministro_en_rover ?r) 1)
-                            (increase (peso_total_prioridades_hechas) (*(prioridad_peticion ?id) 10))     ;; incrementar peso 
+                            (increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
                 )
     )
 

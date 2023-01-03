@@ -124,15 +124,16 @@
 
         :precondition (and 
                             (estacionado ?r ?as)
-                            (peticion_rover ?id ?r)
+                            (peticion_rover ?id ?r)         ;; rover ha cogido la peticion ?id
                             (contenido_peticion ?id ?s)     ;; rover ?r lleva ?t
 
-                            (destino_peticion ?idx ?as)     
-                            ;;(contenido_peticion ?idx ?s)    ;; peticion cualquiera con destino donde esta el rover
+                            (destino_peticion ?idx ?as)     ;; peticion cualquiera con destino donde esta el rover
+                            (contenido_peticion ?idx ?s)    ;; y pide suministro ?s
         )
         :effect (and    
+                            (not (peticion_rover ?id ?r))   ;; el rover ya no tiene la peticion ?id
                             (not (contenido_peticion ?id ?s))  ;--------------------------
-                            (not (destino_peticion ?id ?as))
+                            (not (destino_peticion ?idx ?as))   ;--  idx
                             (increase (peticiones_hechas) 1)
                             (decrease (suministro_en_rover ?r) 1)
                             (increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
@@ -156,11 +157,12 @@
                             (contenido_peticion ?id ?p)     ;; rover ?r lleva un personal ?p
 
                             (destino_peticion ?idx ?as)     
-                            ;;(contenido_peticion ?idx ?p)    ;; peticion cualquiera con destino donde esta el rover
+                            (contenido_peticion ?idx ?p)    ;; peticion cualquiera con destino donde esta el rover
         )
         :effect (and    
+                            (not (peticion_rover ?id ?r))
                             (not (contenido_peticion ?id ?p))   ;-----------------------------
-                            (not (destino_peticion ?id ?as))
+                            (not (destino_peticion ?idx ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (personal_en_rover ?r) 1)
                             (increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 

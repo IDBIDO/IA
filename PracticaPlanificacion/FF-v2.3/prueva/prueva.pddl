@@ -3,7 +3,7 @@
     (:requirements :typing :adl)
 
     (:types base rover - object
-            asentamiento almacenen - base
+            asentamiento almacen - base
             suministro personal - transportable
             
     )

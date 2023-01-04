@@ -71,4 +71,5 @@
 ;;(:metric minimize (+  (combustible rover0) (combustible rover1)))
 (:metric minimize (combustible_total_gastado))
 
+
 )

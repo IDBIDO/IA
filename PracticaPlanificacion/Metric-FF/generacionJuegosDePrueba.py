@@ -77,7 +77,8 @@ def generar_juego_prueba():
         peticion = Peticion(i, suministros[i].base_actual, random.choice(viviendas), random.randrange(1,3))
         peticiones.append(peticion)
     
-    
+    print("(define (problem prueva1)")
+    print("(:domain prueva) ")
     print("(:objects  ")
     for i in range(0,len(rovers)):
         print("rover"+str(i)+" ",end='')
@@ -88,7 +89,7 @@ def generar_juego_prueba():
     print("- almacen")
     
     for i in range(0,len(viviendas)):
-        print("asentamiento"+str(i)+" ",end='')
+        print("vivienda"+str(i)+" ",end='')
     print("- asentamiento")
     
     print("agua comida  - suministro")
@@ -104,11 +105,11 @@ def generar_juego_prueba():
 
     for i in range(0,len(viviendas)):
         for j in range(0,len(viviendas[i].suministros)):
-            print("= (personal_disponible "+viviendas[i].suministros[j].nombre+" vivienda"+str(i)+") 1)")
+            print("(= (personal_disponible "+viviendas[i].suministros[j].nombre+" vivienda"+str(i)+") 1)")
     
     for i in range(0,len(almacenes)):
         for j in range(0,len(almacenes[i].suministros)):
-            print("= (suministro_disponible "+almacenes[i].suministros[j].nombre+" almacen"+str(i)+") 1)")
+            print("(= (suministro_disponible "+almacenes[i].suministros[j].nombre+" almacen"+str(i)+") 1)")
 
     print("\n\n")
     
@@ -137,6 +138,10 @@ def generar_juego_prueba():
     print("\n)")
     
     print("(:goal (   =(peticiones_hechas) "+str(len(peticiones))+"     )     )")
+
+    print("(:metric maximize (+ (combustible_total) (*(peso_total_prioridades_hechas)10)))")
+
+    print(")")
 
 # Creamos un juego de prueba con 3 bases, 2 rovers y 3 conexiones
 juego_prueba = generar_juego_prueba()

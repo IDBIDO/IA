@@ -1,0 +1,229 @@
+(:objects  
+rover0 rover1 rover2 rover3 rover4 rover5 rover6 - rover
+almacen0 almacen1 almacen2 almacen3 almacen4 almacen5 almacen6 - almacen
+asentamiento0 asentamiento1 asentamiento2 asentamiento3 asentamiento4 asentamiento5 asentamiento6 - asentamiento
+agua comida  - suministro
+medico tecnico - personal
+x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 - id
+)
+(:init
+;Tamaño del problema (generación del script)   7
+
+= (personal_disponible medico vivienda0) 1)
+= (personal_disponible tecnico vivienda1) 1)
+= (personal_disponible tecnico vivienda2) 1)
+= (personal_disponible tecnico vivienda3) 1)
+= (personal_disponible tecnico vivienda3) 1)
+= (personal_disponible tecnico vivienda3) 1)
+= (personal_disponible tecnico vivienda5) 1)
+= (personal_disponible medico vivienda6) 1)
+= (personal_disponible tecnico vivienda6) 1)
+= (suministro_disponible comida almacen1) 1)
+= (suministro_disponible comida almacen2) 1)
+= (suministro_disponible agua almacen3) 1)
+= (suministro_disponible comida almacen3) 1)
+= (suministro_disponible agua almacen6) 1)
+
+
+
+(=(combustible rover0) 606)
+(estacionado rover0 almacen5)
+(=(personal_en_rover rover0 ) 0)
+(=(suministro_en_rover rover0 ) 0)
+
+
+(=(combustible rover1) 206)
+(estacionado rover1 almacen4)
+(=(personal_en_rover rover1 ) 0)
+(=(suministro_en_rover rover1 ) 0)
+
+
+(=(combustible rover2) 815)
+(estacionado rover2 almacen4)
+(=(personal_en_rover rover2 ) 0)
+(=(suministro_en_rover rover2 ) 0)
+
+
+(=(combustible rover3) 305)
+(estacionado rover3 vivienda1)
+(=(personal_en_rover rover3 ) 0)
+(=(suministro_en_rover rover3 ) 0)
+
+
+(=(combustible rover4) 166)
+(estacionado rover4 almacen2)
+(=(personal_en_rover rover4 ) 0)
+(=(suministro_en_rover rover4 ) 0)
+
+
+(=(combustible rover5) 376)
+(estacionado rover5 vivienda6)
+(=(personal_en_rover rover5 ) 0)
+(=(suministro_en_rover rover5 ) 0)
+
+
+(=(combustible rover6) 745)
+(estacionado rover6 almacen6)
+(=(personal_en_rover rover6 ) 0)
+(=(suministro_en_rover rover6 ) 0)
+
+
+(=(combustible_total) 3219)
+
+
+(=(peso_total_prioridades_hechas)0)
+
+(contenido_peticion x1 medico)
+(destino_peticion x1 vivienda0)
+(=(prioridad_peticion x1 ) 1)
+
+(contenido_peticion x2 comida)
+(destino_peticion x2 vivienda5)
+(=(prioridad_peticion x2 ) 1)
+
+(contenido_peticion x3 agua)
+(destino_peticion x3 vivienda3)
+(=(prioridad_peticion x3 ) 2)
+
+(contenido_peticion x4 tecnico)
+(destino_peticion x4 vivienda4)
+(=(prioridad_peticion x4 ) 1)
+
+(contenido_peticion x5 tecnico)
+(destino_peticion x5 vivienda2)
+(=(prioridad_peticion x5 ) 1)
+
+(contenido_peticion x6 tecnico)
+(destino_peticion x6 vivienda0)
+(=(prioridad_peticion x6 ) 2)
+
+(contenido_peticion x7 comida)
+(destino_peticion x7 vivienda4)
+(=(prioridad_peticion x7 ) 2)
+
+(contenido_peticion x8 tecnico)
+(destino_peticion x8 vivienda4)
+(=(prioridad_peticion x8 ) 1)
+
+(contenido_peticion x9 tecnico)
+(destino_peticion x9 vivienda0)
+(=(prioridad_peticion x9 ) 1)
+
+(contenido_peticion x10 agua)
+(destino_peticion x10 vivienda2)
+(=(prioridad_peticion x10 ) 1)
+
+(contenido_peticion x11 comida)
+(destino_peticion x11 vivienda0)
+(=(prioridad_peticion x11 ) 2)
+
+(contenido_peticion x12 tecnico)
+(destino_peticion x12 vivienda1)
+(=(prioridad_peticion x12 ) 1)
+
+(contenido_peticion x13 tecnico)
+(destino_peticion x13 vivienda0)
+(=(prioridad_peticion x13 ) 2)
+
+(contenido_peticion x14 medico)
+(destino_peticion x14 vivienda2)
+(=(prioridad_peticion x14 ) 1)
+
+
+( = (peticiones_hechas) 0)
+
+(conectado vivienda2 vivienda1)
+(conectado almacen1 almacen0)
+(conectado vivienda4 almacen2)
+(conectado almacen1 vivienda6)
+(conectado almacen6 vivienda2)
+(conectado vivienda0 vivienda5)
+(conectado almacen1 vivienda3)
+(conectado vivienda6 vivienda2)
+(conectado almacen3 vivienda4)
+(conectado almacen5 vivienda2)
+(conectado vivienda6 vivienda3)
+(conectado almacen6 almacen1)
+(conectado almacen0 vivienda3)
+(conectado almacen2 vivienda2)
+(conectado almacen3 vivienda0)
+(conectado almacen3 almacen2)
+(conectado almacen4 almacen5)
+(conectado vivienda6 vivienda4)
+(conectado vivienda4 almacen5)
+(conectado vivienda0 almacen1)
+(conectado almacen3 almacen0)
+(conectado vivienda5 almacen5)
+(conectado almacen2 almacen6)
+(conectado vivienda0 vivienda6)
+(conectado almacen4 vivienda1)
+(conectado almacen0 vivienda1)
+(conectado vivienda1 almacen2)
+(conectado vivienda4 vivienda1)
+(conectado vivienda0 almacen6)
+(conectado almacen1 almacen2)
+(conectado vivienda5 almacen6)
+(conectado vivienda6 almacen5)
+(conectado vivienda1 almacen1)
+(conectado almacen3 vivienda1)
+(conectado almacen6 vivienda6)
+(conectado almacen3 almacen4)
+(conectado almacen0 almacen6)
+(conectado almacen5 almacen1)
+(conectado vivienda0 almacen2)
+(conectado vivienda6 almacen4)
+(conectado almacen2 vivienda5)
+(conectado almacen4 vivienda4)
+(conectado vivienda0 almacen4)
+(conectado vivienda1 vivienda6)
+(conectado vivienda6 almacen0)
+(conectado almacen5 vivienda1)
+(conectado vivienda2 vivienda4)
+(conectado vivienda6 almacen2)
+(conectado vivienda5 vivienda6)
+(conectado almacen4 almacen6)
+(conectado almacen1 almacen3)
+(conectado vivienda4 vivienda0)
+(conectado almacen3 vivienda3)
+(conectado vivienda5 vivienda1)
+(conectado vivienda4 vivienda5)
+(conectado vivienda2 almacen0)
+(conectado vivienda5 almacen3)
+(conectado almacen0 vivienda0)
+(conectado vivienda3 almacen5)
+(conectado vivienda4 almacen6)
+(conectado vivienda3 vivienda1)
+(conectado almacen4 vivienda5)
+(conectado almacen0 almacen4)
+(conectado vivienda2 almacen4)
+(conectado vivienda3 almacen6)
+(conectado almacen2 almacen4)
+(conectado almacen0 almacen2)
+(conectado vivienda6 almacen3)
+(conectado almacen4 vivienda3)
+(conectado almacen6 vivienda1)
+(conectado almacen5 vivienda0)
+(conectado almacen3 vivienda2)
+(conectado vivienda3 vivienda2)
+(conectado almacen1 almacen4)
+(conectado almacen1 vivienda5)
+(conectado almacen3 almacen5)
+(conectado vivienda4 almacen0)
+(conectado almacen0 vivienda5)
+(conectado almacen5 almacen6)
+(conectado vivienda0 vivienda3)
+(conectado vivienda2 almacen1)
+(conectado vivienda0 vivienda1)
+(conectado vivienda3 vivienda4)
+(conectado almacen2 almacen5)
+(conectado almacen2 vivienda3)
+(conectado almacen1 vivienda4)
+(conectado almacen0 almacen5)
+(conectado vivienda0 vivienda2)
+(conectado almacen3 almacen6)
+(conectado vivienda5 vivienda2)
+(conectado vivienda3 vivienda5)
+
+
+)
+(:goal (   =(peticiones_hechas) 14     )     )

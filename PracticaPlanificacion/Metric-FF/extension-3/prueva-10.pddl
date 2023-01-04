@@ -23,7 +23,6 @@
     (= (suministro_disponible comida almacen2) 1)
 
     
-
     ;; definicion del estado del rover0
     (=(combustible rover0) 100)         ;; tiene 100 unidad de combustible (puede hace 100 movimientos) 
     (estacionado rover0 vivienda0)      ;; esta estacionado en la vivienda0

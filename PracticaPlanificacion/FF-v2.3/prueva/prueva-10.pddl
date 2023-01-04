@@ -1,35 +1,49 @@
-;;./ff -o prueva/prueva.pddl -f prueva/prueva-10.pddl
-;; ./ff -o rovers/domain.pddl -f rovers/pfile01
-;; ./ff -o SmartBus-domain-fluents-v0.pddl -f SmartBus-prob1-fluents-v0.pddl
-(define (problem prueva1) 
-(:domain prueva)
-(:objects   rv0 - rover
-            as0 as1 as2 - asentamiento
-            alm0 alm1 alm2 - almacenen
-            sum0 sum1 sum2 - suministro
-            per0 per1 per2 - personal
+(define (problem prueva1)
+(:domain prueva) 
+(:objects  
+rover0 rover1 rover2 rover3 - rover
+almacen0 almacen1 almacen2 almacen3 - almacen
+vivienda0 vivienda1 vivienda2 vivienda3 - asentamiento
+agua comida  - suministro
+medico tecnico - personal
+x1 x2 x3 x4 x5 x6 x7 x8 - id
 )
-
 (:init
-    ;;posicion de las peticiones ;; base de peticion  ;; 
-    (en sum0 alm0) (pendiente sum0) (destino sum0 alm1)     ;; enviar alm0 a alm1
-    (en sum1 alm0) (pendiente sum1) (destino sum1 alm2);;
-    (en sum2 alm0) (pendiente sum2) (destino sum2 alm1);;
-    (en per0 as0)  (pendiente per0) (destino per0 as1)
-    (en per1 as0)  (pendiente per1) (destino per1 as2)
-    (en per2 as0)  (pendiente per2) (destino per2 as1)
-    (estacionado rv0 as2)  ;; posicion del rover
+;Tamaño del problema (generación del script)   4
 
-    ;; definir el grafo de conexiones
-    (conectado as0 as1) (conectado as0 as2) (conectado as0 alm0)
-    (conectado alm0 alm1) (conectado alm0 alm2)
+
+
+(conectado almacen3 vivienda1)
+(conectado vivienda3 vivienda1)
+(conectado vivienda0 vivienda2)
+(conectado vivienda2 vivienda1)
+(conectado almacen0 almacen2)
+(conectado vivienda2 almacen1)
+(conectado almacen3 vivienda3)
+(conectado vivienda2 vivienda3)
+(conectado vivienda1 almacen2)
+(conectado vivienda0 vivienda3)
+(conectado almacen0 vivienda0)
+(conectado almacen3 almacen1)
+(conectado almacen0 almacen3)
+(conectado vivienda3 almacen1)
+(conectado vivienda1 almacen1)
+(conectado vivienda2 almacen2)
+(conectado vivienda0 almacen3)
+(conectado vivienda0 almacen2)
+(conectado almacen0 almacen1)
+(conectado almacen2 almacen1)
+(conectado almacen0 vivienda2)
+(conectado vivienda2 almacen3)
+(conectado vivienda0 vivienda1)
+(conectado almacen2 vivienda3)
+(conectado almacen0 vivienda1)
+(conectado almacen0 vivienda3)
+(conectado almacen2 almacen3)
+(conectado almacen1 vivienda0)
 
 )
-
-;; no se puede envia ningun suministro mas
-(:goal (forall (?t - transportable) (servido ?t))
+;(:goal (   =(peticiones_hechas) 6     )     )
+;(:metric maximize (+ (combustible_total) (*(peso_total_prioridades_hechas)10)))
 )
 
-;un-comment the following line if metric is needed
-;(:metric minimize (???))
-)

@@ -34,7 +34,7 @@ class Peticion:
 # Función para generar un juego de prueba aleatorio
 def generar_juego_prueba():
     # Generamos las bases
-    tamañoDelProblema = random.randrange(2,10)
+    tamañoDelProblema = random.randrange(2,5)
     viviendas = []
     for i in range(0,tamañoDelProblema):
         base = Vivienda("vivienda"+str(i))

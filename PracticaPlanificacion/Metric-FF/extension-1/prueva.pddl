@@ -16,7 +16,6 @@
 
         (personal_en_rover ?r - rover)          ;; num persona cargados en rover
         (suministro_en_rover ?r - rover)        ;; num suministro en rover
-        (combustible ?r - rover)
 
         (peticiones_hechas)                   ;; para ver si hemos terminado
 
@@ -110,29 +109,30 @@
     
 
 
-    (:action descargar_suministro
+(:action descargar_suministro
         :parameters (
                         ?r - rover
                         ?as - asentamiento
                         ?id - id
-                        ?idx - id 
+    
                         ?s - suministro
                     )
 
 
         :precondition (and 
                             (estacionado ?r ?as)
-                            (peticion_rover ?id ?r)
-                            (contenido_peticion ?id ?s)     ;; rover ?r lleva ?t
+                            (peticion_rover ?id ?r)         ;; rover ha cogido la peticion ?id
 
-                            (destino_peticion ?idx ?as)     
-                            (contenido_peticion ?idx ?s)    ;; peticion cualquiera con destino donde esta el rover
+                            (contenido_peticion ?id ?s)     ;; rover ?r lleva el suministro ?s
+                            (destino_peticion ?id ?as)     ;; peticion del rover tiene como destino el asentamiento donde esta aparcao
+
+
         )
         :effect (and    
                             (not (peticion_rover ?id ?r))   ;; el rover ya no tiene la peticion ?id
+                            (not (contenido_peticion ?id ?s))  ;; la peticion ?id esta hecha
+                            (not (destino_peticion ?id ?as))   
 
-                            (not (contenido_peticion ?id ?s))
-                            (not (destino_peticion ?idx ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (suministro_en_rover ?r) 1)
                 )
@@ -144,7 +144,6 @@
                         ?r - rover
                         ?as - asentamiento
                         ?id - id
-                        ?idx - id 
                         ?p - personal
                     )
 
@@ -152,16 +151,15 @@
         :precondition (and 
                             (estacionado ?r ?as)
                             (peticion_rover ?id ?r)
-                            (contenido_peticion ?id ?p)     ;; rover ?r lleva un personal ?p
 
-                            (destino_peticion ?idx ?as)     
-                            (contenido_peticion ?idx ?p)    ;; peticion cualquiera con destino donde esta el rover
+                            (contenido_peticion ?id ?p)     ;; rover ?r lleva un personal ?p
+                            (destino_peticion ?id ?as)     
+                            
         )
         :effect (and    
-                            (not (peticion_rover ?id ?r))   ;; el rover ya no tiene la peticion ?id
-
-                            (not (contenido_peticion ?id ?p))
-                            (not (destino_peticion ?idx ?as))
+                            (not (peticion_rover ?id ?r))
+                            (not (contenido_peticion ?id ?p))   
+                            (not (destino_peticion ?id ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (personal_en_rover ?r) 1)
                 )
@@ -171,12 +169,12 @@
         :parameters (?r - rover ?o - base ?d - base)
         :precondition (and  (estacionado ?r ?o)
                              (or (conectado ?o ?d) (conectado ?d ?o))
-                             (> (combustible ?r) 0)
+                         
                              
         )
         :effect (and    (estacionado ?r ?d)
                         (not (estacionado ?r ?o))
-                        (decrease (combustible ?r) 1)
+                 
                         
         )
     )

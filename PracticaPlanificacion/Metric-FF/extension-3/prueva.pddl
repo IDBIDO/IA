@@ -19,6 +19,8 @@
         (suministro_en_rover ?r - rover)        ;; num suministro en rover
         (combustible ?r - rover)
 
+        (combustible_total)         ;; suma de todo combustible de rovers
+
         (peticiones_hechas)                   ;; para ver si hemos terminado
 
         (prioridad_peticion ?id - id)        ;; entre 1-3, 3 la maxima
@@ -60,8 +62,9 @@
                             (= (personal_en_rover ?r) 0)            ;; no hay personal en rover
                             (< (suministro_en_rover ?r) 1)          ;; menos de 1 suministro en rover
                             (estacionado ?r ?alm)                     ;; ?r estacionado en almacen ?alm
+
                             (contenido_peticion ?id ?s)             ;; hay una peticion de suministro ?s disponible
-                            (destino_peticion ?id ?asx)             ;; ---------------------
+                            (destino_peticion ?id ?asx)             ;; 
 
                             (> (suministro_disponible ?s ?alm) 0)  ;; en almacen ?alm hay ?s para cargar
 
@@ -71,7 +74,7 @@
         ;; rover ?r carga con ?t
         ;; ?t en ?b disminuye una unidad
         :effect (and    
-                        (peticion_rover ?id ?r)
+                        (peticion_rover ?id ?r)             ;; rover ?r ha cogido la peticion ?id
                         (decrease (suministro_disponible ?s ?alm) 1)
                         (increase (suministro_en_rover ?r) 1)
         
@@ -93,6 +96,7 @@
                             (= (suministro_en_rover ?r) 0)          ;; no hay suministros en rover
                             (< (personal_en_rover ?r) 2)            ;; menos de 2 personal
                             (estacionado ?r ?as)                     ;; ?r estacionado en un asentamiento ?as
+
                             (contenido_peticion ?id ?p)             ;; hay una peticion de personal ?p disponible
                             (destino_peticion ?id ?asx)              ;; con destino asentamiento cualquiera -----------------
 
@@ -104,7 +108,7 @@
         ;; rover ?r carga con ?t
         ;; ?t en ?b disminuye una unidad
         :effect (and    
-                        (peticion_rover ?id ?r)
+                        (peticion_rover ?id ?r)             ;; rover ?r ha cogido la peticion ?id
                         (decrease (personal_disponible ?p ?as) 1)
                         (increase (personal_en_rover ?r) 1)
         
@@ -118,7 +122,7 @@
                         ?r - rover
                         ?as - asentamiento
                         ?id - id
-                        ?idx - id 
+    
                         ?s - suministro
                     )
 
@@ -126,15 +130,17 @@
         :precondition (and 
                             (estacionado ?r ?as)
                             (peticion_rover ?id ?r)         ;; rover ha cogido la peticion ?id
-                            (contenido_peticion ?id ?s)     ;; rover ?r lleva ?t
 
-                            (destino_peticion ?idx ?as)     ;; peticion cualquiera con destino donde esta el rover
-                            (contenido_peticion ?idx ?s)    ;; y pide suministro ?s
+                            (contenido_peticion ?id ?s)     ;; rover ?r lleva el suministro ?s
+                            (destino_peticion ?id ?as)     ;; peticion del rover tiene como destino el asentamiento donde esta aparcao
+
+
         )
         :effect (and    
                             (not (peticion_rover ?id ?r))   ;; el rover ya no tiene la peticion ?id
-                            (not (contenido_peticion ?id ?s))  ;--------------------------
-                            (not (destino_peticion ?idx ?as))   ;--  idx
+                            (not (contenido_peticion ?id ?s))  ;; la peticion ?id esta hecha
+                            (not (destino_peticion ?id ?as))   
+
                             (increase (peticiones_hechas) 1)
                             (decrease (suministro_en_rover ?r) 1)
                             (increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
@@ -147,7 +153,6 @@
                         ?r - rover
                         ?as - asentamiento
                         ?id - id
-                        ?idx - id 
                         ?p - personal
                     )
 
@@ -155,15 +160,15 @@
         :precondition (and 
                             (estacionado ?r ?as)
                             (peticion_rover ?id ?r)
-                            (contenido_peticion ?id ?p)     ;; rover ?r lleva un personal ?p
 
-                            (destino_peticion ?idx ?as)     
-                            (contenido_peticion ?idx ?p)    ;; peticion cualquiera con destino donde esta el rover
+                            (contenido_peticion ?id ?p)     ;; rover ?r lleva un personal ?p
+                            (destino_peticion ?id ?as)     
+                            
         )
         :effect (and    
                             (not (peticion_rover ?id ?r))
-                            (not (contenido_peticion ?id ?p))   ;-----------------------------
-                            (not (destino_peticion ?idx ?as))
+                            (not (contenido_peticion ?id ?p))   
+                            (not (destino_peticion ?id ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (personal_en_rover ?r) 1)
                             (increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
@@ -180,7 +185,7 @@
         :effect (and    (estacionado ?r ?d)
                         (not (estacionado ?r ?o))
                         (decrease (combustible ?r) 1)
-                        
+                        (decrease (combustible_total) 1)
         )
     )
     

@@ -20,7 +20,8 @@
     (= (suministro_disponible agua almacen2) 2)
     (= (suministro_disponible comida almacen2) 1)
 
-    
+    (= (combustible_total_gastado) 0)
+
     (=(combustible rover0) 100)
     (estacionado rover0 almacen0)
     (=(personal_en_rover rover0 ) 0)        
@@ -67,7 +68,7 @@
 ;un-comment the following line if metric is needed
 ;(:metric minimize (???))
 
-(:metric minimize (+  (combustible rover0) (combustible rover1)))
-;;(:metric minimize (combustible rover0))
+;;(:metric minimize (+  (combustible rover0) (combustible rover1)))
+(:metric minimize (combustible_total_gastado))
 
 )

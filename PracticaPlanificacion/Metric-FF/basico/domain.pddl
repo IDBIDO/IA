@@ -65,7 +65,7 @@
                         ?r - rover
                         ?as - asentamiento
                         ?id - id
-                        ?idx - id 
+                     
                         ?t - transportable
                     )
 
@@ -73,10 +73,9 @@
         :precondition (and 
                             (estacionado ?r ?as)
                             (peticion_rover ?id ?r)
+                            
                             (contenido_peticion ?id ?t)     ;; rover ?r lleva ?t
-
-                            (destino_peticion ?idx ?as)     
-                            (contenido_peticion ?idx ?t)    ;; peticion cualquiera con destino donde esta el rover
+                            (destino_peticion ?id ?as)     
         )
         :effect (and    
                             (not (contenido_peticion ?id ?t))

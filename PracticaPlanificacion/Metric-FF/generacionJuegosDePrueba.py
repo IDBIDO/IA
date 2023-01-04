@@ -104,12 +104,31 @@ def generar_juego_prueba():
 
 
     for i in range(0,len(viviendas)):
+        suminis = [0,0] #tecnico, medico
         for j in range(0,len(viviendas[i].suministros)):
-            print("(= (personal_disponible "+viviendas[i].suministros[j].nombre+" vivienda"+str(i)+") 1)")
+            if viviendas[i].suministros[j].nombre=="tecnico":
+                suminis[0]+=1
+            else:
+                suminis[1]+=1
+        
+        for j in range(0,2):
+            if j==0 and suminis[j]!=0:
+                print("(= (personal_disponible tecnico vivienda"+str(i)+") "+str(suminis[j])+")")
+            elif j==1 and suminis[j]!=0:
+                print("(= (personal_disponible medico vivienda"+str(i)+") "+str(suminis[j])+")")
     
     for i in range(0,len(almacenes)):
+        suminis = [0,0] #agua, comida
         for j in range(0,len(almacenes[i].suministros)):
-            print("(= (suministro_disponible "+almacenes[i].suministros[j].nombre+" almacen"+str(i)+") 1)")
+            if almacenes[i].suministros[j].nombre=="agua":
+                suminis[0]+=1
+            else:
+                suminis[1]+=1
+        for j in range(0,2):
+            if j==0 and suminis[j]!=0:
+                print("(= (suministro_disponible agua almacen"+str(i)+") "+str(suminis[j])+")")
+            elif j==1 and suminis[j]!=0:
+                print("(= (suministro_disponible comida almacen"+str(i)+") "+str(suminis[j])+")")
 
     print("\n\n")
     

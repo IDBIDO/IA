@@ -77,6 +77,12 @@ def generar_juego_prueba():
         peticion = Peticion(i, suministros[i].base_actual, random.choice(viviendas), random.randrange(1,3))
         peticiones.append(peticion)
     
+    extra = 0
+    for i in range(0,tamañoDelProblema):
+        peticion = Peticion(i,suministros[random.randrange(0,len(suministros))].base_actual, random.choice(viviendas), random.randrange(1,3))
+        peticiones.append(peticion)
+        extra+=1
+    
     print("(define (problem prueva1)")
     print("(:domain prueva) ")
     print("(:objects  ")
@@ -144,7 +150,7 @@ def generar_juego_prueba():
     print("(=(peso_total_prioridades_hechas)0)\n")
     
     
-    for i in range(0,len(peticiones)):
+    for i in range(0,len(peticiones)-extra):
         print("(contenido_peticion x"+str(i+1)+" "+suministros[i].nombre+")")
         print("(destino_peticion x"+str(i+1)+" "+peticiones[i].base_final.nombre+")")
         print("(=(prioridad_peticion x"+str(i+1)+" "+") "+str(peticiones[i].prioridad)+")\n")

@@ -154,6 +154,12 @@ def generar_juego_prueba():
         print("(contenido_peticion x"+str(i+1)+" "+suministros[i].nombre+")")
         print("(destino_peticion x"+str(i+1)+" "+peticiones[i].base_final.nombre+")")
         print("(=(prioridad_peticion x"+str(i+1)+" "+") "+str(peticiones[i].prioridad)+")\n")
+        
+    for i in range(len(peticiones)-extra,len(peticiones)):
+        indice = random.randrange(0,len(suministros))
+        print("(contenido_peticion x"+str(i+1)+" "+suministros[indice].nombre+")")
+        print("(destino_peticion x"+str(i+1)+" "+peticiones[indice].base_final.nombre+")")
+        print("(=(prioridad_peticion x"+str(i+1)+" "+") "+str(peticiones[indice].prioridad)+")\n")
     
     print("\n( = (peticiones_hechas) 0)\n")
     
@@ -164,7 +170,7 @@ def generar_juego_prueba():
     
     print("(:goal (   =(peticiones_hechas) "+str(len(peticiones))+"     )     )")
 
-    print("(:metric maximize (+ (combustible_total) (*(peso_total_prioridades_hechas)10)))")
+    print("(:metric maximize (+ (combustible_total) (*(peso_total_prioridades_hechas)"+str(sum([i.prioridad for i in peticiones]))+")))")
 
     print(")")
 

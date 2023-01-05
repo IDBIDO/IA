@@ -3,17 +3,16 @@
     (:requirements :strips :typing :adl :fluents)
 
     (:types base rover id object
-            asentamiento almacenen - base
+            asentamiento almacen - base
             suministro personal - transportable
             
     )
-
     (:functions
 
         (transportable_disponible ?t - transportable ?b - base)      
 
-        (peticiones_hechas)                   ;; para ver si hemos terminado
-
+        ;;(peticiones_hechas)                   ;; para ver si hemos terminado
+        
     )
 
     (:predicates

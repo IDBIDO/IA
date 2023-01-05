@@ -5,7 +5,7 @@
 (:domain basico)
 (:objects   rover0 rover1 - rover
             vivienda0 vivienda1 vivienda2 - asentamiento
-            almacen0 almacen1 almacen2 - almacenen
+            almacen0 almacen1 almacen2 - almacen
             agua comida  - suministro
             medico tecnico - personal
             x001 x002 x003 x004 x005 - id

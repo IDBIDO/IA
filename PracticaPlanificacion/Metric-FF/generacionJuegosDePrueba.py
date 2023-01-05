@@ -108,7 +108,7 @@ def generar_juego_prueba():
     print("(:init")
     print(";Tamaño del problema (generación del script)   "+str(tamañoDelProblema)+"\n")
 
-
+    num_transportable = 0
     for i in range(0,len(viviendas)):
         suminis = [0,0] #tecnico, medico
         for j in range(0,len(viviendas[i].suministros)):
@@ -116,6 +116,7 @@ def generar_juego_prueba():
                 suminis[0]+=1
             else:
                 suminis[1]+=1
+            num_transportable += 1
         
         for j in range(0,2):
             if j==0 and suminis[j]!=0:
@@ -130,12 +131,13 @@ def generar_juego_prueba():
                 suminis[0]+=1
             else:
                 suminis[1]+=1
+            num_transportable += 1
         for j in range(0,2):
             if j==0 and suminis[j]!=0:
                 print("(= (suministro_disponible agua almacen"+str(i)+") "+str(suminis[j])+")")
             elif j==1 and suminis[j]!=0:
                 print("(= (suministro_disponible comida almacen"+str(i)+") "+str(suminis[j])+")")
-
+    
     print("\n\n")
     
     for i in range(0,len(rovers)):
@@ -167,8 +169,8 @@ def generar_juego_prueba():
     for (base1,base2) in conexiones:
         print("(conectado "+base1.nombre+" "+base2.nombre+")")
     print("\n)")
-    
-    print("(:goal (   =(peticiones_hechas) "+str(len(peticiones))+"     )     )")
+    #print("------------------------------------------   " + str(num_transportable))
+    print("(:goal (   =(peticiones_hechas) "+str(num_transportable)+"     )     )")
 
     print("(:metric maximize (+ (combustible_total) (*(peso_total_prioridades_hechas)"+str(sum([i.prioridad for i in peticiones]))+")))")
 

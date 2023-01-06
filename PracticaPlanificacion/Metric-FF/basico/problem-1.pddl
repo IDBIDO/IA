@@ -61,7 +61,4 @@
 ;un-comment the following line if metric is needed
 ;(:metric minimize (???))
 
-(:metric minimize (+  (combustible rover0) (combustible rover1)))
-;;(:metric minimize (combustible rover0))
 
-)

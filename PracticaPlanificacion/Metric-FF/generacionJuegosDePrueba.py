@@ -141,6 +141,7 @@ def generar_juego_prueba():
     print("\n\n")
     
     for i in range(0,len(rovers)):
+        
         print("(=(combustible rover"+str(i)+") "+str(rovers[i].combustible)+")")
         print("(estacionado rover"+str(i)+" "+rovers[i].base_actual.nombre+")")
         print("(=(personal_en_rover rover"+str(i)+" ) 0)")
@@ -148,6 +149,10 @@ def generar_juego_prueba():
         print("\n")
         
     print("(=(combustible_total) "+str(sum([i.combustible for i in rovers]))+")")
+    #extension2: 
+    #print("(= (combustible_total_gastado) 0)")
+    
+
     print("\n")
     print("(=(peso_total_prioridades_hechas)0)\n")
     
@@ -155,7 +160,7 @@ def generar_juego_prueba():
     for i in range(0,len(peticiones)-extra):
         print("(contenido_peticion x"+str(i+1)+" "+suministros[i].nombre+")")
         print("(destino_peticion x"+str(i+1)+" "+peticiones[i].base_final.nombre+")")
-        print("(=(prioridad_peticion x"+str(i+1)+" "+") "+str(peticiones[i].prioridad)+")\n")
+        print("(=(prioridad_peticion x"+str(i+1)+" "+") "+str(peticiones[i].prioridad)+")\n")       #descomentar para exte
         
     for i in range(len(peticiones)-extra,len(peticiones)):
         indice = random.randrange(0,len(suministros))
@@ -173,6 +178,9 @@ def generar_juego_prueba():
     print("(:goal (   =(peticiones_hechas) "+str(num_transportable)+"     )     )")
 
     print("(:metric maximize (+ (combustible_total) (*(peso_total_prioridades_hechas)"+str(sum([i.prioridad for i in peticiones]))+")))")
+    #extension2: 
+    # print("(:metric minimize (combustible_total_gastado))")
+    #extension1: comentar print metric
 
     print(")")
 

@@ -29,6 +29,7 @@
     (=(personal_en_rover rover0 ) 0)    ;; al principio no puede llevar ningun personal
     (=(suministro_en_rover rover0) 0)   ;; al principio no puede llevar ningun suministro
 
+
     (=(combustible rover1) 100)
     (estacionado rover1 almacen1)
     (=(personal_en_rover rover1 ) 0)        
@@ -46,7 +47,6 @@
     (contenido_peticion x002 comida)        
     (destino_peticion x002 vivienda2) 
     (=(prioridad_peticion x002) 3)
-
 
     (contenido_peticion x003 medico)     
     (destino_peticion x003 vivienda1) 

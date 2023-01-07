@@ -19,7 +19,7 @@
         (suministro_en_rover ?r - rover)        ;; num suministro en rover
         (combustible ?r - rover)
 
-        (combustible_total)         ;; suma de todo combustible de rovers
+        (combustible_total_gastado)         ;; suma de todo combustible de rovers
 
         (peticiones_hechas)                   ;; para ver si hemos terminado
 
@@ -185,7 +185,7 @@
         :effect (and    (estacionado ?r ?d)
                         (not (estacionado ?r ?o))
                         (decrease (combustible ?r) 1)
-                        (decrease (combustible_total) 1)
+                        (increase (combustible_total_gastado) 1)
         )
     )
     

@@ -35,7 +35,7 @@
     (=(personal_en_rover rover1 ) 0)        
     (=(suministro_en_rover rover1) 0)
 
-    (=(combustible_total) 200)          ;; suma de todo combustible de rovers
+    (=(combustible_total_gastado) 0)          ;; suma de todo combustible de rovers
 
     ;; PETICIONES: el destino de las peticiones tiene que ser un asentamiento. 
     (=(peso_total_prioridades_hechas)0)     ;; al principio no hay ninguna peticion hecha, por lo que la acumulacion de prioridades es 0
@@ -69,7 +69,7 @@
 )
 
 ;; no se puede envia ningun suministro mas
-(:goal (   =(peticiones_hechas) 5     )     )       ;; este numero tiene que ser igual a la suma de 
+(:goal (   =(peticiones_hechas) 4     )     )       ;; este numero tiene que ser igual a la suma de 
                                                     ;; personal_disponible y suministro_disponible declarados al principio, le llamamos sum
                                                     ;; sum tiene que ser menor o igual al numero de peticiones
                                                     
@@ -82,7 +82,7 @@
 
 ;; comustible + 2*prioridades_hechas
 ;; combustible = combustible_rover0 + combustible_rover1 ....
-(:metric maximize (+ (combustible_total) (*(peso_total_prioridades_hechas)10)     ;; esto habra que probarlo en el juego de pruebas
+(:metric minimize (+ (combustible_total_gastado) (*(peso_total_prioridades_hechas)10)     ;; esto habra que probarlo en el juego de pruebas
                   )
 
 

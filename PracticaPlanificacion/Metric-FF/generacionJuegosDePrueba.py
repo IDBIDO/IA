@@ -148,9 +148,9 @@ def generar_juego_prueba():
         print("(=(suministro_en_rover rover"+str(i)+" ) 0)")
         print("\n")
         
-    print("(=(combustible_total) "+str(sum([i.combustible for i in rovers]))+")")
+    #print("(=(combustible_total) "+str(sum([i.combustible for i in rovers]))+")")
     #extension2: 
-    #print("(= (combustible_total_gastado) 0)")
+    print("(= (combustible_total_gastado) 0)")
     
 
     print("\n")

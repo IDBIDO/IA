@@ -6,7 +6,7 @@
             almacen0 almacen1 almacen2 - almacen
             agua comida  - suministro
             medico tecnico - personal
-            x001 x002 x003 x004 x005 - id           ;; id de peticiones (creo que tiene que empezar con letra)
+            x001 x002 x003 x004 x005 x006 x007 x008 - id           ;; id de peticiones (creo que tiene que empezar con letra)
 )
 
 (:init
@@ -40,10 +40,6 @@
     ;; PETICIONES: el destino de las peticiones tiene que ser un asentamiento. 
     (=(peso_total_prioridades_hechas)0)     ;; al principio no hay ninguna peticion hecha, por lo que la acumulacion de prioridades es 0
 
-    (contenido_peticion x001 agua)          ;; definir el contenido de la peticion
-    (destino_peticion x001 vivienda0)       ;; definir el destino de la peticion
-    (=(prioridad_peticion x001) 3)          ;; definir la prioridad de la peticio (1, 2, 3)
-
     (contenido_peticion x002 comida)        
     (destino_peticion x002 vivienda2) 
     (=(prioridad_peticion x002) 3)
@@ -58,7 +54,23 @@
 
     (contenido_peticion x005 agua)     
     (destino_peticion x005 vivienda2) 
-    (=(prioridad_peticion x005) 1)
+    (=(prioridad_peticion x005) 3)
+
+    (contenido_peticion x001 agua)          ;; definir el contenido de la peticion
+    (destino_peticion x001 vivienda0)       ;; definir el destino de la peticion
+    (=(prioridad_peticion x001) 3)          ;; definir la prioridad de la peticio (1, 2, 3)
+
+    (contenido_peticion x006 comida)     
+    (destino_peticion x006 vivienda2) 
+    (=(prioridad_peticion x006) 1)
+
+    (contenido_peticion x007 agua)     
+    (destino_peticion x007 vivienda2) 
+    (=(prioridad_peticion x007) 1)
+
+    (contenido_peticion x008 agua)     
+    (destino_peticion x008 vivienda2) 
+    (=(prioridad_peticion x008) 1)
 
     ( = (peticiones_hechas) 0)          ;; al principio no hay ninguna peticion hecha
 
@@ -69,7 +81,7 @@
 )
 
 ;; no se puede envia ningun suministro mas
-(:goal (   =(peticiones_hechas) 4     )     )       ;; este numero tiene que ser igual a la suma de 
+(:goal (   =(peticiones_hechas) 5     )     )       ;; este numero tiene que ser igual a la suma de 
                                                     ;; personal_disponible y suministro_disponible declarados al principio, le llamamos sum
                                                     ;; sum tiene que ser menor o igual al numero de peticiones
                                                     

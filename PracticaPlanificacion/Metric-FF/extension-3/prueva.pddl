@@ -77,7 +77,10 @@
                         (peticion_rover ?id ?r)             ;; rover ?r ha cogido la peticion ?id
                         (decrease (suministro_disponible ?s ?alm) 1)
                         (increase (suministro_en_rover ?r) 1)
-        
+                        ;;(increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
+                        (when (=(prioridad_peticion ?id)3) (increase (peso_total_prioridades_hechas) 1))
+                        (when (=(prioridad_peticion ?id)2) (increase (peso_total_prioridades_hechas) 2))
+                        (when (=(prioridad_peticion ?id)1) (increase (peso_total_prioridades_hechas) 3))
                 )
     )
 
@@ -111,7 +114,10 @@
                         (peticion_rover ?id ?r)             ;; rover ?r ha cogido la peticion ?id
                         (decrease (personal_disponible ?p ?as) 1)
                         (increase (personal_en_rover ?r) 1)
-        
+                        ;;(increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
+                        (when (=(prioridad_peticion ?id)3) (increase (peso_total_prioridades_hechas) 1))
+                        (when (=(prioridad_peticion ?id)2) (increase (peso_total_prioridades_hechas) 2))
+                        (when (=(prioridad_peticion ?id)1) (increase (peso_total_prioridades_hechas) 3))
                 )
     )
     
@@ -143,7 +149,7 @@
 
                             (increase (peticiones_hechas) 1)
                             (decrease (suministro_en_rover ?r) 1)
-                            (increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
+                            ;;(increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
                 )
     )
 
@@ -171,7 +177,7 @@
                             (not (destino_peticion ?id ?as))
                             (increase (peticiones_hechas) 1)
                             (decrease (personal_en_rover ?r) 1)
-                            (increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
+                            ;;(increase (peso_total_prioridades_hechas) (prioridad_peticion ?id) )     ;; incrementar peso 
                 )
     )
 

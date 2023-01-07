@@ -96,10 +96,7 @@
 ;; combustible = combustible_rover0 + combustible_rover1 ....
 (:metric minimize (+ (combustible_total_gastado) (*(peso_total_prioridades_hechas)10)     ;; esto habra que probarlo en el juego de pruebas
                   )
-
-
-
-
+                ;;(+ (*(combustible_total_gastado)1) (*(peso_total_prioridades_hechas)10)  )
 )              
 
 )

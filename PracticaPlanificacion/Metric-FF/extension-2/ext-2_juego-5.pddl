@@ -31,11 +31,9 @@
     (=(suministro_en_rover rover0) 0)
 
     (=(combustible rover1) 100)
-    (estacionado rover1 almacen3)
+    (estacionado rover1 almacen1)
     (=(personal_en_rover rover1 ) 0)        
     (=(suministro_en_rover rover1) 0)
-
-
 
 
     ;; PETICIONES
